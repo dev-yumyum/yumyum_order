@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YumYum 주문 접수 시스템</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 헤더 -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <i class="fas fa-utensils logo-icon"></i>
+                    <h1>YumYum 주문 접수</h1>
+                </div>
+                <div class="header-actions">
+                    <span id="currentTime" class="current-time"></span>
+                    <div class="status-badge" id="statusBadge">
+                        <i class="fas fa-circle status-icon"></i>
+                        <span>온라인</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- 메인 컨텐츠 -->
+        <main class="main-content">
+            <!-- 사이드바 네비게이션 -->
+            <nav class="sidebar">
+                <ul class="nav-menu">
+                    <li class="nav-item active" data-tab="orders">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>주문 접수</span>
+                    </li>
+                    <li class="nav-item" data-tab="order-list">
+                        <i class="fas fa-list"></i>
+                        <span>주문 내역</span>
+                    </li>
+                    <li class="nav-item" data-tab="statistics">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>통계</span>
+                    </li>
+                    <li class="nav-item" data-tab="settings">
+                        <i class="fas fa-cog"></i>
+                        <span>설정</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- 컨텐츠 영역 -->
+            <div class="content-area">
+                <!-- 주문 접수 탭 -->
+                <div id="orders" class="tab-content active">
+                    <div class="content-header">
+                        <h2><i class="fas fa-plus-circle"></i> 새 주문 접수</h2>
+                        <button id="newOrderBtn" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> 새 주문
+                        </button>
+                    </div>
+
+                    <div class="order-form-container">
+                        <form id="orderForm" class="order-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="customerName">고객명</label>
+                                    <input type="text" id="customerName" name="customerName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="customerPhone">전화번호</label>
+                                    <input type="tel" id="customerPhone" name="customerPhone" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="customerAddress">배달 주소</label>
+                                <textarea id="customerAddress" name="customerAddress" rows="2"></textarea>
+                            </div>
+
+                            <div class="menu-section">
+                                <h3>메뉴 선택</h3>
+                                <div id="menuItems" class="menu-items">
+                                    <!-- 메뉴 항목들이 동적으로 추가됩니다 -->
+                                </div>
+                                <button type="button" id="addMenuBtn" class="btn btn-secondary">
+                                    <i class="fas fa-plus"></i> 메뉴 추가
+                                </button>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="specialRequests">특별 요청사항</label>
+                                    <textarea id="specialRequests" name="specialRequests" rows="3" placeholder="특별한 요청사항이나 주의사항을 입력하세요..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="order-summary">
+                                <h3>주문 요약</h3>
+                                <div class="summary-content">
+                                    <div class="total-amount">
+                                        <span>총 금액: </span>
+                                        <span id="totalAmount" class="amount">0원</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="button" id="resetFormBtn" class="btn btn-secondary">
+                                    <i class="fas fa-undo"></i> 초기화
+                                </button>
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fas fa-check"></i> 주문 접수
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 주문 내역 탭 -->
+                <div id="order-list" class="tab-content">
+                    <div class="content-header">
+                        <h2><i class="fas fa-list"></i> 주문 내역</h2>
+                        <div class="header-actions">
+                            <select id="statusFilter" class="filter-select">
+                                <option value="">전체 상태</option>
+                                <option value="pending">접수 대기</option>
+                                <option value="confirmed">주문 확인</option>
+                                <option value="preparing">조리 중</option>
+                                <option value="ready">조리 완료</option>
+                                <option value="delivered">배달 완료</option>
+                                <option value="cancelled">주문 취소</option>
+                            </select>
+                            <button id="refreshOrdersBtn" class="btn btn-secondary">
+                                <i class="fas fa-sync"></i> 새로고침
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="orders-container">
+                        <div id="ordersList" class="orders-list">
+                            <!-- 주문 리스트가 동적으로 생성됩니다 -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 통계 탭 -->
+                <div id="statistics" class="tab-content">
+                    <div class="content-header">
+                        <h2><i class="fas fa-chart-bar"></i> 주문 통계</h2>
+                    </div>
+                    <div class="stats-container">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-shopping-cart"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="totalOrdersToday">0</h3>
+                                <p>오늘 주문 수</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-won-sign"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="totalRevenueToday">0원</h3>
+                                <p>오늘 매출</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="averageTime">0분</h3>
+                                <p>평균 처리 시간</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 설정 탭 -->
+                <div id="settings" class="tab-content">
+                    <div class="content-header">
+                        <h2><i class="fas fa-cog"></i> 설정</h2>
+                    </div>
+                    <div class="settings-container">
+                        <div class="settings-section">
+                            <h3>메뉴 설정</h3>
+                            <div id="menuSettings" class="menu-settings">
+                                <!-- 메뉴 설정이 여기에 표시됩니다 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 알림 토스트 -->
+        <div id="toast" class="toast">
+            <div class="toast-content">
+                <i class="toast-icon"></i>
+                <span class="toast-message"></span>
+            </div>
+        </div>
+
+        <!-- 주문 상세 모달 -->
+        <div id="orderDetailModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>주문 상세 정보</h3>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="orderDetailContent">
+                        <!-- 주문 상세 정보가 여기에 표시됩니다 -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <select id="orderStatusUpdate" class="status-select">
+                        <option value="pending">접수 대기</option>
+                        <option value="confirmed">주문 확인</option>
+                        <option value="preparing">조리 중</option>
+                        <option value="ready">조리 완료</option>
+                        <option value="delivered">배달 완료</option>
+                        <option value="cancelled">주문 취소</option>
+                    </select>
+                    <button id="updateStatusBtn" class="btn btn-primary">상태 변경</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+</html>
