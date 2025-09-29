@@ -92,13 +92,14 @@ function initializeApp() {
 // 이벤트 리스너 설정
 function setupEventListeners() {
     // 탭 버튼 클릭
-    const tabButtons = document.querySelectorAll('.tab-btn');
-    tabButtons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const tabName = e.target.dataset.tab;
-            switchTab(tabName);
-        });
-    });
+    // 탭 버튼 이벤트 리스너 제거 (통합 UI로 변경)
+    // const tabButtons = document.querySelectorAll('.tab-btn');
+    // tabButtons.forEach(btn => {
+    //     btn.addEventListener('click', (e) => {
+    //         const tabName = e.target.dataset.tab;
+    //         switchTab(tabName);
+    //     });
+    // });
     
     // 주문 상태 버튼들
     const cancelBtn = document.querySelector('.btn-cancel');
@@ -214,92 +215,64 @@ function updateOrderDisplay(order) {
         orderSubtitle.textContent = `메뉴 ${order.menuCount}개 · 총 ${order.totalAmount.toLocaleString()}원 (결제완료)`;
     }
     
-    // 요청사항 업데이트
-    updateRequestsTab(order);
-    
-    // 메뉴정보 업데이트
-    updateMenuTab(order);
-    
-    // 주문정보 업데이트
-    updateOrderInfoTab(order);
+    // 통합 주문정보 업데이트
+    updateIntegratedOrderInfo(order);
 }
 
-// 요청사항 탭 업데이트
-function updateRequestsTab(order) {
-    const requestsPanel = document.getElementById('requests');
-    if (!requestsPanel) return;
+// 통합 주문정보 업데이트
+function updateIntegratedOrderInfo(order) {
+    // 기본 주문 정보 업데이트
+    const orderTimeInfo = document.getElementById('orderTimeInfo');
+    const customerNameInfo = document.getElementById('customerNameInfo');
+    const customerPhoneInfo = document.getElementById('customerPhoneInfo');
+    const orderTypeInfo = document.getElementById('orderTypeInfo');
     
-    const requestSection = requestsPanel.querySelector('.request-section');
-    if (requestSection) {
-        requestSection.innerHTML = `
-            <div class="request-item">
-                <span class="request-label">가게</span>
-                <span class="request-text">${order.requests.store}</span>
-            </div>
-            <div class="request-item">
-                <span class="request-label">취급정</span>
-                <span class="request-text">${order.requests.extras}</span>
-            </div>
-        `;
-    }
-}
-
-// 메뉴정보 탭 업데이트
-function updateMenuTab(order) {
-    const menuPanel = document.getElementById('menu');
-    if (!menuPanel) return;
+    if (orderTimeInfo) orderTimeInfo.textContent = order.orderTime;
+    if (customerNameInfo) customerNameInfo.textContent = order.customerName;
+    if (customerPhoneInfo) customerPhoneInfo.textContent = order.customerPhone;
+    if (orderTypeInfo) orderTypeInfo.textContent = order.type;
     
-    const menuList = menuPanel.querySelector('.menu-list');
-    if (menuList) {
+    // 메뉴 정보 업데이트
+    const menuList = document.getElementById('integratedMenuList');
+    if (menuList && order.items) {
         menuList.innerHTML = order.items.map(item => `
-            <div class="menu-item-detail">
-                <div class="menu-header">
-                    <span class="menu-name">${item.name}</span>
-                    <div class="menu-controls">
-                        <span class="quantity">${item.quantity}</span>
-                        <span class="price">${item.price.toLocaleString()}원</span>
-                    </div>
+            <div class="menu-item-row">
+                <span class="menu-name">${item.name}</span>
+                <div class="menu-details">
+                    <span class="quantity">${item.quantity}개</span>
+                    <span class="price">${item.price.toLocaleString()}원</span>
                 </div>
             </div>
         `).join('');
     }
     
-    const menuTotal = menuPanel.querySelector('.menu-total .total-row');
-    if (menuTotal) {
-        menuTotal.innerHTML = `
-            <span>소계</span>
-            <span>${order.totalAmount.toLocaleString()}원</span>
+    // 총 금액 업데이트
+    const totalAmountInfo = document.getElementById('totalAmountInfo');
+    if (totalAmountInfo) {
+        totalAmountInfo.textContent = `${order.totalAmount.toLocaleString()}원`;
+    }
+    
+    // 요청사항 업데이트
+    const requestsContent = document.getElementById('integratedRequests');
+    if (requestsContent && order.requests) {
+        requestsContent.innerHTML = `
+            <div class="request-item">
+                <span class="request-label">가게</span>
+                <span class="request-text">${order.requests.store || '요청사항 없음'}</span>
+            </div>
+            <div class="request-item">
+                <span class="request-label">취급정</span>
+                <span class="request-text">${order.requests.extras || '요청사항 없음'}</span>
+            </div>
         `;
     }
 }
 
-// 주문정보 탭 업데이트
-function updateOrderInfoTab(order) {
-    const orderPanel = document.getElementById('order');
-    if (!orderPanel) return;
-    
-    const customerInfo = orderPanel.querySelector('.customer-info');
-    if (customerInfo) {
-        customerInfo.innerHTML = `
-            <div class="info-row">
-                <span class="info-label">고객명</span>
-                <span class="info-value">${order.customerName}</span>
-            </div>
-            <div class="info-row">
-                <span class="info-label">연락처</span>
-                <span class="info-value">${order.customerPhone}</span>
-            </div>
-                <div class="info-row">
-                    <span class="info-label">주문시간</span>
-                    <span class="info-value">${order.orderTime}</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">주문유형</span>
-                    <span class="info-value">${order.type}</span>
-                </div>
-        `;
-    }
-}
+// 기존 탭 업데이트 함수 제거됨 (통합 UI로 변경)
+// function updateMenuTab(order) { ... }
+
+// 기존 탭 업데이트 함수 제거됨 (통합 UI로 변경)
+// function updateOrderInfoTab(order) { ... }
 
 // 사이드바 선택 상태 업데이트
 function updateSidebarSelection(orderId) {

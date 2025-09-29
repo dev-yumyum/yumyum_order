@@ -114,79 +114,81 @@
                     <span>주문이 접수되었습니다. 주방으로 전송되었으니 조리를 시작해 주세요.</span>
                 </div>
 
-                <!-- 주문 상세 탭 -->
-                <div class="order-tabs">
-                    <div class="tab-header">
-                        <button class="tab-btn active" data-tab="requests">요청사항</button>
-                        <button class="tab-btn" data-tab="menu">메뉴정보</button>
-                        <button class="tab-btn" data-tab="order">주문정보</button>
+                <!-- 통합 주문 정보 -->
+                <div class="integrated-order-info">
+                    <div class="section-header">
+                        <h3>주문정보</h3>
                     </div>
 
-                    <div class="tab-content">
-                        <!-- 요청사항 탭 -->
-                        <div class="tab-panel active" id="requests">
-                            <div class="request-section">
-                                <div class="request-item">
-                                    <span class="request-label">가게</span>
-                                    <span class="request-text">영업 소급만 부어주세요</span>
-                                </div>
-                                
-                                <div class="request-item">
-                                    <span class="request-label">취급정</span>
-                                    <span class="request-text">수저포크 X 김치, 단무지 X</span>
-                                </div>
+                    <!-- 기본 주문 정보 -->
+                    <div class="order-basic-info">
+                        <div class="info-card">
+                            <div class="info-row">
+                                <span class="info-label">주문시간</span>
+                                <span class="info-value" id="orderTimeInfo">02.29 14:30</span>
                             </div>
-                            
-                            <div class="special-note">
-                                <span class="note-text">접수가 완료되었습니다.</span>
+                            <div class="info-row">
+                                <span class="info-label">고객명</span>
+                                <span class="info-value" id="customerNameInfo">홍길동</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">연락처</span>
+                                <span class="info-value" id="customerPhoneInfo">010-1234-5678</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">주문유형</span>
+                                <span class="info-value" id="orderTypeInfo">포장</span>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- 메뉴정보 탭 -->
-                        <div class="tab-panel" id="menu">
-                            <div class="menu-list">
-                                <div class="menu-item-detail">
-                                    <div class="menu-header">
-                                        <span class="menu-name">아이스 아메리카노</span>
-                                        <div class="menu-controls">
-                                            <span class="quantity">1</span>
-                                            <span class="price">4,000원</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="menu-total">
-                                <div class="total-row">
-                                    <span>소계</span>
-                                    <span>4,000원</span>
-                                </div>
-                            </div>
-                            
-                            <button class="btn btn-reorder">주문정보 재출력</button>
+                    <!-- 메뉴 정보 -->
+                    <div class="menu-info-section">
+                        <div class="section-title">
+                            <h4>주문 메뉴</h4>
                         </div>
+                        <div class="menu-list" id="integratedMenuList">
+                            <div class="menu-item-row">
+                                <span class="menu-name">아이스 아메리카노</span>
+                                <div class="menu-details">
+                                    <span class="quantity">1개</span>
+                                    <span class="price">4,000원</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="total-section">
+                            <div class="total-row">
+                                <span class="total-label">총 금액</span>
+                                <span class="total-amount" id="totalAmountInfo">4,000원</span>
+                            </div>
+                        </div>
+                    </div>
 
-                        <!-- 주문정보 탭 -->
-                        <div class="tab-panel" id="order">
-                            <div class="customer-info">
-                                <div class="info-row">
-                                    <span class="info-label">고객명</span>
-                                    <span class="info-value">홍길동</span>
-                                </div>
-                                <div class="info-row">
-                                    <span class="info-label">연락처</span>
-                                    <span class="info-value">010-1234-5678</span>
-                                </div>
-                                <div class="info-row">
-                                    <span class="info-label">주문시간</span>
-                                    <span class="info-value">02.29 14:30</span>
-                                </div>
-                                <div class="info-row">
-                                    <span class="info-label">예약시간</span>
-                                    <span class="info-value">02.29 17:00</span>
-                                </div>
+                    <!-- 요청사항 -->
+                    <div class="requests-section">
+                        <div class="section-title">
+                            <h4>요청사항</h4>
+                        </div>
+                        <div class="requests-content" id="integratedRequests">
+                            <div class="request-item">
+                                <span class="request-label">가게</span>
+                                <span class="request-text">영업 소급만 부어주세요</span>
+                            </div>
+                            <div class="request-item">
+                                <span class="request-label">취급정</span>
+                                <span class="request-text">수저포크 X 김치, 단무지 X</span>
                             </div>
                         </div>
+                        
+                        <div class="status-note">
+                            <span class="note-text">접수가 완료되었습니다.</span>
+                        </div>
+                    </div>
+
+                    <!-- 주문 관리 액션 -->
+                    <div class="order-actions-bottom">
+                        <button class="btn btn-reorder">주문정보 재출력</button>
                     </div>
                 </div>
             </main>
