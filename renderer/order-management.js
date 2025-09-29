@@ -18,7 +18,6 @@ const BUSINESS_RULES = {
     },
     TIME_LIMITS: {
         maxPreparationTime: 30, // 분
-        reservationAdvanceTime: 120, // 분 (2시간 전)
         cancelTimeout: 5 // 분
     },
     MENU_STATUS: {
@@ -33,14 +32,12 @@ let orders = [
         id: 'order-1',
         type: '포장',
         number: 28,
-        reservationTime: '17:00',
         menuCount: 1,
         totalAmount: 4000,
         status: 'preparing',
         customerName: '홍길동',
         customerPhone: '010-1234-5678',
         orderTime: '02.29 14:30',
-        reservationDate: '02.29 17:00',
         createdAt: new Date().toISOString(), // 생성 시간 추가
         items: [
             { name: '아이스 아메리카노', quantity: 1, price: 4000 }
@@ -210,7 +207,7 @@ function updateOrderDisplay(order) {
     const orderSubtitle = document.querySelector('.order-subtitle');
     
     if (orderTitle) {
-        orderTitle.textContent = `${order.type} ${order.number} · 예약 ${order.reservationTime}`;
+        orderTitle.textContent = `${order.type} ${order.number}`;
     }
     
     if (orderSubtitle) {
@@ -292,14 +289,14 @@ function updateOrderInfoTab(order) {
                 <span class="info-label">연락처</span>
                 <span class="info-value">${order.customerPhone}</span>
             </div>
-            <div class="info-row">
-                <span class="info-label">주문시간</span>
-                <span class="info-value">${order.orderTime}</span>
-            </div>
-            <div class="info-row">
-                <span class="info-label">예약시간</span>
-                <span class="info-value">${order.reservationDate}</span>
-            </div>
+                <div class="info-row">
+                    <span class="info-label">주문시간</span>
+                    <span class="info-value">${order.orderTime}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">주문유형</span>
+                    <span class="info-value">${order.type}</span>
+                </div>
         `;
     }
 }
@@ -470,17 +467,9 @@ function validateOrderConditions(order) {
         errors.push(`최대 주문 가능 메뉴 개수(${BUSINESS_RULES.ORDER_LIMITS.maxItemsPerOrder}개) 초과`);
     }
     
-    // 3. 예약 시간 검증 (예약 주문인 경우)
-    if (order.reservationTime && order.reservationDate) {
-        const reservationDateTime = new Date(order.reservationDate.replace(/\./g, '-') + ' ' + order.reservationTime);
-        const now = new Date();
-        const timeDiff = (reservationDateTime - now) / (1000 * 60); // 분 단위
-        
-        if (timeDiff < 0) {
-            errors.push('예약 시간이 과거입니다');
-        } else if (timeDiff > BUSINESS_RULES.TIME_LIMITS.reservationAdvanceTime) {
-            errors.push(`예약은 ${BUSINESS_RULES.TIME_LIMITS.reservationAdvanceTime}분 전까지만 가능합니다`);
-        }
+    // 3. 포장 주문 검증 (예약 기능 제외)
+    if (order.type === '포장' && (order.reservationTime || order.reservationDate)) {
+        errors.push('포장 주문은 예약이 불가능합니다');
     }
     
     // 4. 준비 시간 초과 검증
@@ -623,21 +612,13 @@ function performRealTimeValidation() {
         });
     }
     
-    // 3. 예약 시간 임박 주문 확인
-    const now = new Date();
-    const upcomingReservations = orders.filter(order => {
-        if (!order.reservationTime || !order.reservationDate) return false;
-        
-        const reservationDateTime = new Date(order.reservationDate.replace(/\./g, '-') + ' ' + order.reservationTime);
-        const timeDiff = (reservationDateTime - now) / (1000 * 60); // 분
-        
-        return timeDiff > 0 && timeDiff <= 30 && order.status === 'preparing';
+    // 3. 처리 지연 주문 확인
+    const delayedOrders = orders.filter(order => {
+        return order.status === 'preparing' && order.timer > 20; // 20분 이상 지연
     });
     
-    upcomingReservations.forEach(order => {
-        const reservationDateTime = new Date(order.reservationDate.replace(/\./g, '-') + ' ' + order.reservationTime);
-        const timeDiff = Math.floor((reservationDateTime - now) / (1000 * 60));
-        showNotification(`주문 ${order.number}의 예약시간이 ${timeDiff}분 남았습니다.`, 'warning');
+    delayedOrders.forEach(order => {
+        showNotification(`주문 ${order.number}이 ${order.timer}분째 처리 중입니다.`, 'warning');
     });
 }
 
@@ -663,14 +644,10 @@ function filterOrdersByCondition(condition) {
             return orders.filter(order => 
                 order.timer > BUSINESS_RULES.TIME_LIMITS.maxPreparationTime
             );
-        case 'upcoming_reservation':
-            const now = new Date();
-            return orders.filter(order => {
-                if (!order.reservationTime) return false;
-                const reservationDateTime = new Date(order.reservationDate.replace(/\./g, '-') + ' ' + order.reservationTime);
-                const timeDiff = (reservationDateTime - now) / (1000 * 60);
-                return timeDiff > 0 && timeDiff <= 60; // 1시간 이내
-            });
+        case 'delayed_orders':
+            return orders.filter(order => 
+                order.status === 'preparing' && order.timer > 20
+            );
         case 'validation_failed':
             return orders.filter(order => 
                 order.validationErrors && order.validationErrors.length > 0
