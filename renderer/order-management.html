@@ -213,6 +213,17 @@
         </div>
     </div>
 
+    <script>
+        // Electron API 노출
+        if (typeof require !== 'undefined') {
+            const { ipcRenderer } = require('electron');
+            window.electron = {
+                getPrinters: () => ipcRenderer.invoke('get-printers'),
+                checkPrinter: (name) => ipcRenderer.invoke('check-printer', name),
+                printReceipt: (printer, data) => ipcRenderer.invoke('print-receipt', printer, data)
+            };
+        }
+    </script>
     <script src="order-management.js"></script>
 </body>
 </html>
