@@ -194,6 +194,29 @@ function selectOrder(orderId) {
     // UI 업데이트
     updateOrderDisplay(order);
     updateSidebarSelection(orderId);
+    
+    // 새 주문인 경우 영수증 자동 출력 (5분 이내 생성된 주문)
+    if (order.createdAt && window.printHelper) {
+        const orderTime = new Date(order.createdAt);
+        const now = new Date();
+        const diffMinutes = (now - orderTime) / 1000 / 60;
+        
+        // 5분 이내 생성된 주문이고, 아직 출력하지 않은 주문
+        if (diffMinutes <= 5 && !order.receiptPrinted) {
+            // 영수증 자동 출력
+            window.printHelper.autoPrintReceipt(order).then(result => {
+                if (result.success) {
+                    console.log('새 주문 영수증 자동 출력 완료:', orderId);
+                    // 출력 완료 플래그 설정
+                    order.receiptPrinted = true;
+                } else {
+                    console.log('영수증 자동 출력 실패:', result.reason);
+                }
+            }).catch(error => {
+                console.error('영수증 출력 오류:', error);
+            });
+        }
+    }
 }
 
 // 주문 표시 업데이트
@@ -651,26 +674,37 @@ function printOrderInfo() {
     const order = orders.find(o => o.id === selectedOrderId);
     if (!order) return;
     
-    // 실제 환경에서는 프린터 연결 또는 PDF 생성
-    const printContent = `
-        주문번호: ${order.type} ${order.number}
-        고객명: ${order.customerName}
-        연락처: ${order.customerPhone}
-        주문시간: ${order.orderTime}
-        예약시간: ${order.reservationDate}
+    // 영수증 출력 헬퍼 사용
+    if (window.printHelper) {
+        window.printHelper.printOrderReceipt(order).then(result => {
+            if (result.success) {
+                console.log('영수증 재출력 완료');
+                showNotification('영수증이 출력되었습니다.', 'success');
+            }
+        }).catch(error => {
+            console.error('영수증 재출력 오류:', error);
+            showNotification('영수증 출력 중 오류가 발생했습니다.', 'error');
+        });
+    } else {
+        // 폴백: 콘솔 출력
+        const printContent = `
+            주문번호: ${order.type} ${order.number}
+            고객명: ${order.customerName}
+            연락처: ${order.customerPhone}
+            주문시간: ${order.orderTime}
+            
+            메뉴:
+            ${order.items.map(item => `${item.name} ${item.quantity}개 - ${item.price.toLocaleString()}원`).join('\n')}
+            
+            총금액: ${order.totalAmount.toLocaleString()}원
+            
+            요청사항:
+            ${order.requests ? (typeof order.requests === 'string' ? order.requests : JSON.stringify(order.requests)) : '없음'}
+        `;
         
-        메뉴:
-        ${order.items.map(item => `${item.name} ${item.quantity}개 - ${item.price.toLocaleString()}원`).join('\n')}
-        
-        총금액: ${order.totalAmount.toLocaleString()}원
-        
-        요청사항:
-        가게: ${order.requests.store}
-        취급정: ${order.requests.extras}
-    `;
-    
-    console.log('주문정보 출력:', printContent);
-    showNotification('주문정보가 출력되었습니다.', 'success');
+        console.log('주문정보 출력:', printContent);
+        showNotification('프린터 설정을 확인해주세요.', 'warning');
+    }
 }
 
 // 사이드바 토글

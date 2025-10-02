@@ -10,7 +10,7 @@ let settings = {
         pickupPrintEnabled: false
     },
     printer: {
-        autoPrintEnabled: false,
+        autoPrintEnabled: true, // 주문 접수 시 자동 영수증 출력
         selectedPrinter: '',
         paperWidth: 80,
         printSpeed: 150, // mm/s
