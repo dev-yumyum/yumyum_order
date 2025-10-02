@@ -342,6 +342,268 @@ input:checked + .slider:before {
     cursor: pointer;
 }
 
+/* 프린터 선택 그룹 */
+.printer-select-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.printer-select-group .select-box {
+    flex: 1;
+}
+
+/* 프린터 규격 */
+.printer-specs {
+    margin-top: 30px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.printer-specs h3 {
+    font-size: 16px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.spec-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.spec-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.spec-item label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #666;
+}
+
+.size-display {
+    padding: 10px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #333;
+    text-align: center;
+}
+
+/* 프린터 연결 정보 */
+.printer-connection-info {
+    margin-top: 30px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.printer-connection-info h3 {
+    font-size: 16px;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.port-info {
+    padding: 15px;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+}
+
+.port-info .info-label {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.port-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+.port-item:last-child {
+    margin-bottom: 0;
+}
+
+.port-name {
+    font-weight: 500;
+    color: #333;
+}
+
+.port-status {
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 12px;
+}
+
+.port-status.connected {
+    background: #4CAF50;
+    color: white;
+}
+
+.port-status.disconnected {
+    background: #999;
+    color: white;
+}
+
+.status-text {
+    font-size: 13px;
+    color: #666;
+}
+
+.status-text.success {
+    color: #4CAF50;
+    font-weight: 500;
+}
+
+.status-text.error {
+    color: #f44336;
+    font-weight: 500;
+}
+
+/* 백엔드 API 설정 */
+.api-config, .api-endpoints, .connection-status-box {
+    margin-top: 30px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.api-config h3, .api-endpoints h3, .connection-status-box h3 {
+    font-size: 16px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.config-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+.config-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.config-item label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #666;
+}
+
+.text-input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 100%;
+    transition: border-color 0.2s;
+}
+
+.text-input:focus {
+    outline: none;
+    border-color: #2196F3;
+}
+
+.input-with-button {
+    display: flex;
+    gap: 8px;
+}
+
+.input-with-button .text-input {
+    flex: 1;
+}
+
+.btn-icon {
+    width: 40px;
+    height: 40px;
+    background: #2196F3;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.btn-icon:hover {
+    background: #1976D2;
+}
+
+.status-display {
+    padding: 20px;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.status-indicator i {
+    font-size: 12px;
+}
+
+.status-indicator i.connected {
+    color: #4CAF50;
+}
+
+.status-indicator i.disconnected {
+    color: #999;
+}
+
+.status-indicator i.error {
+    color: #f44336;
+}
+
+.status-indicator span {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.status-details {
+    font-size: 13px;
+    color: #666;
+    padding-left: 24px;
+}
+
+.endpoint-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+}
+
+.endpoint-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.endpoint-item label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #666;
+}
+
 /* 설정 푸터 */
 .settings-footer {
     margin-top: 30px;

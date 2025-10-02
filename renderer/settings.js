@@ -11,12 +11,33 @@ let settings = {
     },
     printer: {
         autoPrintEnabled: false,
-        selectedPrinter: ''
+        selectedPrinter: '',
+        paperWidth: 80,
+        printSpeed: 150, // mm/s
+        paperCut: 'auto',
+        printerSize: {
+            width: 142,
+            depth: 185,
+            height: 136
+        }
     },
     notification: {
         soundEnabled: true,
         volume: 80,
         popupEnabled: true
+    },
+    backend: {
+        autoConnect: true,
+        apiUrl: 'http://localhost:3000',
+        apiKey: '',
+        timeout: 10000,
+        retryCount: 3,
+        endpoints: {
+            orders: '/api/orders',
+            createOrder: '/api/orders/create',
+            updateOrder: '/api/orders/update',
+            menu: '/api/menu'
+        }
     },
     alarmDetails: {
         orderAlarm: 'all',
@@ -34,6 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeSettings();
     loadSettings();
     updateCurrentTime();
+    loadPrinters();
     setInterval(updateCurrentTime, 1000);
 });
 
@@ -82,6 +104,12 @@ function initializeSettings() {
         saveSettings();
     });
 
+    // 백엔드 설정
+    document.getElementById('apiAutoConnect')?.addEventListener('change', (e) => {
+        settings.backend.autoConnect = e.target.checked;
+        saveSettings();
+    });
+
     console.log('설정 화면 초기화 완료');
 }
 
@@ -123,6 +151,35 @@ function applySettings() {
     }
     if (document.getElementById('popupEnabled')) {
         document.getElementById('popupEnabled').checked = settings.notification.popupEnabled;
+    }
+
+    // 백엔드 설정
+    if (document.getElementById('apiAutoConnect')) {
+        document.getElementById('apiAutoConnect').checked = settings.backend.autoConnect;
+    }
+    if (document.getElementById('apiUrl')) {
+        document.getElementById('apiUrl').value = settings.backend.apiUrl;
+    }
+    if (document.getElementById('apiKey')) {
+        document.getElementById('apiKey').value = settings.backend.apiKey;
+    }
+    if (document.getElementById('apiTimeout')) {
+        document.getElementById('apiTimeout').value = settings.backend.timeout;
+    }
+    if (document.getElementById('apiRetry')) {
+        document.getElementById('apiRetry').value = settings.backend.retryCount;
+    }
+    if (document.getElementById('endpointOrders')) {
+        document.getElementById('endpointOrders').value = settings.backend.endpoints.orders;
+    }
+    if (document.getElementById('endpointCreateOrder')) {
+        document.getElementById('endpointCreateOrder').value = settings.backend.endpoints.createOrder;
+    }
+    if (document.getElementById('endpointUpdateOrder')) {
+        document.getElementById('endpointUpdateOrder').value = settings.backend.endpoints.updateOrder;
+    }
+    if (document.getElementById('endpointMenu')) {
+        document.getElementById('endpointMenu').value = settings.backend.endpoints.menu;
     }
 }
 
@@ -261,10 +318,202 @@ function updateNow() {
     showToast('업데이트를 확인하고 있습니다...', 'info');
 }
 
+// 프린터 목록 로드
+async function loadPrinters() {
+    try {
+        const printerSelect = document.getElementById('printerSelect');
+        if (!printerSelect) return;
+
+        // 기존 옵션 제거 (첫번째 기본 옵션 제외)
+        while (printerSelect.options.length > 1) {
+            printerSelect.remove(1);
+        }
+
+        // 시스템 프린터 목록 가져오기
+        if (window.electron && window.electron.getPrinters) {
+            const printers = await window.electron.getPrinters();
+            
+            printers.forEach(printer => {
+                const option = document.createElement('option');
+                option.value = printer.name;
+                option.textContent = `${printer.name}${printer.isDefault ? ' (기본)' : ''}`;
+                if (printer.status === 0) {
+                    option.textContent += ' [준비됨]';
+                }
+                printerSelect.appendChild(option);
+            });
+
+            updatePortInfo(printers);
+            
+            // 저장된 프린터 선택
+            if (settings.printer.selectedPrinter) {
+                printerSelect.value = settings.printer.selectedPrinter;
+            }
+        } else {
+            // Electron API 없을 때 더미 데이터
+            addDummyPrinters(printerSelect);
+        }
+    } catch (error) {
+        console.error('프린터 목록 로드 실패:', error);
+        showToast('프린터 목록을 불러올 수 없습니다', 'error');
+    }
+}
+
+// 더미 프린터 추가 (개발/테스트용)
+function addDummyPrinters(selectElement) {
+    const dummyPrinters = [
+        { name: 'POS-80 영수증 프린터 (COM1)', port: 'COM1' },
+        { name: 'EPSON TM-T88V (USB001)', port: 'USB001' },
+        { name: '기본 프린터', port: 'LPT1' }
+    ];
+
+    dummyPrinters.forEach(printer => {
+        const option = document.createElement('option');
+        option.value = printer.name;
+        option.textContent = printer.name;
+        selectElement.appendChild(option);
+    });
+
+    // 더미 포트 정보 표시
+    updatePortInfo(dummyPrinters.map(p => ({
+        name: p.name,
+        status: 0,
+        displayName: p.port
+    })));
+}
+
+// 프린터 새로고침
+function refreshPrinters() {
+    showToast('프린터 목록을 새로고침합니다', 'info');
+    loadPrinters();
+}
+
+// 포트 정보 업데이트
+function updatePortInfo(printers) {
+    const portInfo = document.getElementById('portInfo');
+    if (!portInfo) return;
+
+    if (!printers || printers.length === 0) {
+        portInfo.innerHTML = '<p class="info-label">감지된 프린터가 없습니다</p>';
+        return;
+    }
+
+    let html = '';
+    printers.forEach((printer, index) => {
+        const isConnected = printer.status === 0 || printer.status === undefined;
+        const portName = printer.displayName || `PORT${index + 1}`;
+        
+        html += `
+            <div class="port-item">
+                <div>
+                    <div class="port-name">${printer.name}</div>
+                    <div style="font-size: 12px; color: #999; margin-top: 4px;">${portName}</div>
+                </div>
+                <span class="port-status ${isConnected ? 'connected' : 'disconnected'}">
+                    ${isConnected ? '연결됨' : '오프라인'}
+                </span>
+            </div>
+        `;
+    });
+
+    portInfo.innerHTML = html;
+}
+
+// 프린터 연결 확인
+async function checkPrinterConnection() {
+    const selectedPrinter = document.getElementById('printerSelect').value;
+    const statusElement = document.getElementById('printerStatus');
+
+    if (!selectedPrinter) {
+        statusElement.textContent = '프린터를 선택해주세요';
+        statusElement.className = 'status-text';
+        showToast('프린터를 먼저 선택해주세요', 'error');
+        return;
+    }
+
+    statusElement.textContent = '연결 확인 중...';
+    statusElement.className = 'status-text';
+
+    try {
+        // 실제 연결 확인 (Electron API 사용)
+        if (window.electron && window.electron.checkPrinter) {
+            const isConnected = await window.electron.checkPrinter(selectedPrinter);
+            
+            if (isConnected) {
+                statusElement.textContent = '✓ 프린터가 정상적으로 연결되었습니다';
+                statusElement.className = 'status-text success';
+                showToast('프린터 연결이 정상입니다', 'success');
+            } else {
+                statusElement.textContent = '✗ 프린터 연결에 실패했습니다';
+                statusElement.className = 'status-text error';
+                showToast('프린터 연결을 확인해주세요', 'error');
+            }
+        } else {
+            // 개발 모드에서는 성공으로 표시
+            statusElement.textContent = '✓ 프린터가 정상적으로 연결되었습니다 (개발 모드)';
+            statusElement.className = 'status-text success';
+            showToast('프린터 연결이 정상입니다 (개발 모드)', 'success');
+        }
+    } catch (error) {
+        console.error('프린터 연결 확인 실패:', error);
+        statusElement.textContent = '✗ 연결 확인 중 오류가 발생했습니다';
+        statusElement.className = 'status-text error';
+        showToast('프린터 연결 확인 실패', 'error');
+    }
+}
+
+// 프린터 설정 저장
+function savePrinterSettings() {
+    settings.printer.selectedPrinter = document.getElementById('printerSelect').value;
+    settings.printer.paperWidth = parseInt(document.getElementById('paperWidth').value);
+    settings.printer.printSpeed = parseInt(document.getElementById('printSpeed').value); // mm/s로 저장
+    settings.printer.paperCut = document.getElementById('paperCut').value;
+
+    saveSettings();
+    showToast(`프린터 설정이 저장되었습니다 (속도: ${settings.printer.printSpeed}mm/s)`, 'success');
+}
+
 // 테스트 인쇄
-function testPrint() {
+async function testPrint() {
+    const selectedPrinter = document.getElementById('printerSelect').value;
+    
+    if (!selectedPrinter) {
+        showToast('프린터를 먼저 선택해주세요', 'error');
+        return;
+    }
+
     showToast('테스트 인쇄를 시작합니다', 'info');
-    // 실제 인쇄 로직은 메인 프로세스에서 처리
+
+    try {
+        // 테스트 영수증 내용
+        const testReceipt = {
+            storeName: 'YumYum 테스트 매장',
+            orderId: 'TEST-' + Date.now(),
+            date: new Date().toLocaleString('ko-KR'),
+            items: [
+                { name: '테스트 메뉴 1', quantity: 1, price: 10000 },
+                { name: '테스트 메뉴 2', quantity: 2, price: 15000 }
+            ],
+            total: 40000,
+            paymentMethod: '현금'
+        };
+
+        if (window.electron && window.electron.printReceipt) {
+            const result = await window.electron.printReceipt(selectedPrinter, testReceipt);
+            if (result.success) {
+                showToast('테스트 인쇄가 완료되었습니다', 'success');
+            } else {
+                showToast('인쇄 중 오류가 발생했습니다', 'error');
+            }
+        } else {
+            // 개발 모드
+            console.log('테스트 인쇄 데이터:', testReceipt);
+            showToast('테스트 인쇄 완료 (개발 모드)', 'success');
+        }
+    } catch (error) {
+        console.error('테스트 인쇄 실패:', error);
+        showToast('테스트 인쇄 중 오류가 발생했습니다', 'error');
+    }
 }
 
 // 토스트 메시지
@@ -351,6 +600,162 @@ document.addEventListener('keydown', (e) => {
         closeDetailAlarmModal();
     }
 });
+
+// 백엔드 API 연결 테스트
+async function testApiConnection() {
+    const apiUrl = document.getElementById('apiUrl').value;
+    const apiKey = document.getElementById('apiKey').value;
+    const timeout = parseInt(document.getElementById('apiTimeout').value);
+    
+    const statusIcon = document.getElementById('apiStatusIcon');
+    const statusText = document.getElementById('apiStatusText');
+    const statusDetails = document.getElementById('apiStatusDetails');
+
+    // 연결 중 표시
+    statusIcon.className = 'fas fa-circle';
+    statusIcon.style.color = '#FFA726';
+    statusText.textContent = '연결 중...';
+    statusDetails.textContent = 'API 서버에 연결을 시도하고 있습니다...';
+
+    try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+        const headers = {
+            'Content-Type': 'application/json'
+        };
+        if (apiKey) {
+            headers['Authorization'] = `Bearer ${apiKey}`;
+        }
+
+        const response = await fetch(`${apiUrl}/api/health`, {
+            method: 'GET',
+            headers: headers,
+            signal: controller.signal
+        });
+
+        clearTimeout(timeoutId);
+
+        if (response.ok) {
+            const data = await response.json();
+            statusIcon.className = 'fas fa-circle connected';
+            statusText.textContent = '연결 성공';
+            statusDetails.textContent = `서버가 정상적으로 응답했습니다. 서버 시간: ${data.timestamp || new Date().toLocaleString()}`;
+            showToast('API 서버 연결에 성공했습니다', 'success');
+        } else {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+    } catch (error) {
+        statusIcon.className = 'fas fa-circle error';
+        statusText.textContent = '연결 실패';
+        
+        if (error.name === 'AbortError') {
+            statusDetails.textContent = `연결 시간 초과 (${timeout/1000}초)`;
+            showToast('연결 시간이 초과되었습니다', 'error');
+        } else {
+            statusDetails.textContent = `오류: ${error.message}`;
+            showToast('API 서버 연결에 실패했습니다', 'error');
+        }
+        
+        console.error('API 연결 테스트 실패:', error);
+    }
+}
+
+// 백엔드 설정 저장
+function saveBackendSettings() {
+    settings.backend.autoConnect = document.getElementById('apiAutoConnect').checked;
+    settings.backend.apiUrl = document.getElementById('apiUrl').value.trim();
+    settings.backend.apiKey = document.getElementById('apiKey').value.trim();
+    settings.backend.timeout = parseInt(document.getElementById('apiTimeout').value);
+    settings.backend.retryCount = parseInt(document.getElementById('apiRetry').value);
+    
+    settings.backend.endpoints.orders = document.getElementById('endpointOrders').value.trim();
+    settings.backend.endpoints.createOrder = document.getElementById('endpointCreateOrder').value.trim();
+    settings.backend.endpoints.updateOrder = document.getElementById('endpointUpdateOrder').value.trim();
+    settings.backend.endpoints.menu = document.getElementById('endpointMenu').value.trim();
+
+    saveSettings();
+    showToast('백엔드 설정이 저장되었습니다', 'success');
+}
+
+// 백엔드 설정 초기화
+function resetBackendSettings() {
+    if (!confirm('백엔드 설정을 기본값으로 복원하시겠습니까?')) {
+        return;
+    }
+
+    settings.backend = {
+        autoConnect: true,
+        apiUrl: 'http://localhost:3000',
+        apiKey: '',
+        timeout: 10000,
+        retryCount: 3,
+        endpoints: {
+            orders: '/api/orders',
+            createOrder: '/api/orders/create',
+            updateOrder: '/api/orders/update',
+            menu: '/api/menu'
+        }
+    };
+
+    applySettings();
+    saveSettings();
+    
+    // 연결 상태 초기화
+    const statusIcon = document.getElementById('apiStatusIcon');
+    const statusText = document.getElementById('apiStatusText');
+    const statusDetails = document.getElementById('apiStatusDetails');
+    
+    statusIcon.className = 'fas fa-circle disconnected';
+    statusText.textContent = '연결되지 않음';
+    statusDetails.textContent = 'API 서버 연결 테스트를 실행해주세요';
+
+    showToast('백엔드 설정이 기본값으로 복원되었습니다', 'success');
+}
+
+// API 요청 헬퍼 함수
+async function apiRequest(endpoint, method = 'GET', data = null) {
+    const url = `${settings.backend.apiUrl}${endpoint}`;
+    const headers = {
+        'Content-Type': 'application/json'
+    };
+
+    if (settings.backend.apiKey) {
+        headers['Authorization'] = `Bearer ${settings.backend.apiKey}`;
+    }
+
+    const options = {
+        method: method,
+        headers: headers,
+        signal: AbortSignal.timeout(settings.backend.timeout)
+    };
+
+    if (data) {
+        options.body = JSON.stringify(data);
+    }
+
+    let lastError;
+    for (let i = 0; i <= settings.backend.retryCount; i++) {
+        try {
+            const response = await fetch(url, options);
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            return await response.json();
+        } catch (error) {
+            lastError = error;
+            if (i < settings.backend.retryCount) {
+                console.log(`재시도 ${i + 1}/${settings.backend.retryCount}...`);
+                await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
+            }
+        }
+    }
+
+    throw lastError;
+}
+
+// 전역으로 API 요청 함수 노출
+window.apiRequest = apiRequest;
 
 console.log('YumYum 설정 화면 로드 완료');
 
