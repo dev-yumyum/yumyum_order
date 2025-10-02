@@ -179,14 +179,9 @@ function switchTab(tabName) {
     const tabPanels = document.querySelectorAll('.tab-panel');
     tabPanels.forEach(panel => panel.classList.remove('active'));
     
-    // 선택한 탭 활성화
-    const activeTabBtn = document.querySelector(`[data-tab="${tabName}"]`);
-    const activeTabPanel = document.getElementById(tabName);
-    
-    if (activeTabBtn && activeTabPanel) {
-        activeTabBtn.classList.add('active');
-        activeTabPanel.classList.add('active');
-    }
+    // 탭 기능 제거됨 - 통합 UI 사용
+    // const activeTabBtn = document.querySelector(`[data-tab="${tabName}"]`);
+    // const activeTabPanel = document.getElementById(tabName);
 }
 
 // 주문 선택

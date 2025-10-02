@@ -69,3 +69,4 @@ dist/
 # Logs
 logs
 *.log
+oracleJdk-25.jdk/
