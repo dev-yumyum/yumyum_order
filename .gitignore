@@ -70,3 +70,8 @@ dist/
 logs
 *.log
 oracleJdk-25.jdk/
+
+# Java files
+pom.xml
+src/main/
+target/

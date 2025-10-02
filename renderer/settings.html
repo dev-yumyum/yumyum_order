@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>설정 - YumYum 주문 관리</title>
+    <link rel="stylesheet" href="settings.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="settings-container">
+        <!-- 상단 헤더 -->
+        <header class="settings-header">
+            <div class="header-left">
+                <button class="back-btn" onclick="goBack()">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>이전</span>
+                </button>
+            </div>
+            <div class="header-center">
+                <h1>설정</h1>
+            </div>
+            <div class="header-right">
+                <span class="current-time" id="currentTime">02. 29 (금) 00:00</span>
+            </div>
+        </header>
+
+        <div class="settings-main">
+            <!-- 왼쪽 사이드바 메뉴 -->
+            <aside class="settings-sidebar">
+                <nav class="settings-nav">
+                    <button class="nav-item active" data-tab="general" onclick="switchSettingsTab('general')">
+                        <i class="fas fa-cog"></i>
+                        <span>전반 설정</span>
+                    </button>
+                    <button class="nav-item" data-tab="printer" onclick="switchSettingsTab('printer')">
+                        <i class="fas fa-print"></i>
+                        <span>프린터 설정</span>
+                    </button>
+                    <button class="nav-item" data-tab="notification" onclick="switchSettingsTab('notification')">
+                        <i class="fas fa-bell"></i>
+                        <span>알림 설정</span>
+                    </button>
+                </nav>
+            </aside>
+
+            <!-- 메인 설정 영역 -->
+            <main class="settings-content">
+                <!-- 전반 설정 -->
+                <div id="general-settings" class="settings-panel active">
+                    <div class="settings-section">
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <h3>가게 알림사 설정</h3>
+                                <p>가게에서 설정한 소리 및 알림으로 알려드려요</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="storeAlarmEnabled" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <h3>주문 접수마다 알림</h3>
+                                <p>주문이 접수될 때마다 알림음과 팝업으로 알려드립니다</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="orderAlarmEnabled" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <h3>픽업시 출력</h3>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="pickupPrintEnabled">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="setting-item clickable" onclick="openDetailAlarmSettings()">
+                            <div class="setting-info">
+                                <h3>가게 주문 상세알림 설정</h3>
+                                <p>가게에서 설정한 알림으로 알려드려요</p>
+                            </div>
+                            <button class="detail-btn">
+                                <span>상세설정</span>
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+
+                        <div class="setting-item clickable" onclick="openDeviceManagement()">
+                            <div class="setting-info">
+                                <h3>기기 관리</h3>
+                                <p>이 가게에서 접속중인 기기 및 프로그램을 확인하고 로그아웃 처리 할 수 있어요.</p>
+                            </div>
+                            <button class="detail-btn">
+                                <span>기기관리</span>
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <h3>프로그램 업데이트 확인</h3>
+                                <p>버전: v1.0.0</p>
+                            </div>
+                            <div class="update-buttons">
+                                <button class="btn-secondary" onclick="checkUpdate()">내용 확인</button>
+                                <button class="btn-secondary" onclick="updateNow()">바로 적용</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-footer">
+                        <p>Copyright 2025 yumyumorder. All right reserved. 얌얌 오더는 주식회사 (주)얌얌프랜차이즈에서 제공하는 서비스로 (주)얌얌프랜차이즈의 책임 관리하에 제공됩니다.</p>
+                    </div>
+                </div>
+
+                <!-- 프린터 설정 -->
+                <div id="printer-settings" class="settings-panel">
+                    <div class="settings-section">
+                        <h2>프린터 설정</h2>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <h3>주문서 자동 인쇄</h3>
+                                <p>신규 주문 접수 시 자동으로 주문서를 인쇄합니다</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="autoPrintEnabled">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <h3>프린터 선택</h3>
+                                <p>사용할 프린터를 선택하세요</p>
+                            </div>
+                            <select class="select-box" id="printerSelect">
+                                <option value="">프린터를 선택하세요</option>
+                                <option value="default">기본 프린터</option>
+                            </select>
+                        </div>
+
+                        <div class="setting-item">
+                            <button class="btn-primary" onclick="testPrint()">
+                                <i class="fas fa-print"></i>
+                                테스트 인쇄
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 알림 설정 -->
+                <div id="notification-settings" class="settings-panel">
+                    <div class="settings-section">
+                        <h2>알림 설정</h2>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <h3>알림음 활성화</h3>
+                                <p>주문 접수 시 알림음을 재생합니다</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="soundEnabled" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <h3>알림음 볼륨</h3>
+                            </div>
+                            <input type="range" min="0" max="100" value="80" class="volume-slider" id="volumeSlider">
+                        </div>
+
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <h3>팝업 알림</h3>
+                                <p>신규 주문 시 팝업 창으로 알립니다</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="popupEnabled" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- 상세 알림 설정 모달 -->
+        <div id="detailAlarmModal" class="modal-overlay">
+            <div class="modal-container alarm-modal">
+                <div class="modal-header">
+                    <h3>주문 관리대로 알림</h3>
+                    <button class="modal-close" onclick="closeDetailAlarmModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="alarm-section">
+                        <div class="alarm-item">
+                            <div class="alarm-info">
+                                <label>주문 접수 시 알림</label>
+                                <p>소리 및 팝업 알림을 고객이 선택한 시간 이내에만 알림을 받습니다</p>
+                            </div>
+                        </div>
+
+                        <div class="alarm-option">
+                            <label>
+                                <input type="radio" name="orderAlarm" value="all" checked>
+                                <span>전체 시간</span>
+                            </label>
+                        </div>
+
+                        <div class="alarm-option">
+                            <label class="time-option">
+                                <input type="radio" name="orderAlarm" value="custom">
+                                <span>신규 시간</span>
+                            </label>
+                            <div class="time-input-group">
+                                <button class="time-btn" onclick="decreaseTime('orderTime')">-</button>
+                                <input type="text" id="orderTime" value="10" readonly>
+                                <span>분 내로</span>
+                                <button class="time-btn" onclick="increaseTime('orderTime')">+</button>
+                            </div>
+                        </div>
+
+                        <div class="alarm-section">
+                            <h4>픽업 완료마다 알림시간</h4>
+                            <div class="alarm-option">
+                                <label>
+                                    <input type="radio" name="pickupAlarm" value="all" checked>
+                                    <span>전체 시간</span>
+                                </label>
+                            </div>
+
+                            <div class="alarm-option">
+                                <label class="time-option">
+                                    <input type="radio" name="pickupAlarm" value="custom">
+                                    <span>선결 시간</span>
+                                </label>
+                                <div class="time-input-group">
+                                    <button class="time-btn" onclick="decreaseTime('pickupTime')">-</button>
+                                    <input type="text" id="pickupTime" value="10" readonly>
+                                    <span>분 후 ~ 15분 이내</span>
+                                    <button class="time-btn" onclick="increaseTime('pickupTime')">+</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="alarm-section">
+                            <h4>조리 완료마다 알림시간</h4>
+                            <div class="alarm-option">
+                                <label>
+                                    <input type="checkbox" id="cookingCompleteAlarm">
+                                    <span>전체 시간</span>
+                                </label>
+                            </div>
+
+                            <div class="alarm-option">
+                                <label class="time-option">
+                                    <input type="checkbox" id="cookingCompleteCustom">
+                                    <span>선결 시간</span>
+                                </label>
+                                <div class="time-input-group">
+                                    <button class="time-btn" onclick="decreaseTime('cookingTime')">-</button>
+                                    <input type="text" id="cookingTime" value="10" readonly>
+                                    <span>분 ~ 15분 이내</span>
+                                    <button class="time-btn" onclick="increaseTime('cookingTime')">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-primary full-width" onclick="saveAlarmSettings()">적용</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="settings.js"></script>
+</body>
+</html>
+

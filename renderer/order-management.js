@@ -844,5 +844,21 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
+// 설정 화면 열기
+function openSettings() {
+    window.location.href = 'settings.html';
+}
+
+// 앱 종료
+function closeApp() {
+    if (confirm('YumYum 주문 관리 시스템을 종료하시겠습니까?')) {
+        if (window.electron) {
+            window.electron.closeApp();
+        } else {
+            window.close();
+        }
+    }
+}
+
 console.log('YumYum 주문 관리 시스템 스크립트 로드 완료');
 
