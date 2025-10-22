@@ -4,6 +4,11 @@
 
 // 전역 변수
 let selectedOrderId = null;
+let currentPreparationTime = 10; // 기본 준비시간 10분
+const MIN_PREPARATION_TIME = 5; // 최소 5분
+const MAX_PREPARATION_TIME = 60; // 최대 60분
+const TIME_STEP = 5; // 5분 단위
+let appSettings = null; // 앱 설정
 
 // 비즈니스 규칙 및 조건들
 const BUSINESS_RULES = {
@@ -34,7 +39,7 @@ let orders = [
         number: 28,
         menuCount: 1,
         totalAmount: 4000,
-        status: 'preparing',
+        status: 'pending', // 신규 주문 상태로 변경
         customerName: '홍길동',
         customerPhone: '010-1234-5678',
         orderTime: '02.29 14:30',
@@ -46,7 +51,8 @@ let orders = [
             store: '영업 소급만 부어주세요',
             extras: '수저포크 X 김치, 단무지 X'
         },
-        timer: 15,
+        timer: 0,
+        preparationTime: 10, // 예상 준비시간
         validationStatus: 'pending' // 검증 상태 추가
     }
 ];
@@ -56,6 +62,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeApp();
     setupEventListeners();
     updateCurrentTime();
+    loadSettings(); // 설정 로드
     
     // 1초마다 시간 업데이트
     setInterval(updateCurrentTime, 1000);
@@ -102,11 +109,11 @@ function setupEventListeners() {
     // });
     
     // 주문 상태 버튼들
-    const cancelBtn = document.querySelector('.btn-cancel');
+    const printReceiptBtn = document.querySelector('.btn-print-receipt');
     const readyBtn = document.querySelector('.btn-ready');
     const completeBtn = document.querySelector('.btn-complete');
     
-    if (cancelBtn) cancelBtn.addEventListener('click', () => updateOrderStatus('cancelled'));
+    if (printReceiptBtn) printReceiptBtn.addEventListener('click', printOrderInfo);
     if (readyBtn) readyBtn.addEventListener('click', () => updateOrderStatus('ready'));
     if (completeBtn) completeBtn.addEventListener('click', () => updateOrderStatus('completed'));
     
@@ -190,6 +197,30 @@ function selectOrder(orderId) {
     const order = orders.find(o => o.id === orderId);
     
     if (!order) return;
+    
+    // 주문 접수 영역 표시 여부 결정
+    const acceptSection = document.getElementById('orderAcceptSection');
+    if (acceptSection) {
+        if (order.status === 'pending') {
+            // 자동접수가 켜져 있으면 자동으로 접수
+            if (appSettings && appSettings.general.autoAcceptEnabled) {
+                autoAcceptOrder(order);
+                return;
+            }
+            
+            // 신규 주문인 경우 접수 영역 표시
+            acceptSection.style.display = 'block';
+            // 준비시간 초기화
+            currentPreparationTime = order.preparationTime || 10;
+            updatePreparationTimeDisplay();
+            
+            // 알림 재생
+            playOrderNotification();
+        } else {
+            // 접수된 주문은 접수 영역 숨김
+            acceptSection.style.display = 'none';
+        }
+    }
     
     // UI 업데이트
     updateOrderDisplay(order);
@@ -339,8 +370,10 @@ function updateOrderStatus(status) {
         case 'cancelled':
             order.status = status;
             order.updatedAt = new Date().toISOString();
+            order.cancelledAt = new Date().toISOString();
             showNotification('주문이 취소되었습니다.', 'warning');
             logOrderStatusChange(order, status, '관리자에 의한 취소');
+            saveOrderToHistory(order); // 주문 내역에 저장
             break;
         case 'ready':
             // 준비완료 모달 표시
@@ -352,6 +385,7 @@ function updateOrderStatus(status) {
             order.completedAt = new Date().toISOString();
             showNotification('주문이 완료되었습니다.', 'success');
             logOrderStatusChange(order, status, '주문 완료 처리');
+            saveOrderToHistory(order); // 주문 내역에 저장
             break;
     }
     
@@ -891,6 +925,478 @@ function closeApp() {
         } else {
             window.close();
         }
+    }
+}
+
+// 테스트 주문 생성 함수
+function createTestOrder() {
+    const testMenus = [
+        { name: '아이스 아메리카노', price: 4000 },
+        { name: '카페라떼', price: 4500 },
+        { name: '카푸치노', price: 4500 },
+        { name: '바닐라라떼', price: 5000 },
+        { name: '카라멜마끼아또', price: 5500 },
+        { name: '크로와상', price: 3500 },
+        { name: '치즈케이크', price: 6000 },
+        { name: '초코브라우니', price: 4500 }
+    ];
+    
+    const testCustomers = [
+        { name: '김철수', phone: '010-1234-5678' },
+        { name: '이영희', phone: '010-2345-6789' },
+        { name: '박민수', phone: '010-3456-7890' },
+        { name: '정수진', phone: '010-4567-8901' },
+        { name: '최동훈', phone: '010-5678-9012' }
+    ];
+    
+    const orderTypes = ['포장', '매장'];
+    
+    // 랜덤 선택
+    const randomMenu = testMenus[Math.floor(Math.random() * testMenus.length)];
+    const randomCustomer = testCustomers[Math.floor(Math.random() * testCustomers.length)];
+    const randomType = orderTypes[Math.floor(Math.random() * orderTypes.length)];
+    const randomQuantity = Math.floor(Math.random() * 3) + 1; // 1-3개
+    
+    // 주문 번호 생성
+    const orderNumber = Math.floor(Math.random() * 100) + 1;
+    
+    // 새 주문 생성 (신규 상태로)
+    const newOrder = {
+        id: `order-${Date.now()}`,
+        type: randomType,
+        number: orderNumber,
+        menuCount: randomQuantity,
+        totalAmount: randomMenu.price * randomQuantity,
+        status: 'pending', // 신규 주문 상태
+        customerName: randomCustomer.name,
+        customerPhone: randomCustomer.phone,
+        orderTime: new Date().toLocaleString('ko-KR', {
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        }).replace(/\. /g, '.').replace(/, /g, ' '),
+        createdAt: new Date().toISOString(),
+        items: [
+            { 
+                name: randomMenu.name, 
+                quantity: randomQuantity, 
+                price: randomMenu.price * randomQuantity 
+            }
+        ],
+        requests: {
+            store: Math.random() > 0.5 ? '빨리 부탁드립니다' : '포장 꼼꼼히 부탁드려요',
+            extras: Math.random() > 0.5 ? '수저포크 O 김치 X' : '수저포크 X 김치 X'
+        },
+        timer: 0,
+        preparationTime: 10, // 기본 준비시간
+        validationStatus: 'pending',
+        receiptPrinted: false
+    };
+    
+    // 주문 목록에 추가
+    orders.unshift(newOrder);
+    
+    // 사이드바에 주문 추가
+    addOrderToSidebar(newOrder);
+    
+    // 새 주문 선택 (자동접수 확인 포함)
+    selectOrder(newOrder.id);
+    
+    // 사이드바 카운터 업데이트
+    updateSidebarCounters();
+    
+    // 알림 표시
+    if (!appSettings || !appSettings.general.autoAcceptEnabled) {
+        showNotification(`테스트 주문이 생성되었습니다. (${newOrder.type} ${newOrder.number})`, 'success');
+    }
+    
+    console.log('테스트 주문 생성:', newOrder);
+}
+
+// 사이드바에 주문 추가
+function addOrderToSidebar(order) {
+    // 주문 상태에 따라 적절한 섹션 선택
+    let targetSection;
+    let statusLabel;
+    
+    if (order.status === 'pending') {
+        // 신규 섹션
+        targetSection = document.querySelector('.sidebar-section:nth-child(1)');
+        statusLabel = '신규';
+    } else if (order.status === 'preparing') {
+        // 진행 섹션
+        targetSection = document.querySelector('.sidebar-section:nth-child(2)');
+        statusLabel = '접수';
+    } else {
+        return; // 다른 상태는 사이드바에 표시하지 않음
+    }
+    
+    if (!targetSection) return;
+    
+    // 주문 아이템 HTML 생성
+    const orderItemHTML = `
+        <div class="order-item ${order.status === 'pending' ? 'new-order' : ''}" onclick="selectOrder('${order.id}')">
+            <div class="order-info">
+                <div class="order-type">${order.type} ${order.number}</div>
+                <div class="order-details">
+                    <span class="menu-count">메뉴 ${order.menuCount}개</span>
+                    <span class="order-time">${order.orderTime.split(' ')[1]} ${statusLabel}</span>
+                </div>
+            </div>
+            <div class="order-timer">
+                <div class="timer-circle">
+                    <span class="timer-text">${order.timer || 0}분</span>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // 기존 "신규건이 없습니다" 텍스트 제거
+    const noOrderText = targetSection.querySelector('.order-status-text');
+    if (noOrderText) {
+        noOrderText.remove();
+    }
+    
+    // 주문 아이템 추가
+    targetSection.insertAdjacentHTML('beforeend', orderItemHTML);
+}
+
+// 사이드바 카운터 업데이트
+function updateSidebarCounters() {
+    const newOrders = orders.filter(o => o.status === 'pending');
+    const preparingOrders = orders.filter(o => o.status === 'preparing');
+    
+    // 신규 카운터
+    const newHeader = document.querySelector('.sidebar-section:nth-child(1) .section-header span:first-of-type');
+    if (newHeader) {
+        newHeader.textContent = `신규 ${newOrders.length}건`;
+    }
+    
+    // 진행 카운터
+    const preparingHeader = document.querySelector('.sidebar-section:nth-child(2) .section-header span:first-of-type');
+    if (preparingHeader) {
+        preparingHeader.textContent = `진행 ${preparingOrders.length}건`;
+    }
+}
+
+// ============= 주문 접수/거부 및 준비시간 조절 기능 =============
+
+// 준비시간 표시 업데이트
+function updatePreparationTimeDisplay() {
+    const display = document.getElementById('preparationTimeDisplay');
+    if (display) {
+        display.textContent = `${currentPreparationTime}분`;
+    }
+    
+    // 버튼 활성화/비활성화
+    const minusBtn = document.querySelector('.time-minus');
+    const plusBtn = document.querySelector('.time-plus');
+    
+    if (minusBtn) {
+        minusBtn.disabled = currentPreparationTime <= MIN_PREPARATION_TIME;
+    }
+    
+    if (plusBtn) {
+        plusBtn.disabled = currentPreparationTime >= MAX_PREPARATION_TIME;
+    }
+}
+
+// 준비시간 감소
+function decreasePreparationTime() {
+    if (currentPreparationTime > MIN_PREPARATION_TIME) {
+        currentPreparationTime -= TIME_STEP;
+        updatePreparationTimeDisplay();
+        console.log(`준비시간 감소: ${currentPreparationTime}분`);
+    }
+}
+
+// 준비시간 증가
+function increasePreparationTime() {
+    if (currentPreparationTime < MAX_PREPARATION_TIME) {
+        currentPreparationTime += TIME_STEP;
+        updatePreparationTimeDisplay();
+        console.log(`준비시간 증가: ${currentPreparationTime}분`);
+    }
+}
+
+// 주문 접수
+function acceptOrder() {
+    if (!selectedOrderId) {
+        showNotification('선택된 주문이 없습니다.', 'error');
+        return;
+    }
+    
+    const order = orders.find(o => o.id === selectedOrderId);
+    if (!order) {
+        showNotification('주문을 찾을 수 없습니다.', 'error');
+        return;
+    }
+    
+    // 주문 상태 업데이트
+    order.status = 'preparing';
+    order.preparationTime = currentPreparationTime;
+    order.acceptedAt = new Date().toISOString();
+    order.timer = 0;
+    
+    // 접수 영역 숨김
+    const acceptSection = document.getElementById('orderAcceptSection');
+    if (acceptSection) {
+        acceptSection.style.display = 'none';
+    }
+    
+    // 알림 메시지 표시
+    showNotification(`주문이 접수되었습니다. 예상 준비시간: ${currentPreparationTime}분`, 'success');
+    
+    // 사이드바에서 신규에서 진행으로 이동
+    moveToPreparing(order);
+    
+    // 주문 디스플레이 업데이트
+    updateOrderDisplay(order);
+    
+    // 사이드바 카운터 업데이트
+    updateSidebarCounters();
+    
+    // 영수증 자동 출력
+    if (window.printHelper) {
+        window.printHelper.autoPrintReceipt(order).then(result => {
+            if (result.success) {
+                console.log('주문 접수 영수증 자동 출력 완료:', order.id);
+                order.receiptPrinted = true;
+            }
+        }).catch(error => {
+            console.error('영수증 출력 오류:', error);
+        });
+    }
+    
+    console.log(`주문 ${order.id} 접수 완료 - 준비시간: ${currentPreparationTime}분`);
+}
+
+// 주문 거부
+function rejectOrder() {
+    if (!selectedOrderId) {
+        showNotification('선택된 주문이 없습니다.', 'error');
+        return;
+    }
+    
+    const order = orders.find(o => o.id === selectedOrderId);
+    if (!order) {
+        showNotification('주문을 찾을 수 없습니다.', 'error');
+        return;
+    }
+    
+    // 거부 확인
+    if (!confirm(`주문을 거부하시겠습니까?\n\n주문번호: ${order.type} ${order.number}\n고객명: ${order.customerName}\n금액: ${order.totalAmount.toLocaleString()}원`)) {
+        return;
+    }
+    
+    // 주문 상태 업데이트
+    order.status = 'rejected';
+    order.rejectedAt = new Date().toISOString();
+    
+    // 주문 내역에 저장
+    saveOrderToHistory(order);
+    
+    // 접수 영역 숨김
+    const acceptSection = document.getElementById('orderAcceptSection');
+    if (acceptSection) {
+        acceptSection.style.display = 'none';
+    }
+    
+    // 알림 메시지 표시
+    showNotification(`주문이 거부되었습니다. (${order.type} ${order.number})`, 'warning');
+    
+    // 주문 목록에서 제거
+    const orderIndex = orders.findIndex(o => o.id === selectedOrderId);
+    if (orderIndex !== -1) {
+        orders.splice(orderIndex, 1);
+    }
+    
+    // 사이드바에서 제거
+    removeFromSidebar(order.id);
+    
+    // 사이드바 카운터 업데이트
+    updateSidebarCounters();
+    
+    // 다음 주문 선택
+    if (orders.length > 0) {
+        selectOrder(orders[0].id);
+    } else {
+        selectedOrderId = null;
+    }
+    
+    console.log(`주문 ${order.id} 거부 완료`);
+}
+
+// 사이드바에서 주문을 진행중으로 이동
+function moveToPreparing(order) {
+    // 기존 주문 아이템 제거
+    removeFromSidebar(order.id);
+    
+    // 진행중 섹션에 추가
+    addOrderToSidebar(order);
+}
+
+// 사이드바에서 주문 제거
+function removeFromSidebar(orderId) {
+    const orderItem = document.querySelector(`[onclick="selectOrder('${orderId}')"]`);
+    if (orderItem) {
+        orderItem.remove();
+    }
+}
+
+// 페이지 네비게이션
+function navigateTo(page) {
+    switch(page) {
+        case 'orders':
+            // 현재 페이지 (주문관리)
+            break;
+        case 'history':
+            // 주문 내역 페이지로 이동
+            window.location.href = 'order-history.html';
+            break;
+        default:
+            console.log('Unknown page:', page);
+    }
+}
+
+// 주문 내역 저장 (완료/취소/거부 시)
+function saveOrderToHistory(order) {
+    // localStorage에서 기존 내역 가져오기
+    const history = JSON.parse(localStorage.getItem('orderHistory') || '[]');
+    
+    // 이미 있는 주문이면 업데이트, 없으면 추가
+    const existingIndex = history.findIndex(o => o.id === order.id);
+    if (existingIndex !== -1) {
+        history[existingIndex] = order;
+    } else {
+        history.push(order);
+    }
+    
+    // localStorage에 저장
+    localStorage.setItem('orderHistory', JSON.stringify(history));
+    
+    console.log('주문 내역 저장:', order.id);
+}
+
+// ============= 설정 관련 함수 =============
+
+// 설정 로드
+function loadSettings() {
+    try {
+        const savedSettings = localStorage.getItem('yumyum_settings');
+        if (savedSettings) {
+            appSettings = JSON.parse(savedSettings);
+            console.log('설정 로드 완료:', appSettings);
+        } else {
+            // 기본 설정
+            appSettings = {
+                general: {
+                    storeAlarmEnabled: true,
+                    volumeLevel: 3,
+                    autoAcceptEnabled: false,
+                    autoAcceptTime: 15
+                }
+            };
+        }
+    } catch (error) {
+        console.error('설정 로드 실패:', error);
+        appSettings = {
+            general: {
+                storeAlarmEnabled: true,
+                volumeLevel: 3,
+                autoAcceptEnabled: false,
+                autoAcceptTime: 15
+            }
+        };
+    }
+}
+
+// 자동 접수
+function autoAcceptOrder(order) {
+    if (!appSettings || !appSettings.general.autoAcceptEnabled) return;
+    
+    // 자동 조리시간 설정
+    const autoTime = appSettings.general.autoAcceptTime || 15;
+    
+    // 주문 상태 업데이트
+    order.status = 'preparing';
+    order.preparationTime = autoTime;
+    order.acceptedAt = new Date().toISOString();
+    order.timer = 0;
+    
+    // 접수 영역 숨김
+    const acceptSection = document.getElementById('orderAcceptSection');
+    if (acceptSection) {
+        acceptSection.style.display = 'none';
+    }
+    
+    // 알림 재생
+    playOrderNotification();
+    
+    // 알림 메시지 표시
+    showNotification(`주문이 자동 접수되었습니다. 예상 준비시간: ${autoTime}분`, 'success');
+    
+    // 사이드바에서 신규에서 진행으로 이동
+    moveToPreparing(order);
+    
+    // 주문 디스플레이 업데이트
+    updateOrderDisplay(order);
+    
+    // 사이드바 카운터 업데이트
+    updateSidebarCounters();
+    
+    // 영수증 자동 출력
+    if (window.printHelper) {
+        window.printHelper.autoPrintReceipt(order).then(result => {
+            if (result.success) {
+                console.log('자동 접수 영수증 출력 완료:', order.id);
+                order.receiptPrinted = true;
+            }
+        }).catch(error => {
+            console.error('영수증 출력 오류:', error);
+        });
+    }
+    
+    console.log(`주문 ${order.id} 자동 접수 완료 - 준비시간: ${autoTime}분`);
+}
+
+// 주문 알림음 재생
+function playOrderNotification() {
+    if (!appSettings || !appSettings.general.storeAlarmEnabled) {
+        console.log('알림이 비활성화되어 있습니다.');
+        return;
+    }
+    
+    const volumeLevel = appSettings.general.volumeLevel || 3;
+    const volumeValue = (volumeLevel / 6) * 100;
+    
+    try {
+        // Web Audio API로 알림음 재생
+        const context = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = context.createOscillator();
+        const gainNode = context.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(context.destination);
+        
+        // 주문 알림음 (더 긴 소리)
+        oscillator.frequency.value = 880; // A5 음
+        gainNode.gain.value = volumeValue / 100 * 0.5;
+        
+        oscillator.start();
+        
+        // 2번 울리기
+        setTimeout(() => {
+            oscillator.frequency.value = 1046; // C6 음
+        }, 200);
+        
+        setTimeout(() => oscillator.stop(), 400);
+        
+        console.log(`알림음 재생 (볼륨: ${volumeLevel}단계)`);
+    } catch (error) {
+        console.error('알림음 재생 실패:', error);
     }
 }
 

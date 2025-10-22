@@ -27,6 +27,10 @@
             </div>
             
             <div class="header-right">
+                <button class="test-order-btn" onclick="createTestOrder()">
+                    <i class="fas fa-plus"></i>
+                    <span>테스트 주문하기</span>
+                </button>
                 <span class="current-time" id="currentTime">02. 29 (화) 15:30</span>
                 <button class="settings-btn" onclick="openSettings()">
                     <i class="fas fa-cog"></i>
@@ -44,50 +48,81 @@
                 <div class="sidebar-section">
                     <div class="section-header">
                         <i class="fas fa-clock"></i>
-                        <span>신규 0건</span>
-                        <span class="info-icon">
-                            <i class="fas fa-info-circle"></i>
-                        </span>
-                    </div>
-                    <div class="order-status-text">신규건이 없습니다</div>
-                </div>
-
-                <div class="sidebar-section">
-                    <div class="section-header">
-                        <i class="fas fa-cooking-pot"></i>
-                        <span>진행 1건</span>
+                        <span>신규 1건</span>
                         <span class="info-icon">
                             <i class="fas fa-info-circle"></i>
                         </span>
                     </div>
                     
-                    <!-- 주문 아이템 -->
-                    <div class="order-item active" onclick="selectOrder('order-1')">
+                    <!-- 신규 주문 아이템 -->
+                    <div class="order-item new-order active" onclick="selectOrder('order-1')">
                         <div class="order-info">
                             <div class="order-type">포장 28</div>
                             <div class="order-details">
                                 <span class="menu-count">메뉴 1개</span>
-                                <span class="order-time">14:30 접수</span>
+                                <span class="order-time">14:30 신규</span>
                             </div>
                         </div>
                         <div class="order-timer">
                             <div class="timer-circle">
-                                <span class="timer-text">15분</span>
+                                <span class="timer-text">0분</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
+                <div class="sidebar-section">
+                    <div class="section-header">
+                        <i class="fas fa-cooking-pot"></i>
+                        <span>진행 0건</span>
+                        <span class="info-icon">
+                            <i class="fas fa-info-circle"></i>
+                        </span>
+                    </div>
+                    <div class="order-status-text">진행건이 없습니다</div>
+                </div>
+
                 <div class="sidebar-bottom">
-                    <div class="nav-item active">
+                    <div class="nav-item active" onclick="navigateTo('orders')">
                         <i class="fas fa-utensils"></i>
-                        <span>메뉴</span>
+                        <span>주문관리</span>
+                    </div>
+                    <div class="nav-item" onclick="navigateTo('history')">
+                        <i class="fas fa-history"></i>
+                        <span>주문내역</span>
                     </div>
                 </div>
             </aside>
 
             <!-- 메인 컨텐츠 -->
             <main class="main-content">
+                <!-- 주문 접수 확인 영역 (신규 주문일 때만 표시) -->
+                <div class="order-accept-section" id="orderAcceptSection" style="display: block;">
+                    <div class="accept-header">
+                        <h3>🔔 새로운 주문이 들어왔습니다</h3>
+                        <div class="preparation-time-control">
+                            <span class="time-label">준비시간 설정:</span>
+                            <button class="time-btn time-minus" onclick="decreasePreparationTime()">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <span class="preparation-time-display" id="preparationTimeDisplay">10분</span>
+                            <button class="time-btn time-plus" onclick="increasePreparationTime()">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="accept-actions">
+                        <button class="btn btn-reject" onclick="rejectOrder()">
+                            <i class="fas fa-times"></i>
+                            <span>거부</span>
+                        </button>
+                        <button class="btn btn-accept" onclick="acceptOrder()">
+                            <i class="fas fa-check"></i>
+                            <span>접수</span>
+                        </button>
+                    </div>
+                </div>
+
                 <div class="order-header">
                 <div class="order-title">
                     <h2>포장 28</h2>
@@ -95,7 +130,7 @@
                 </div>
                     
                     <div class="order-actions">
-                        <button class="btn btn-cancel">취소</button>
+                        <button class="btn btn-print-receipt">영수증출력</button>
                         <button class="btn btn-ready">준비완료</button>
                         <button class="btn btn-complete">완료처리</button>
                     </div>

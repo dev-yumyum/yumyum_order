@@ -6,7 +6,9 @@
 let settings = {
     general: {
         storeAlarmEnabled: true,
-        orderAlarmEnabled: true,
+        volumeLevel: 3, // 1-6 단계
+        autoAcceptEnabled: false,
+        autoAcceptTime: 15, // 5-60분
         pickupPrintEnabled: false
     },
     printer: {
@@ -64,11 +66,13 @@ function initializeSettings() {
     // 전반 설정
     document.getElementById('storeAlarmEnabled').addEventListener('change', (e) => {
         settings.general.storeAlarmEnabled = e.target.checked;
+        toggleVolumeControl(e.target.checked);
         saveSettings();
     });
 
-    document.getElementById('orderAlarmEnabled').addEventListener('change', (e) => {
-        settings.general.orderAlarmEnabled = e.target.checked;
+    document.getElementById('autoAcceptEnabled').addEventListener('change', (e) => {
+        settings.general.autoAcceptEnabled = e.target.checked;
+        toggleAutoAcceptTimeSection(e.target.checked);
         saveSettings();
     });
 
@@ -125,8 +129,20 @@ function loadSettings() {
 function applySettings() {
     // 전반 설정
     document.getElementById('storeAlarmEnabled').checked = settings.general.storeAlarmEnabled;
-    document.getElementById('orderAlarmEnabled').checked = settings.general.orderAlarmEnabled;
+    document.getElementById('autoAcceptEnabled').checked = settings.general.autoAcceptEnabled;
     document.getElementById('pickupPrintEnabled').checked = settings.general.pickupPrintEnabled;
+    
+    // 볼륨 레벨 적용
+    setVolumeLevel(settings.general.volumeLevel || 3);
+    
+    // 자동접수 시간 적용
+    document.getElementById('autoAcceptTime').textContent = settings.general.autoAcceptTime || 15;
+    
+    // 볼륨 컨트롤 표시/숨김
+    toggleVolumeControl(settings.general.storeAlarmEnabled);
+    
+    // 자동접수 시간 설정 표시/숨김
+    toggleAutoAcceptTimeSection(settings.general.autoAcceptEnabled);
 
     // 프린터 설정
     if (document.getElementById('autoPrintEnabled')) {
@@ -565,6 +581,132 @@ document.addEventListener('keydown', (e) => {
         closeDetailAlarmModal();
     }
 });
+
+// ============= 볼륨 및 자동접수 관련 함수 =============
+
+// 볼륨 레벨 설정
+function setVolumeLevel(level) {
+    // 1-6 범위 검증
+    if (level < 1) level = 1;
+    if (level > 6) level = 6;
+    
+    settings.general.volumeLevel = level;
+    
+    // UI 업데이트
+    updateVolumeGaugeUI(level);
+    
+    // 텍스트 업데이트
+    document.getElementById('volumeLevelText').textContent = level;
+    
+    // 설정 저장
+    saveSettings();
+    
+    // 알림음 테스트 (선택사항)
+    playVolumeTestSound(level);
+    
+    console.log(`볼륨 레벨 설정: ${level}단계`);
+}
+
+// 볼륨 게이지 UI 업데이트
+function updateVolumeGaugeUI(level) {
+    // 모든 레벨 버튼에서 active 클래스 제거
+    document.querySelectorAll('.gauge-level').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // 선택된 레벨까지 active 클래스 추가
+    for (let i = 1; i <= level; i++) {
+        const btn = document.querySelector(`.gauge-level[data-level="${i}"]`);
+        if (btn) {
+            btn.classList.add('active');
+        }
+    }
+    
+    // 게이지 바 너비 조절
+    const gaugeBar = document.getElementById('volumeGaugeBar');
+    if (gaugeBar) {
+        const percentage = (level / 6) * 100;
+        gaugeBar.style.width = percentage + '%';
+    }
+}
+
+// 볼륨 테스트 사운드 재생
+function playVolumeTestSound(level) {
+    if (!settings.general.storeAlarmEnabled) return;
+    
+    // 볼륨 레벨에 따른 실제 볼륨 값 (0-100)
+    const volumeValue = (level / 6) * 100;
+    
+    // 실제 사운드 재생 (Web Audio API 사용)
+    // 여기서는 간단한 비프음으로 테스트
+    try {
+        const context = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = context.createOscillator();
+        const gainNode = context.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(context.destination);
+        
+        oscillator.frequency.value = 800; // 800Hz
+        gainNode.gain.value = volumeValue / 100 * 0.3; // 볼륨 조절
+        
+        oscillator.start();
+        setTimeout(() => oscillator.stop(), 100); // 0.1초 재생
+    } catch (error) {
+        console.log('사운드 테스트 실패:', error);
+    }
+}
+
+// 볼륨 컨트롤 표시/숨김
+function toggleVolumeControl(show) {
+    const volumeSection = document.getElementById('volumeControlSection');
+    if (volumeSection) {
+        volumeSection.style.display = show ? 'flex' : 'none';
+    }
+}
+
+// 자동접수 시간 증가
+function increaseAutoTime() {
+    let currentTime = parseInt(document.getElementById('autoAcceptTime').textContent) || 15;
+    
+    if (currentTime < 60) {
+        currentTime += 5;
+        document.getElementById('autoAcceptTime').textContent = currentTime;
+        settings.general.autoAcceptTime = currentTime;
+        saveSettings();
+        showToast(`자동 조리시간: ${currentTime}분`, 'info');
+    } else {
+        showToast('최대 60분까지 설정 가능합니다', 'warning');
+    }
+}
+
+// 자동접수 시간 감소
+function decreaseAutoTime() {
+    let currentTime = parseInt(document.getElementById('autoAcceptTime').textContent) || 15;
+    
+    if (currentTime > 5) {
+        currentTime -= 5;
+        document.getElementById('autoAcceptTime').textContent = currentTime;
+        settings.general.autoAcceptTime = currentTime;
+        saveSettings();
+        showToast(`자동 조리시간: ${currentTime}분`, 'info');
+    } else {
+        showToast('최소 5분부터 설정 가능합니다', 'warning');
+    }
+}
+
+// 자동접수 시간 설정 섹션 표시/숨김
+function toggleAutoAcceptTimeSection(show) {
+    const section = document.getElementById('autoAcceptTimeSection');
+    if (section) {
+        section.style.display = show ? 'flex' : 'none';
+    }
+}
+
+// 설정 내보내기 (다른 페이지에서 사용)
+function getSettings() {
+    return settings;
+}
 
 // 백엔드 API 연결은 backend-config.js에서 관리됩니다
 

@@ -52,7 +52,7 @@
                     <div class="settings-section">
                         <div class="setting-item">
                             <div class="setting-info">
-                                <h3>가게 알림사 설정</h3>
+                                <h3>가게 알림설정</h3>
                                 <p>가게에서 설정한 소리 및 알림으로 알려드려요</p>
                             </div>
                             <label class="toggle-switch">
@@ -61,15 +61,54 @@
                             </label>
                         </div>
 
+                        <div class="setting-item volume-control-item" id="volumeControlSection">
+                            <div class="setting-info">
+                                <h3>알림 볼륨</h3>
+                                <p>알림음 크기를 6단계로 조절할 수 있습니다</p>
+                            </div>
+                            <div class="volume-gauge-container">
+                                <div class="volume-gauge">
+                                    <div class="gauge-bar" id="volumeGaugeBar"></div>
+                                    <div class="gauge-levels">
+                                        <button class="gauge-level" data-level="1" onclick="setVolumeLevel(1)">1</button>
+                                        <button class="gauge-level" data-level="2" onclick="setVolumeLevel(2)">2</button>
+                                        <button class="gauge-level" data-level="3" onclick="setVolumeLevel(3)">3</button>
+                                        <button class="gauge-level" data-level="4" onclick="setVolumeLevel(4)">4</button>
+                                        <button class="gauge-level" data-level="5" onclick="setVolumeLevel(5)">5</button>
+                                        <button class="gauge-level" data-level="6" onclick="setVolumeLevel(6)">6</button>
+                                    </div>
+                                </div>
+                                <div class="volume-label">볼륨: <span id="volumeLevelText">3</span>단계</div>
+                            </div>
+                        </div>
+
                         <div class="setting-item">
                             <div class="setting-info">
-                                <h3>주문 접수마다 알림</h3>
-                                <p>주문이 접수될 때마다 알림음과 팝업으로 알려드립니다</p>
+                                <h3>자동접수</h3>
+                                <p>신규 주문이 들어오면 자동으로 접수합니다</p>
                             </div>
                             <label class="toggle-switch">
-                                <input type="checkbox" id="orderAlarmEnabled" checked>
+                                <input type="checkbox" id="autoAcceptEnabled">
                                 <span class="slider"></span>
                             </label>
+                        </div>
+
+                        <div class="setting-item auto-time-setting" id="autoAcceptTimeSection" style="display: none;">
+                            <div class="setting-info">
+                                <h3>자동 조리시간 설정</h3>
+                                <p>자동 접수 시 설정될 조리시간입니다 (5분 ~ 60분)</p>
+                            </div>
+                            <div class="time-control-group">
+                                <button class="time-control-btn" onclick="decreaseAutoTime()">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <div class="time-display">
+                                    <span id="autoAcceptTime">15</span>분
+                                </div>
+                                <button class="time-control-btn" onclick="increaseAutoTime()">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
                         </div>
 
                         <div class="setting-item">
