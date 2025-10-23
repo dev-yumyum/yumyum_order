@@ -751,6 +751,523 @@ input:checked + .slider:before {
     line-height: 1.6;
 }
 
+/* ============= 운영 설정 전용 스타일 ============= */
+
+/* 2열 레이아웃 */
+.settings-two-column {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 30px;
+}
+
+.settings-column-left,
+.settings-column-right {
+    display: flex;
+    flex-direction: column;
+}
+
+/* 설정 그룹 */
+.setting-group {
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.setting-group-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.setting-group-header h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.group-description {
+    color: #666;
+    font-size: 13px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+
+.btn-link {
+    background: transparent;
+    border: none;
+    color: #2196F3;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0;
+    transition: color 0.2s;
+}
+
+.btn-link:hover {
+    color: #1976D2;
+}
+
+/* 준비시간 리스트 */
+.prep-time-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.prep-time-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+}
+
+.prep-time-label {
+    font-size: 14px;
+    color: #333;
+    font-weight: 500;
+}
+
+.prep-time-value {
+    font-size: 14px;
+    color: #666;
+}
+
+/* 순서 변경 리스트 */
+.order-info-sequence {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sequence-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    cursor: move;
+    transition: all 0.2s;
+}
+
+.sequence-item:hover {
+    background: #f8f9fa;
+    border-color: #2196F3;
+    box-shadow: 0 2px 8px rgba(33, 150, 243, 0.1);
+}
+
+.sequence-item.dragging {
+    opacity: 0.5;
+    transform: scale(1.02);
+}
+
+.sequence-item i {
+    color: #999;
+    font-size: 16px;
+}
+
+.sequence-item span {
+    font-size: 14px;
+    color: #333;
+    font-weight: 500;
+}
+
+/* 버튼 스타일 */
+.btn-secondary {
+    background: white;
+    border: 1px solid #ddd;
+    color: #333;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+    background: #f8f9fa;
+    border-color: #2196F3;
+    color: #2196F3;
+}
+
+/* 반응형 */
+@media (max-width: 1200px) {
+    .settings-two-column {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
+
+/* ============= 프린터 설정 전용 스타일 ============= */
+
+/* 프린터 탭 헤더 */
+.printer-tab-header {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.printer-tab-btn {
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #666;
+}
+
+.printer-tab-btn.active {
+    background: #333;
+    border-color: #333;
+    color: white;
+}
+
+.printer-tab-btn:hover:not(.active) {
+    background: #e9ecef;
+    border-color: #aaa;
+}
+
+.printer-tab-btn i {
+    margin-right: 5px;
+}
+
+.printer-help-btn {
+    background: white;
+    border: 1px solid #ddd;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-left: auto;
+    transition: all 0.2s;
+    color: #666;
+}
+
+.printer-help-btn:hover {
+    background: #f8f9fa;
+    border-color: #2196F3;
+    color: #2196F3;
+}
+
+.printer-help-btn i {
+    margin-right: 5px;
+}
+
+/* 프린터 콘텐츠 */
+.printer-content {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 40px;
+}
+
+/* 왼쪽 섹션 */
+.printer-left-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.printer-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.printer-field label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+
+.field-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.input-box {
+    flex: 1;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    background: #f8f9fa;
+    color: #666;
+}
+
+.input-box:read-only {
+    cursor: not-allowed;
+}
+
+.btn-field {
+    padding: 10px 20px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #333;
+}
+
+.btn-field:hover {
+    background: #f8f9fa;
+    border-color: #2196F3;
+    color: #2196F3;
+}
+
+/* 테스트 출력 섹션 */
+.printer-test-section {
+    margin-top: 20px;
+    padding: 20px;
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+}
+
+.printer-test-section h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 10px 0;
+}
+
+.test-description {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.5;
+    margin-bottom: 15px;
+}
+
+.btn-test {
+    width: 100%;
+    padding: 12px;
+    background: #2196F3;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-test:hover {
+    background: #1976D2;
+}
+
+/* 오른쪽 섹션 */
+.printer-right-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.auto-print-header {
+    margin-bottom: 15px;
+}
+
+.auto-print-header h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 8px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.info-text {
+    font-size: 13px;
+    font-weight: 400;
+    color: #666;
+}
+
+.auto-print-header i {
+    color: #999;
+    font-size: 14px;
+}
+
+.auto-print-description {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* 자동 출력 아이템 */
+.auto-print-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+}
+
+.auto-print-label {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex: 1;
+}
+
+.auto-print-label > span {
+    font-size: 15px;
+    font-weight: 500;
+    color: #333;
+}
+
+/* 인쇄 매수 컨트롤 */
+.print-count-control {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.count-btn {
+    width: 32px;
+    height: 32px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #666;
+    font-size: 14px;
+}
+
+.count-btn:hover {
+    background: #2196F3;
+    border-color: #2196F3;
+    color: white;
+}
+
+.count-display {
+    min-width: 40px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+}
+
+/* 프린터 모달 전용 스타일 */
+.modal-description {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.radio-option {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.radio-option:hover {
+    background: #e9ecef;
+    border-color: #2196F3;
+}
+
+.radio-option input[type="radio"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+    cursor: pointer;
+}
+
+.radio-option input[type="radio"]:checked + .radio-label {
+    color: #2196F3;
+    font-weight: 600;
+}
+
+.radio-label {
+    font-size: 15px;
+    color: #333;
+    flex: 1;
+}
+
+.modal-footer {
+    display: flex;
+    gap: 10px;
+    padding: 20px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.btn-cancel, .btn-confirm {
+    flex: 1;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+}
+
+.btn-cancel {
+    background: white;
+    border: 1px solid #ddd;
+    color: #666;
+}
+
+.btn-cancel:hover {
+    background: #f8f9fa;
+}
+
+.btn-confirm {
+    background: #2196F3;
+    color: white;
+}
+
+.btn-confirm:hover {
+    background: #1976D2;
+}
+
+/* 프린터 설정 반응형 */
+@media (max-width: 1200px) {
+    .printer-content {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+}
+
 /* 모달 */
 .modal-overlay {
     display: none;

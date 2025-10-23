@@ -32,7 +32,7 @@
                 <nav class="settings-nav">
                     <button class="nav-item active" data-tab="general" onclick="switchSettingsTab('general')">
                         <i class="fas fa-cog"></i>
-                        <span>전반 설정</span>
+                        <span>운영 설정</span>
                     </button>
                     <button class="nav-item" data-tab="printer" onclick="switchSettingsTab('printer')">
                         <i class="fas fa-print"></i>
@@ -47,8 +47,247 @@
 
             <!-- 메인 설정 영역 -->
             <main class="settings-content">
-                <!-- 전반 설정 -->
+                <!-- 운영 설정 -->
                 <div id="general-settings" class="settings-panel active">
+                    <div class="settings-two-column">
+                        <!-- 왼쪽 컬럼 -->
+                        <div class="settings-column-left">
+                    <div class="settings-section">
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                        <h3>자동 로그인</h3>
+                                        <p>실행 시 자동으로 로그인 되어 주문을 받을 수 있습니다.</p>
+                            </div>
+                            <label class="toggle-switch">
+                                        <input type="checkbox" id="autoLoginEnabled">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                        <h3>자동 영업 임시중지 설정 <i class="fas fa-info-circle"></i></h3>
+                                        <p>주문취소가 반복되면 자동으로 영업을 임시중지합니다.</p>
+                            </div>
+                            <label class="toggle-switch">
+                                        <input type="checkbox" id="autoPauseEnabled" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                        <h3>원산지 출력</h3>
+                                        <p>가게별로 등록된 원산지를 주문전표(고객용)에 함께 출력합니다.</p>
+                            </div>
+                            <label class="toggle-switch">
+                                        <input type="checkbox" id="originPrintEnabled">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="setting-item clickable" onclick="openDeviceManagement()">
+                            <div class="setting-info">
+                                <h3>기기 관리</h3>
+                                        <p>아이디로 얌얌픽업 주문접수에 로그인한 기기를 확인할 수 있습니다.</p>
+                            </div>
+                                    <button class="btn-secondary">기기조회</button>
+                        </div>
+
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                        <h3>프로그램 버전 정보</h3>
+                                <p>버전: v1.0.0</p>
+                                    </div>
+                                    <button class="btn-secondary" onclick="checkUpdate()">버전 확인</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 오른쪽 컬럼 -->
+                        <div class="settings-column-right">
+                            <div class="settings-section">
+                                <div class="setting-group">
+                                    <div class="setting-group-header">
+                                        <h3>주문 준비시간 설정</h3>
+                                        <button class="btn-link" onclick="openPrepTimeSettings()">설정</button>
+                                    </div>
+                                    <div class="prep-time-list">
+                                        <div class="prep-time-item">
+                                            <span class="prep-time-label">가게배달 음식준비 + 배달시간</span>
+                                            <span class="prep-time-value">최근 시간 사용</span>
+                                        </div>
+                                        <div class="prep-time-item">
+                                            <span class="prep-time-label">얌딜 환전배달 음식 준비시간</span>
+                                            <span class="prep-time-value">15~20분</span>
+                                        </div>
+                                        <div class="prep-time-item">
+                                            <span class="prep-time-label">포장 방문 음식 준비시간</span>
+                                            <span class="prep-time-value">최근 시간 사용</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="setting-group">
+                                    <div class="setting-group-header">
+                                        <h3>주문 상세 정보 순서 변경</h3>
+                                        <p class="group-description">주문 상세 정보 항목을 드래그 앤 드롭하여 순서를 변경할 수 있습니다.</p>
+                                    </div>
+                                    <div class="order-info-sequence" id="orderInfoSequence">
+                                        <div class="sequence-item" draggable="true">
+                                            <i class="fas fa-grip-vertical"></i>
+                                            <span>배달현황</span>
+                                        </div>
+                                        <div class="sequence-item" draggable="true">
+                                            <i class="fas fa-grip-vertical"></i>
+                                            <span>요청사항</span>
+                                        </div>
+                                        <div class="sequence-item" draggable="true">
+                                            <i class="fas fa-grip-vertical"></i>
+                                            <span>배달정보/주문자정보</span>
+                                        </div>
+                                        <div class="sequence-item" draggable="true">
+                                            <i class="fas fa-grip-vertical"></i>
+                                            <span>주문정보</span>
+                                        </div>
+                                        <div class="sequence-item" draggable="true">
+                                            <i class="fas fa-grip-vertical"></i>
+                                            <span>주문이력</span>
+                                        </div>
+                                        <div class="sequence-item" draggable="true">
+                                            <i class="fas fa-grip-vertical"></i>
+                                            <span>가게정보</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-footer">
+                        <p>Copyright 2025 yumyumorder. All right reserved. 얌얌 오더는 주식회사 (주)얌얌프랜차이즈에서 제공하는 서비스로 (주)얌얌프랜차이즈의 책임 관리하에 제공됩니다.</p>
+                    </div>
+                </div>
+
+                <!-- 프린터 설정 -->
+                <div id="printer-settings" class="settings-panel">
+                    <div class="printer-tab-header">
+                        <button class="printer-tab-btn active" data-tab="printer" onclick="switchPrinterTab('printer')">
+                            프린터
+                        </button>
+                        <button class="printer-tab-btn" data-tab="add" onclick="switchPrinterTab('add')">
+                            <i class="fas fa-plus"></i> 추가
+                        </button>
+                        <button class="printer-tab-btn" data-tab="delete" onclick="switchPrinterTab('delete')">
+                            삭제
+                        </button>
+                        <button class="printer-help-btn" onclick="openPrinterHelp()">
+                            <i class="fas fa-list"></i> 설정 방법 안내
+                        </button>
+                    </div>
+
+                    <div class="printer-content">
+                        <!-- 왼쪽: 프린터 설정 -->
+                        <div class="printer-left-section">
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                    <h3>프린터 사용하기</h3>
+                            </div>
+                            <label class="toggle-switch">
+                                    <input type="checkbox" id="printerEnabled" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                            <div class="printer-field">
+                                <label>프린터명</label>
+                                <div class="field-group">
+                                    <input type="text" class="input-box" id="printerName" value="프린터" readonly>
+                                    <button class="btn-field" onclick="openPrinterNameModal()">변경</button>
+                                </div>
+                            </div>
+
+                            <div class="printer-field">
+                                <label>출력꼬</label>
+                                <div class="field-group">
+                                    <input type="text" class="input-box" id="printerCopies" value="3출" readonly>
+                                    <button class="btn-field" onclick="openCopiesModal()">변경</button>
+                                </div>
+                            </div>
+
+                            <div class="printer-field">
+                                <label>연결포트</label>
+                                <div class="field-group">
+                                    <input type="text" class="input-box" id="connectionPort" value="선택없음" readonly>
+                                    <button class="btn-field" onclick="openPortModal()">변경</button>
+                                </div>
+                            </div>
+
+                            <div class="printer-field">
+                                <label>연결속도</label>
+                                <div class="field-group">
+                                    <input type="text" class="input-box" id="connectionSpeed" value="9600" readonly>
+                                    <button class="btn-field" onclick="openSpeedModal()">변경</button>
+                                </div>
+                            </div>
+
+                            <div class="printer-test-section">
+                                <h3>테스트출력</h3>
+                                <p class="test-description">프린터 연결 상태를 확인하고, 출력이 안 되면 연결포트나 속도를 변경해 보세요.</p>
+                                <button class="btn-test" onclick="testPrint()">출력</button>
+                            </div>
+                        </div>
+
+                        <!-- 오른쪽: 자동 출력물 설정 -->
+                        <div class="printer-right-section">
+                            <div class="auto-print-header">
+                                <h3>자동 출력물 설정 <span class="info-text">주문전표(고객용), 주문서(고객용)</span> <i class="fas fa-info-circle"></i></h3>
+                                <p class="auto-print-description">주문 유형별 출력 장수를 확인하고 자동 출력을 원치 않으면 스위치를 꺼주세요.</p>
+                            </div>
+
+                            <div class="auto-print-item">
+                                <div class="auto-print-label">
+                                    <span>주문전표</span>
+                                    <div class="print-count-control">
+                                        <button class="count-btn" onclick="decreasePrintCount('orderReceipt')">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                        <span class="count-display" id="orderReceiptCount">1장</span>
+                                        <button class="count-btn" onclick="increasePrintCount('orderReceipt')">
+                                            <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="orderReceiptEnabled" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="auto-print-item">
+                                <div class="auto-print-label">
+                                    <span>주문서</span>
+                                    <div class="print-count-control">
+                                        <button class="count-btn" onclick="decreasePrintCount('orderSheet')">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                        <span class="count-display" id="orderSheetCount">1장</span>
+                                        <button class="count-btn" onclick="increasePrintCount('orderSheet')">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="orderSheetEnabled" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 알림 설정 -->
+                <div id="notification-settings" class="settings-panel">
                     <div class="settings-section">
                         <div class="setting-item">
                             <div class="setting-info">
@@ -109,188 +348,6 @@
                                     <i class="fas fa-plus"></i>
                                 </button>
                             </div>
-                        </div>
-
-                        <div class="setting-item">
-                            <div class="setting-info">
-                                <h3>픽업시 출력</h3>
-                            </div>
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="pickupPrintEnabled">
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-
-                        <div class="setting-item clickable" onclick="openDetailAlarmSettings()">
-                            <div class="setting-info">
-                                <h3>가게 주문 상세알림 설정</h3>
-                                <p>가게에서 설정한 알림으로 알려드려요</p>
-                            </div>
-                            <button class="detail-btn">
-                                <span>상세설정</span>
-                                <i class="fas fa-chevron-right"></i>
-                            </button>
-                        </div>
-
-                        <div class="setting-item clickable" onclick="openDeviceManagement()">
-                            <div class="setting-info">
-                                <h3>기기 관리</h3>
-                                <p>이 가게에서 접속중인 기기 및 프로그램을 확인하고 로그아웃 처리 할 수 있어요.</p>
-                            </div>
-                            <button class="detail-btn">
-                                <span>기기관리</span>
-                                <i class="fas fa-chevron-right"></i>
-                            </button>
-                        </div>
-
-                        <div class="setting-item">
-                            <div class="setting-info">
-                                <h3>프로그램 업데이트 확인</h3>
-                                <p>버전: v1.0.0</p>
-                            </div>
-                            <div class="update-buttons">
-                                <button class="btn-secondary" onclick="checkUpdate()">내용 확인</button>
-                                <button class="btn-secondary" onclick="updateNow()">바로 적용</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="settings-footer">
-                        <p>Copyright 2025 yumyumorder. All right reserved. 얌얌 오더는 주식회사 (주)얌얌프랜차이즈에서 제공하는 서비스로 (주)얌얌프랜차이즈의 책임 관리하에 제공됩니다.</p>
-                    </div>
-                </div>
-
-                <!-- 프린터 설정 -->
-                <div id="printer-settings" class="settings-panel">
-                    <div class="settings-section">
-                        <h2>프린터 설정</h2>
-                        
-                        <div class="setting-item">
-                            <div class="setting-info">
-                                <h3>주문서 자동 인쇄</h3>
-                                <p>신규 주문 접수 시 자동으로 주문서를 인쇄합니다</p>
-                            </div>
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="autoPrintEnabled">
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-
-                        <div class="setting-item">
-                            <div class="setting-info">
-                                <h3>프린터 선택</h3>
-                                <p>사용할 프린터를 선택하세요</p>
-                            </div>
-                            <div class="printer-select-group">
-                                <select class="select-box" id="printerSelect">
-                                    <option value="">프린터를 선택하세요</option>
-                                </select>
-                                <button class="btn-secondary" onclick="refreshPrinters()">
-                                    <i class="fas fa-sync-alt"></i>
-                                    새로고침
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="setting-item">
-                            <div class="setting-info">
-                                <h3>프린터 연결 상태</h3>
-                                <p id="printerStatus" class="status-text">프린터를 선택해주세요</p>
-                            </div>
-                            <button class="btn-outline" onclick="checkPrinterConnection()">
-                                <i class="fas fa-check-circle"></i>
-                                연결 확인
-                            </button>
-                        </div>
-
-                        <div class="printer-specs">
-                            <h3>영수증 프린터 규격</h3>
-                            <div class="spec-grid">
-                                <div class="spec-item">
-                                    <label>용지 너비</label>
-                                    <select class="select-box" id="paperWidth">
-                                        <option value="58">58mm (2인치)</option>
-                                        <option value="80" selected>80mm (3인치)</option>
-                                    </select>
-                                </div>
-                                <div class="spec-item">
-                                    <label>프린터 크기</label>
-                                    <div class="size-display">
-                                        W: 142mm × D: 185mm × H: 136mm
-                                    </div>
-                                </div>
-                                <div class="spec-item">
-                                    <label>인쇄 속도</label>
-                                    <select class="select-box" id="printSpeed">
-                                        <option value="50">50 mm/s (저속)</option>
-                                        <option value="80">80 mm/s</option>
-                                        <option value="100">100 mm/s</option>
-                                        <option value="150" selected>150 mm/s (표준)</option>
-                                        <option value="200">200 mm/s</option>
-                                        <option value="250">250 mm/s (고속)</option>
-                                    </select>
-                                </div>
-                                <div class="spec-item">
-                                    <label>용지 절단</label>
-                                    <select class="select-box" id="paperCut">
-                                        <option value="auto" selected>자동 절단</option>
-                                        <option value="manual">수동 절단</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="printer-connection-info">
-                            <h3>연결 포트 정보</h3>
-                            <div class="port-info" id="portInfo">
-                                <p class="info-label">검색 중...</p>
-                            </div>
-                        </div>
-
-                        <div class="setting-item">
-                            <button class="btn-primary" onclick="testPrint()">
-                                <i class="fas fa-print"></i>
-                                테스트 인쇄
-                            </button>
-                            <button class="btn-secondary" onclick="savePrinterSettings()">
-                                <i class="fas fa-save"></i>
-                                설정 저장
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 알림 설정 -->
-                <div id="notification-settings" class="settings-panel">
-                    <div class="settings-section">
-                        <h2>알림 설정</h2>
-                        <div class="setting-item">
-                            <div class="setting-info">
-                                <h3>알림음 활성화</h3>
-                                <p>주문 접수 시 알림음을 재생합니다</p>
-                            </div>
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="soundEnabled" checked>
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-
-                        <div class="setting-item">
-                            <div class="setting-info">
-                                <h3>알림음 볼륨</h3>
-                            </div>
-                            <input type="range" min="0" max="100" value="80" class="volume-slider" id="volumeSlider">
-                        </div>
-
-                        <div class="setting-item">
-                            <div class="setting-info">
-                                <h3>팝업 알림</h3>
-                                <p>신규 주문 시 팝업 창으로 알립니다</p>
-                            </div>
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="popupEnabled" checked>
-                                <span class="slider"></span>
-                            </label>
                         </div>
                     </div>
                 </div>
@@ -384,6 +441,117 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn-primary full-width" onclick="saveAlarmSettings()">적용</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 프린터 설정 모달들 -->
+        <!-- 연결속도 선택 모달 -->
+        <div id="speedModal" class="modal-overlay">
+            <div class="modal-container speed-modal">
+                <div class="modal-header">
+                    <h3>연결속도 선택</h3>
+                    <button class="modal-close" onclick="closeSpeedModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="modal-description">연결속도를 선택해주세요.</p>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="speed" value="default">
+                            <span class="radio-label">사용자 설정</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="speed" value="9600" checked>
+                            <span class="radio-label">9600</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="speed" value="14400">
+                            <span class="radio-label">14400</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="speed" value="19200">
+                            <span class="radio-label">19200</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="speed" value="38400">
+                            <span class="radio-label">38400</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="speed" value="56000">
+                            <span class="radio-label">56000</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="speed" value="57600">
+                            <span class="radio-label">57600</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="speed" value="115200">
+                            <span class="radio-label">115200</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="speed" value="128000">
+                            <span class="radio-label">128000</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="speed" value="256000">
+                            <span class="radio-label">256000</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-cancel" onclick="closeSpeedModal()">취소</button>
+                    <button class="btn-confirm" onclick="saveSpeed()">저장</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 출력꼬 선택 모달 -->
+        <div id="copiesModal" class="modal-overlay">
+            <div class="modal-container copies-modal">
+                <div class="modal-header">
+                    <h3>출력꼬 선택</h3>
+                    <button class="modal-close" onclick="closeCopiesModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="modal-description">출력꼬를 선택해주세요.</p>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="copies" value="0">
+                            <span class="radio-label">0출</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="copies" value="1">
+                            <span class="radio-label">1출</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="copies" value="2">
+                            <span class="radio-label">2출</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="copies" value="3" checked>
+                            <span class="radio-label">3출</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="copies" value="4">
+                            <span class="radio-label">4출</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="copies" value="5">
+                            <span class="radio-label">5출</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="copies" value="6">
+                            <span class="radio-label">6출</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-cancel" onclick="closeCopiesModal()">취소</button>
+                    <button class="btn-confirm" onclick="saveCopies()">저장</button>
                 </div>
             </div>
         </div>

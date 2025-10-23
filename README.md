@@ -1,148 +1,172 @@
 # YumYum Order Management System
 
-YumYum 주문 관리 시스템입니다.
+> 얌얌픽업 주문 접수 시스템 - Windows & macOS 데스크탑 애플리케이션
 
-## 설치 및 실행
+## 🚀 빠른 시작
 
-### 의존성 설치
+### 개발 환경 실행
 ```bash
+# 의존성 설치
 npm install
-```
 
-### 개발 서버 실행
-```bash
+# Electron 앱 실행
+npm run electron
+
+# 개발 모드 (nodemon)
 npm run dev
 ```
 
-### 프로덕션 실행
+## 📦 설치 패키지 빌드
+
+### Windows
 ```bash
-npm start
+# 64비트 (권장)
+npm run build:win
+
+# 32비트
+npm run build:win32
+
+# 결과물
+# dist/YumYum 주문접수-Setup-1.0.0-x64.exe
+# dist/YumYum 주문접수-Portable-1.0.0-x64.exe
 ```
 
-## 개발 도구
-
-### 테스트 실행
+### macOS
 ```bash
-# 단일 테스트 실행
-npm test
+# Apple Silicon (M1/M2/M3)
+npm run build:mac-arm
 
-# 테스트 감시 모드
-npm run test:watch
+# Intel Mac
+npm run build:mac-intel
+
+# Universal (Intel + Apple Silicon)
+npm run build:mac
+
+# 결과물
+# dist/YumYum 주문접수-1.0.0-arm64.dmg
+# dist/YumYum 주문접수-1.0.0-x64.dmg
 ```
 
-### 코드 품질 관리
+### 모든 플랫폼
 ```bash
-# ESLint 검사
-npm run lint
-
-# ESLint 자동 수정
-npm run lint:fix
-
-# Prettier 포맷팅
-npm run format
+npm run build:all
 ```
 
-## 프로젝트 구조
+## 🛠️ 프로젝트 구조
 
 ```
 yumyum_order/
-├── src/           # 소스 코드
-│   ├── main.js       # Electron 메인 프로세스
-│   ├── main-simple.js # 간단한 메인 프로세스
-│   ├── app.js        # 앱 로직
-│   └── config.js     # 설정
-├── renderer/      # Electron 렌더러 프로세스
-│   ├── order-management.html  # 주문 관리 화면
-│   ├── order-management.js    # 주문 관리 로직
-│   ├── order-management.css   # 주문 관리 스타일
-│   ├── settings.html          # 설정 화면
-│   ├── settings.js            # 설정 로직
-│   ├── settings.css           # 설정 스타일
-│   └── backend-config.js      # 백엔드 API 설정
-├── test/          # 테스트 파일
-├── docs/          # 문서
-├── dist/          # 빌드 결과물
-├── package.json   # 프로젝트 설정
-├── .gitignore     # Git 무시 파일
-├── eslint.config.js    # ESLint 설정
-├── .prettierrc.json    # Prettier 설정
-└── README.md      # 프로젝트 설명서
+├── src/                    # Node.js 백엔드
+│   ├── main-simple.js     # Electron 메인 프로세스
+│   └── index.js           # 서버 엔트리포인트
+├── renderer/              # 프론트엔드 (HTML/CSS/JS)
+│   ├── order-management.html
+│   ├── order-management.css
+│   ├── order-management.js
+│   ├── order-history.html
+│   ├── settings.html
+│   └── ...
+├── assets/               # 아이콘 및 리소스
+│   ├── icon.ico         # Windows 아이콘
+│   ├── icon.icns        # macOS 아이콘
+│   └── icon.png         # Linux 아이콘
+├── dist/                # 빌드 결과물
+├── package.json
+└── README.md
 ```
 
-## 기술 스택
+## ✨ 주요 기능
 
-- **Runtime**: Node.js + Electron
-- **Testing**: Jest
-- **Code Quality**: ESLint + Prettier
-- **Development**: Nodemon
-- **Desktop**: Electron
-- **UI**: HTML5 + CSS3 + JavaScript
+- ✅ 실시간 주문 접수
+- ✅ 주문 상태 관리 (신규/진행/완료)
+- ✅ 타이머 카운팅 (원형 프로그레스 바)
+- ✅ 프린터 자동 출력
+- ✅ 주문 내역 조회
+- ✅ 설정 관리 (운영/프린터/알림)
+- ✅ 자동 접수 기능
+- ✅ 알림음 및 볼륨 조절
+- ✅ 다크/라이트 테마
 
-## 주문 관리 화면 테스트
+## 📋 시스템 요구사항
 
-전문적인 주문 접수 화면이 구현되어 있습니다:
+### Windows
+- Windows 10 이상
+- 최소 4GB RAM
+- 200MB 디스크 공간
+
+### macOS
+- macOS 10.13 (High Sierra) 이상
+- Intel 또는 Apple Silicon
+- 최소 4GB RAM
+- 200MB 디스크 공간
+
+## 🔧 개발 스크립트
 
 ```bash
+# 서버 실행
+npm start
+
+# 서버 개발 모드 (자동 재시작)
+npm run dev
+
 # Electron 앱 실행
 npm run electron
+
+# 테스트
+npm test
+npm run test:watch
+
+# 코드 린트
+npm run lint
+npm run lint:fix
+
+# 코드 포맷팅
+npm run format
+
+# 빌드 (디렉토리만)
+npm run pack
 ```
 
-### 주요 기능
-- **주문 관리**: 실시간 주문 접수 및 상태 관리
-- **설정 화면**: 프린터, 알림 등 다양한 설정
-- **프린터 연동**: COM1~, USB, 네트워크 프린터 지원
-- **백엔드 API**: 자동 연결 및 재시도 메커니즘
-- **탭 전환**: 요청사항/메뉴정보/주문정보 탭
-- **실시간 타이머**: 15분 카운터
-- **상태 관리**: 취소/준비완료/완료처리 버튼
+## 📝 설치 가이드
 
-### 키보드 단축키
-- `Ctrl+1,2,3`: 탭 전환
-- `ESC`: 모달 닫기
-- `Ctrl+P`: 주문정보 출력
+자세한 설치 방법은 [INSTALL.md](./INSTALL.md) 문서를 참고하세요.
 
-## 백엔드 API 설정
+## 🔄 업데이트 로그
 
-백엔드 API 연결은 `renderer/backend-config.js` 파일에서 관리됩니다.
+자세한 변경 사항은 [CHANGELOG.md](./CHANGELOG.md) 문서를 참고하세요.
 
-### 기본 설정
-```javascript
-const BACKEND_CONFIG = {
-    apiUrl: 'http://localhost:3000',
-    apiKey: '',
-    timeout: 10000,
-    retryCount: 3,
-    autoConnect: true
-};
-```
+## 🐛 문제 해결
 
-### 환경 변수 지원
+### Windows "PC 보호" 메시지
+디지털 서명이 없어 나타나는 메시지입니다.
+"추가 정보" → "실행" 클릭
+
+### macOS "손상된 앱" 메시지
+터미널에서 다음 명령어 실행:
 ```bash
-# API 서버 URL 설정
-export API_URL=http://your-api-server.com
-
-# API 인증 키 설정
-export API_KEY=your-api-key
+sudo xattr -cr /Applications/YumYum\ 주문접수.app
 ```
 
-### API 사용 예제
-```javascript
-// 주문 조회
-const result = await fetchOrders();
+### 프린터 인식 안됨
+1. 프린터 드라이버 설치 확인
+2. 설정에서 프린터 재선택
+3. USB 연결 확인
 
-// 주문 생성
-const newOrder = await createOrder(orderData);
+## 📞 지원
 
-// 주문 상태 업데이트
-const updated = await updateOrderStatus(orderId, 'completed');
-```
+- 이메일: support@yumyum.com
+- 문서: [INSTALL.md](./INSTALL.md)
 
-### 자동 연결
-앱 시작 시 자동으로 백엔드 서버에 연결을 시도합니다. 연결 실패 시 로컬 모드로 작동합니다.
+## 📄 라이선스
 
-## 개발 가이드
+MIT License
 
-1. 코드 작성 전 `npm run lint`로 코드 품질 확인
-2. 테스트 작성 후 `npm test`로 테스트 실행
-3. 커밋 전 `npm run format`으로 코드 포맷팅
-4. 개발 중에는 `npm run dev`로 자동 재시작 모드 사용
+Copyright (c) 2025 DoWon Jung
+
+## 🙏 기여
+
+버그 리포트, 기능 제안 등은 GitHub Issues를 통해 제출해주세요.
+
+---
+
+**Made with ❤️ by DoWon Jung**

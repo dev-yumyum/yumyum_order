@@ -67,8 +67,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // 1초마다 시간 업데이트
     setInterval(updateCurrentTime, 1000);
     
-    // 1분마다 타이머 업데이트
-    setInterval(updateTimers, 60000);
+    // 1초마다 타이머 업데이트 (내부에서 초 단위로 카운팅)
+    setInterval(updateTimers, 1000);
     
     // 5분마다 실시간 조건 검증
     setInterval(performRealTimeValidation, 5 * 60 * 1000);
@@ -126,7 +126,7 @@ function setupEventListeners() {
     // 메뉴 토글 버튼
     const menuToggle = document.querySelector('.menu-toggle');
     if (menuToggle) {
-        menuToggle.addEventListener('click', toggleSidebar);
+        menuToggle.addEventListener('click', openSideMenu);
     }
     
     // 설정 버튼
@@ -689,16 +689,56 @@ function filterOrdersByCondition(condition) {
 // 타이머 업데이트
 function updateTimers() {
     orders.forEach(order => {
-        if (order.status === 'preparing') {
-            order.timer += 1;
-            
-            // UI에서 타이머 업데이트
-            const timerElement = document.querySelector('.timer-text');
-            if (timerElement && order.id === selectedOrderId) {
-                timerElement.textContent = `${order.timer}분`;
+        // 신규 상태(pending)거나 준비중(preparing) 상태일 때 타이머 증가
+        if (order.status === 'pending' || order.status === 'preparing') {
+            // 초 단위로 증가 (timer는 초 단위로 저장)
+            if (!order.timerSeconds) {
+                order.timerSeconds = 0;
             }
+            order.timerSeconds += 1;
+            
+            // 분 단위로 변환
+            const minutes = Math.floor(order.timerSeconds / 60);
+            
+            // 해당 주문의 타이머 UI 업데이트
+            updateOrderTimerUI(order.id, minutes, order.timerSeconds);
         }
     });
+}
+
+// 주문 타이머 UI 업데이트 (원형 프로그레스 바 포함)
+function updateOrderTimerUI(orderId, minutes, seconds) {
+    // 사이드바의 주문 아이템 찾기
+    const orderElement = document.querySelector(`.order-item[data-order-id="${orderId}"]`);
+    if (!orderElement) return;
+    
+    const timerText = orderElement.querySelector('.timer-text');
+    const timerProgress = orderElement.querySelector('.timer-progress');
+    
+    if (timerText) {
+        timerText.textContent = `${minutes}분`;
+        timerText.style.color = '#ff4444';
+    }
+    
+    if (timerProgress) {
+        // 원의 둘레: 2πr = 2 × π × 20 = 125.6
+        const circumference = 125.6;
+        // 30분을 기준으로 프로그레스 계산 (30분 = 100%)
+        const maxMinutes = 30;
+        const progress = Math.min(minutes / maxMinutes, 1);
+        const offset = circumference * (1 - progress);
+        
+        timerProgress.style.strokeDashoffset = offset;
+        
+        // 시간에 따라 색상 변경
+        if (minutes < 10) {
+            timerProgress.style.stroke = '#ff4444'; // 빨강
+        } else if (minutes < 20) {
+            timerProgress.style.stroke = '#ff8800'; // 주황
+        } else {
+            timerProgress.style.stroke = '#ff0000'; // 진한 빨강
+        }
+    }
 }
 
 // 주문정보 출력
@@ -990,6 +1030,7 @@ function createTestOrder() {
             extras: Math.random() > 0.5 ? '수저포크 O 김치 X' : '수저포크 X 김치 X'
         },
         timer: 0,
+        timerSeconds: 0, // 초 단위 타이머
         preparationTime: 10, // 기본 준비시간
         validationStatus: 'pending',
         receiptPrinted: false
@@ -1035,9 +1076,9 @@ function addOrderToSidebar(order) {
     
     if (!targetSection) return;
     
-    // 주문 아이템 HTML 생성
+    // 주문 아이템 HTML 생성 (SVG 타이머 포함)
     const orderItemHTML = `
-        <div class="order-item ${order.status === 'pending' ? 'new-order' : ''}" onclick="selectOrder('${order.id}')">
+        <div class="order-item ${order.status === 'pending' ? 'new-order' : ''}" data-order-id="${order.id}" onclick="selectOrder('${order.id}')">
             <div class="order-info">
                 <div class="order-type">${order.type} ${order.number}</div>
                 <div class="order-details">
@@ -1047,6 +1088,11 @@ function addOrderToSidebar(order) {
             </div>
             <div class="order-timer">
                 <div class="timer-circle">
+                    <svg width="48" height="48">
+                        <circle class="timer-background" cx="24" cy="24" r="20" fill="none" stroke-width="3"/>
+                        <circle class="timer-progress" cx="24" cy="24" r="20" fill="none" stroke-width="3" 
+                                stroke-dasharray="125.6" stroke-dashoffset="125.6"/>
+                    </svg>
                     <span class="timer-text">${order.timer || 0}분</span>
                 </div>
             </div>
@@ -1399,6 +1445,94 @@ function playOrderNotification() {
         console.error('알림음 재생 실패:', error);
     }
 }
+
+// ============= 사이드 메뉴 관련 함수 =============
+
+// 사이드 메뉴 열기
+function openSideMenu() {
+    const sideMenu = document.getElementById('sideMenu');
+    if (sideMenu) {
+        sideMenu.classList.add('show');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+// 사이드 메뉴 닫기
+function closeSideMenu() {
+    const sideMenu = document.getElementById('sideMenu');
+    if (sideMenu) {
+        sideMenu.classList.remove('show');
+        document.body.style.overflow = '';
+    }
+}
+
+// 공지 · 한마디
+function openNotice() {
+    showNotification('공지 · 한마디 기능은 준비 중입니다', 'info');
+    closeSideMenu();
+}
+
+// 주문내역
+function openOrderHistory() {
+    window.location.href = 'order-history.html';
+    closeSideMenu();
+}
+
+// 운영정보 관리
+function openOperationInfo() {
+    showNotification('운영정보 관리 기능은 준비 중입니다', 'info');
+    closeSideMenu();
+}
+
+// 메뉴 품절 관리
+function openMenuManagement() {
+    showNotification('메뉴 품절 관리 기능은 준비 중입니다', 'info');
+    closeSideMenu();
+}
+
+// 리뷰 관리
+function openReviewManagement() {
+    showNotification('리뷰 관리 기능은 준비 중입니다', 'info');
+    closeSideMenu();
+}
+
+// 주문접수 설정
+function openOrderSettings() {
+    showNotification('주문접수 설정 기능은 준비 중입니다', 'info');
+    closeSideMenu();
+}
+
+// 운영 설정
+function openOperationSettings() {
+    window.location.href = 'settings.html';
+    closeSideMenu();
+}
+
+// 프린터 설정
+function openPrinterSettings() {
+    window.location.href = 'settings.html?tab=printer';
+    closeSideMenu();
+}
+
+// 알림 설정
+function openNotificationSettings() {
+    window.location.href = 'settings.html?tab=notification';
+    closeSideMenu();
+}
+
+// FAQ
+function openFAQ() {
+    showNotification('자주 묻는 질문 페이지로 이동합니다', 'info');
+    closeSideMenu();
+}
+
+// 사이드 메뉴 오버레이 클릭 시 닫기
+document.addEventListener('click', (e) => {
+    const sideMenu = document.getElementById('sideMenu');
+    if (e.target === sideMenu) {
+        closeSideMenu();
+    }
+});
 
 console.log('YumYum 주문 관리 시스템 스크립트 로드 완료');
 

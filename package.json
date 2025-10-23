@@ -1,7 +1,7 @@
 {
   "name": "yumyum_order",
   "version": "1.0.0",
-  "description": "YumYum Order Management System - Windows Desktop App",
+  "description": "YumYum Order Management System - 얌얌픽업 주문 접수 시스템",
   "main": "src/main-simple.js",
   "homepage": "./",
   "scripts": {
@@ -15,17 +15,23 @@
     "lint:fix": "eslint src/ --fix",
     "format": "prettier --write src/",
     "build": "electron-builder",
-    "build:win": "electron-builder --win",
+    "build:win": "electron-builder --win --x64",
+    "build:win32": "electron-builder --win --ia32",
+    "build:mac": "electron-builder --mac",
+    "build:mac-arm": "electron-builder --mac --arm64",
+    "build:mac-intel": "electron-builder --mac --x64",
+    "build:all": "electron-builder --win --mac",
     "pack": "electron-builder --dir"
   },
   "keywords": [
     "yumyum",
     "order",
     "management",
-    "javascript"
+    "electron",
+    "desktop"
   ],
   "author": "DoWon Jung",
-  "license": "ISC",
+  "license": "MIT",
   "type": "commonjs",
   "devDependencies": {
     "@eslint/js": "^9.36.0",
@@ -38,9 +44,10 @@
   },
   "build": {
     "appId": "com.yumyum.order.management",
-    "productName": "YumYum 주문 접수 시스템",
+    "productName": "YumYum 주문접수",
     "directories": {
-      "output": "dist"
+      "output": "dist",
+      "buildResources": "assets"
     },
     "files": [
       "src/**/*",
@@ -57,9 +64,17 @@
             "x64",
             "ia32"
           ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
         }
       ],
-      "icon": "assets/icon.ico"
+      "icon": "assets/icon.ico",
+      "requestedExecutionLevel": "asInvoker",
+      "artifactName": "${productName}-Setup-${version}-${arch}.${ext}"
     },
     "nsis": {
       "oneClick": false,
@@ -67,15 +82,59 @@
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "YumYum 주문접수"
+      "shortcutName": "YumYum 주문접수",
+      "installerIcon": "assets/icon.ico",
+      "uninstallerIcon": "assets/icon.ico",
+      "installerHeaderIcon": "assets/icon.ico",
+      "perMachine": false,
+      "deleteAppDataOnUninstall": false,
+      "language": "2066"
+    },
+    "portable": {
+      "artifactName": "${productName}-Portable-${version}-${arch}.${ext}"
     },
     "mac": {
-      "target": "dmg",
-      "icon": "assets/icon.icns"
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
+      "category": "public.app-category.business",
+      "artifactName": "${productName}-${version}-${arch}.${ext}"
+    },
+    "dmg": {
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ],
+      "title": "${productName} ${version}"
     },
     "linux": {
-      "target": "AppImage",
-      "icon": "assets/icon.png"
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "icon": "assets/icon.png",
+      "category": "Office"
     }
   }
 }

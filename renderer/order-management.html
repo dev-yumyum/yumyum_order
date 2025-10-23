@@ -55,7 +55,7 @@
                     </div>
                     
                     <!-- 신규 주문 아이템 -->
-                    <div class="order-item new-order active" onclick="selectOrder('order-1')">
+                    <div class="order-item new-order active" data-order-id="order-1" onclick="selectOrder('order-1')">
                         <div class="order-info">
                             <div class="order-type">포장 28</div>
                             <div class="order-details">
@@ -65,6 +65,11 @@
                         </div>
                         <div class="order-timer">
                             <div class="timer-circle">
+                                <svg width="48" height="48">
+                                    <circle class="timer-background" cx="24" cy="24" r="20" fill="none" stroke-width="3"/>
+                                    <circle class="timer-progress" cx="24" cy="24" r="20" fill="none" stroke-width="3" 
+                                            stroke-dasharray="125.6" stroke-dashoffset="125.6"/>
+                                </svg>
                                 <span class="timer-text">0분</span>
                             </div>
                         </div>
@@ -243,6 +248,111 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-confirm" onclick="confirmReady()">확인</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 사이드 메뉴 -->
+        <div id="sideMenu" class="side-menu-overlay">
+            <div class="side-menu-container">
+                <div class="side-menu-header">
+                    <h2>설정찬 님</h2>
+                    <button class="side-menu-close" onclick="closeSideMenu()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <div class="side-menu-content">
+                    <!-- 왼쪽: 나의 셀프서비스 -->
+                    <div class="side-menu-left">
+                        <div class="menu-section">
+                            <h3 class="menu-section-title">
+                                나의 셀프서비스
+                                <i class="fas fa-chevron-right"></i>
+                            </h3>
+                            
+                            <div class="menu-items">
+                                <button class="menu-item" onclick="openNotice()">
+                                    <i class="fas fa-bullhorn"></i>
+                                    <span>공지 · 한마디</span>
+                                </button>
+
+                                <button class="menu-item" onclick="openOrderHistory()">
+                                    <i class="fas fa-history"></i>
+                                    <span>주문내역</span>
+                                </button>
+
+                                <button class="menu-item" onclick="openOperationInfo()">
+                                    <i class="fas fa-info-circle"></i>
+                                    <span>운영정보 관리</span>
+                                </button>
+
+                                <button class="menu-item" onclick="openMenuManagement()">
+                                    <i class="fas fa-utensils"></i>
+                                    <span>메뉴 품절 관리</span>
+                                </button>
+
+                                <button class="menu-item" onclick="openReviewManagement()">
+                                    <i class="fas fa-edit"></i>
+                                    <span>리뷰 관리</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 하단 설정 메뉴 -->
+                        <div class="menu-settings">
+                            <button class="settings-item" onclick="openOrderSettings()">
+                                <i class="fas fa-receipt"></i>
+                                <span>주문접수</span>
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                            
+                            <button class="settings-item" onclick="openOperationSettings()">
+                                <i class="fas fa-cog"></i>
+                                <span>운영 설정</span>
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                            
+                            <button class="settings-item" onclick="openPrinterSettings()">
+                                <i class="fas fa-print"></i>
+                                <span>프린트 설정</span>
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                            
+                                <button class="settings-item" onclick="openNotificationSettings()">
+                                    <i class="fas fa-bell"></i>
+                                    <span>알림 설정</span>
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+
+                                <button class="settings-item-link" onclick="openFAQ()">
+                                    자주 묻는 질문 바로가기
+                                </button>
+                        </div>
+
+                        <!-- 고객센터 정보 -->
+                        <div class="customer-service">
+                            <p class="service-title">얌얌픽업 고객센터</p>
+                            <p class="service-info">유선번호 : 1600-2111</p>
+                        </div>
+                    </div>
+
+                    <!-- 오른쪽: 공지사항 -->
+                    <div class="side-menu-right">
+                        <div class="notice-section">
+                            <h3 class="notice-title">
+                                공지사항
+                                <i class="fas fa-chevron-right"></i>
+                            </h3>
+
+                            <div class="notice-list" id="noticeList">
+                                <div class="notice-empty">
+                                    <i class="fas fa-info-circle"></i>
+                                    <p>등록된 공지사항이 없습니다.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

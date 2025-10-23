@@ -9,13 +9,25 @@ let settings = {
         volumeLevel: 3, // 1-6 단계
         autoAcceptEnabled: false,
         autoAcceptTime: 15, // 5-60분
-        pickupPrintEnabled: false
+        pickupPrintEnabled: false,
+        autoLoginEnabled: false,
+        autoPauseEnabled: true,
+        originPrintEnabled: false
     },
     printer: {
-        autoPrintEnabled: true, // 주문 접수 시 자동 영수증 출력
+        enabled: true,
+        printerName: '프린터',
+        copies: 3, // 0-6
+        connectionPort: '선택없음',
+        connectionSpeed: 9600,
+        autoPrintEnabled: true,
+        orderReceiptCount: 1,
+        orderSheetCount: 1,
+        orderReceiptEnabled: true,
+        orderSheetEnabled: true,
         selectedPrinter: '',
         paperWidth: 80,
-        printSpeed: 150, // mm/s
+        printSpeed: 150,
         paperCut: 'auto',
         printerSize: {
             width: 142,
@@ -63,25 +75,62 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // 설정 초기화
 function initializeSettings() {
+    // 운영 설정 - 자동 로그인
+    document.getElementById('autoLoginEnabled')?.addEventListener('change', (e) => {
+        settings.general.autoLoginEnabled = e.target.checked;
+        saveSettings();
+        showToast('자동 로그인 설정이 저장되었습니다', 'success');
+    });
+
+    // 운영 설정 - 자동 영업 임시중지
+    document.getElementById('autoPauseEnabled')?.addEventListener('change', (e) => {
+        settings.general.autoPauseEnabled = e.target.checked;
+        saveSettings();
+        showToast('자동 영업 임시중지 설정이 저장되었습니다', 'success');
+    });
+
+    // 운영 설정 - 원산지 출력
+    document.getElementById('originPrintEnabled')?.addEventListener('change', (e) => {
+        settings.general.originPrintEnabled = e.target.checked;
+        saveSettings();
+        showToast('원산지 출력 설정이 저장되었습니다', 'success');
+    });
+
     // 전반 설정
-    document.getElementById('storeAlarmEnabled').addEventListener('change', (e) => {
+    document.getElementById('storeAlarmEnabled')?.addEventListener('change', (e) => {
         settings.general.storeAlarmEnabled = e.target.checked;
         toggleVolumeControl(e.target.checked);
         saveSettings();
     });
 
-    document.getElementById('autoAcceptEnabled').addEventListener('change', (e) => {
+    document.getElementById('autoAcceptEnabled')?.addEventListener('change', (e) => {
         settings.general.autoAcceptEnabled = e.target.checked;
         toggleAutoAcceptTimeSection(e.target.checked);
         saveSettings();
     });
 
-    document.getElementById('pickupPrintEnabled').addEventListener('change', (e) => {
+    document.getElementById('pickupPrintEnabled')?.addEventListener('change', (e) => {
         settings.general.pickupPrintEnabled = e.target.checked;
         saveSettings();
     });
 
     // 프린터 설정
+    document.getElementById('printerEnabled')?.addEventListener('change', (e) => {
+        settings.printer.enabled = e.target.checked;
+        saveSettings();
+        showToast('프린터 사용 설정이 저장되었습니다', 'success');
+    });
+
+    document.getElementById('orderReceiptEnabled')?.addEventListener('change', (e) => {
+        settings.printer.orderReceiptEnabled = e.target.checked;
+        saveSettings();
+    });
+
+    document.getElementById('orderSheetEnabled')?.addEventListener('change', (e) => {
+        settings.printer.orderSheetEnabled = e.target.checked;
+        saveSettings();
+    });
+
     document.getElementById('autoPrintEnabled')?.addEventListener('change', (e) => {
         settings.printer.autoPrintEnabled = e.target.checked;
         saveSettings();
@@ -127,16 +176,35 @@ function loadSettings() {
 
 // 설정 적용
 function applySettings() {
+    // 운영 설정
+    if (document.getElementById('autoLoginEnabled')) {
+        document.getElementById('autoLoginEnabled').checked = settings.general.autoLoginEnabled;
+    }
+    if (document.getElementById('autoPauseEnabled')) {
+        document.getElementById('autoPauseEnabled').checked = settings.general.autoPauseEnabled;
+    }
+    if (document.getElementById('originPrintEnabled')) {
+        document.getElementById('originPrintEnabled').checked = settings.general.originPrintEnabled;
+    }
+
     // 전반 설정
-    document.getElementById('storeAlarmEnabled').checked = settings.general.storeAlarmEnabled;
-    document.getElementById('autoAcceptEnabled').checked = settings.general.autoAcceptEnabled;
-    document.getElementById('pickupPrintEnabled').checked = settings.general.pickupPrintEnabled;
+    if (document.getElementById('storeAlarmEnabled')) {
+        document.getElementById('storeAlarmEnabled').checked = settings.general.storeAlarmEnabled;
+    }
+    if (document.getElementById('autoAcceptEnabled')) {
+        document.getElementById('autoAcceptEnabled').checked = settings.general.autoAcceptEnabled;
+    }
+    if (document.getElementById('pickupPrintEnabled')) {
+        document.getElementById('pickupPrintEnabled').checked = settings.general.pickupPrintEnabled;
+    }
     
     // 볼륨 레벨 적용
     setVolumeLevel(settings.general.volumeLevel || 3);
     
     // 자동접수 시간 적용
-    document.getElementById('autoAcceptTime').textContent = settings.general.autoAcceptTime || 15;
+    if (document.getElementById('autoAcceptTime')) {
+        document.getElementById('autoAcceptTime').textContent = settings.general.autoAcceptTime || 15;
+    }
     
     // 볼륨 컨트롤 표시/숨김
     toggleVolumeControl(settings.general.storeAlarmEnabled);
@@ -145,6 +213,33 @@ function applySettings() {
     toggleAutoAcceptTimeSection(settings.general.autoAcceptEnabled);
 
     // 프린터 설정
+    if (document.getElementById('printerEnabled')) {
+        document.getElementById('printerEnabled').checked = settings.printer.enabled;
+    }
+    if (document.getElementById('printerName')) {
+        document.getElementById('printerName').value = settings.printer.printerName;
+    }
+    if (document.getElementById('printerCopies')) {
+        document.getElementById('printerCopies').value = `${settings.printer.copies}출`;
+    }
+    if (document.getElementById('connectionPort')) {
+        document.getElementById('connectionPort').value = settings.printer.connectionPort;
+    }
+    if (document.getElementById('connectionSpeed')) {
+        document.getElementById('connectionSpeed').value = settings.printer.connectionSpeed;
+    }
+    if (document.getElementById('orderReceiptCount')) {
+        document.getElementById('orderReceiptCount').textContent = `${settings.printer.orderReceiptCount}장`;
+    }
+    if (document.getElementById('orderSheetCount')) {
+        document.getElementById('orderSheetCount').textContent = `${settings.printer.orderSheetCount}장`;
+    }
+    if (document.getElementById('orderReceiptEnabled')) {
+        document.getElementById('orderReceiptEnabled').checked = settings.printer.orderReceiptEnabled;
+    }
+    if (document.getElementById('orderSheetEnabled')) {
+        document.getElementById('orderSheetEnabled').checked = settings.printer.orderSheetEnabled;
+    }
     if (document.getElementById('autoPrintEnabled')) {
         document.getElementById('autoPrintEnabled').checked = settings.printer.autoPrintEnabled;
     }
@@ -703,6 +798,280 @@ function toggleAutoAcceptTimeSection(show) {
     }
 }
 
+// ============= 운영 설정 전용 함수 =============
+
+// 준비시간 설정 열기
+function openPrepTimeSettings() {
+    showToast('주문 준비시간 설정 기능은 준비 중입니다', 'info');
+}
+
+// 순서 변경 드래그 앤 드롭 기능
+let draggedElement = null;
+
+// 드래그 시작
+function handleDragStart(e) {
+    draggedElement = this;
+    this.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/html', this.innerHTML);
+}
+
+// 드래그 오버
+function handleDragOver(e) {
+    if (e.preventDefault) {
+        e.preventDefault();
+    }
+    e.dataTransfer.dropEffect = 'move';
+    return false;
+}
+
+// 드래그 엔터
+function handleDragEnter(e) {
+    this.classList.add('drag-over');
+}
+
+// 드래그 리브
+function handleDragLeave(e) {
+    this.classList.remove('drag-over');
+}
+
+// 드롭
+function handleDrop(e) {
+    if (e.stopPropagation) {
+        e.stopPropagation();
+    }
+
+    if (draggedElement !== this) {
+        // 순서 변경
+        const parent = this.parentNode;
+        const draggedIndex = Array.from(parent.children).indexOf(draggedElement);
+        const targetIndex = Array.from(parent.children).indexOf(this);
+
+        if (draggedIndex < targetIndex) {
+            parent.insertBefore(draggedElement, this.nextSibling);
+        } else {
+            parent.insertBefore(draggedElement, this);
+        }
+
+        showToast('순서가 변경되었습니다', 'success');
+        saveOrderSequence();
+    }
+
+    this.classList.remove('drag-over');
+    return false;
+}
+
+// 드래그 종료
+function handleDragEnd(e) {
+    this.classList.remove('dragging');
+    
+    // 모든 drag-over 클래스 제거
+    document.querySelectorAll('.sequence-item').forEach(item => {
+        item.classList.remove('drag-over');
+    });
+}
+
+// 드래그 앤 드롭 초기화
+function initializeDragDrop() {
+    const sequenceItems = document.querySelectorAll('.sequence-item');
+    
+    sequenceItems.forEach(item => {
+        item.addEventListener('dragstart', handleDragStart, false);
+        item.addEventListener('dragenter', handleDragEnter, false);
+        item.addEventListener('dragover', handleDragOver, false);
+        item.addEventListener('dragleave', handleDragLeave, false);
+        item.addEventListener('drop', handleDrop, false);
+        item.addEventListener('dragend', handleDragEnd, false);
+    });
+}
+
+// 순서 저장
+function saveOrderSequence() {
+    const sequenceContainer = document.getElementById('orderInfoSequence');
+    if (!sequenceContainer) return;
+
+    const items = Array.from(sequenceContainer.querySelectorAll('.sequence-item span'));
+    const sequence = items.map(span => span.textContent);
+    
+    settings.orderInfoSequence = sequence;
+    saveSettings();
+}
+
+// 페이지 로드 시 드래그 앤 드롭 초기화
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(initializeDragDrop, 500);
+    });
+} else {
+    setTimeout(initializeDragDrop, 500);
+}
+
+// ============= 프린터 설정 전용 함수 =============
+
+// 프린터 탭 전환
+function switchPrinterTab(tabName) {
+    // 모든 탭 버튼에서 active 제거
+    document.querySelectorAll('.printer-tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // 선택된 탭 버튼에 active 추가
+    const selectedBtn = document.querySelector(`.printer-tab-btn[data-tab="${tabName}"]`);
+    if (selectedBtn) {
+        selectedBtn.classList.add('active');
+    }
+    
+    // TODO: 탭별 콘텐츠 표시/숨김 처리
+    showToast(`${tabName} 탭이 선택되었습니다`, 'info');
+}
+
+// 프린터 도움말 열기
+function openPrinterHelp() {
+    showToast('프린터 설정 방법 안내를 표시합니다', 'info');
+}
+
+// 프린터명 변경 모달
+function openPrinterNameModal() {
+    const newName = prompt('프린터명을 입력하세요:', settings.printer.printerName);
+    if (newName && newName.trim()) {
+        settings.printer.printerName = newName.trim();
+        document.getElementById('printerName').value = newName.trim();
+        saveSettings();
+        showToast('프린터명이 변경되었습니다', 'success');
+    }
+}
+
+// 출력꼬 선택 모달 열기
+function openCopiesModal() {
+    const modal = document.getElementById('copiesModal');
+    if (modal) {
+        // 현재 설정값 선택
+        const currentCopies = settings.printer.copies;
+        const radio = document.querySelector(`input[name="copies"][value="${currentCopies}"]`);
+        if (radio) {
+            radio.checked = true;
+        }
+        modal.classList.add('show');
+        modal.style.display = 'flex';
+    }
+}
+
+// 출력꼬 선택 모달 닫기
+function closeCopiesModal() {
+    const modal = document.getElementById('copiesModal');
+    if (modal) {
+        modal.classList.remove('show');
+        modal.style.display = 'none';
+    }
+}
+
+// 출력꼬 저장
+function saveCopies() {
+    const selected = document.querySelector('input[name="copies"]:checked');
+    if (selected) {
+        const copies = parseInt(selected.value);
+        settings.printer.copies = copies;
+        document.getElementById('printerCopies').value = `${copies}출`;
+        saveSettings();
+        showToast(`출력꼬가 ${copies}출로 설정되었습니다`, 'success');
+        closeCopiesModal();
+    }
+}
+
+// 연결포트 모달
+function openPortModal() {
+    showToast('연결포트 설정 기능은 준비 중입니다', 'info');
+}
+
+// 연결속도 선택 모달 열기
+function openSpeedModal() {
+    const modal = document.getElementById('speedModal');
+    if (modal) {
+        // 현재 설정값 선택
+        const currentSpeed = settings.printer.connectionSpeed;
+        const radio = document.querySelector(`input[name="speed"][value="${currentSpeed}"]`);
+        if (radio) {
+            radio.checked = true;
+        }
+        modal.classList.add('show');
+        modal.style.display = 'flex';
+    }
+}
+
+// 연결속도 선택 모달 닫기
+function closeSpeedModal() {
+    const modal = document.getElementById('speedModal');
+    if (modal) {
+        modal.classList.remove('show');
+        modal.style.display = 'none';
+    }
+}
+
+// 연결속도 저장
+function saveSpeed() {
+    const selected = document.querySelector('input[name="speed"]:checked');
+    if (selected) {
+        const speed = selected.value === 'default' ? '사용자 설정' : selected.value;
+        if (speed !== '사용자 설정') {
+            settings.printer.connectionSpeed = parseInt(speed);
+        }
+        document.getElementById('connectionSpeed').value = speed;
+        saveSettings();
+        showToast(`연결속도가 ${speed}로 설정되었습니다`, 'success');
+        closeSpeedModal();
+    }
+}
+
+// 인쇄 매수 증가
+function increasePrintCount(type) {
+    if (type === 'orderReceipt') {
+        if (settings.printer.orderReceiptCount < 10) {
+            settings.printer.orderReceiptCount++;
+            document.getElementById('orderReceiptCount').textContent = `${settings.printer.orderReceiptCount}장`;
+            saveSettings();
+        } else {
+            showToast('최대 10장까지 설정 가능합니다', 'warning');
+        }
+    } else if (type === 'orderSheet') {
+        if (settings.printer.orderSheetCount < 10) {
+            settings.printer.orderSheetCount++;
+            document.getElementById('orderSheetCount').textContent = `${settings.printer.orderSheetCount}장`;
+            saveSettings();
+        } else {
+            showToast('최대 10장까지 설정 가능합니다', 'warning');
+        }
+    }
+}
+
+// 인쇄 매수 감소
+function decreasePrintCount(type) {
+    if (type === 'orderReceipt') {
+        if (settings.printer.orderReceiptCount > 1) {
+            settings.printer.orderReceiptCount--;
+            document.getElementById('orderReceiptCount').textContent = `${settings.printer.orderReceiptCount}장`;
+            saveSettings();
+        } else {
+            showToast('최소 1장부터 설정 가능합니다', 'warning');
+        }
+    } else if (type === 'orderSheet') {
+        if (settings.printer.orderSheetCount > 1) {
+            settings.printer.orderSheetCount--;
+            document.getElementById('orderSheetCount').textContent = `${settings.printer.orderSheetCount}장`;
+            saveSettings();
+        } else {
+            showToast('최소 1장부터 설정 가능합니다', 'warning');
+        }
+    }
+}
+
+// 모달 외부 클릭 시 닫기
+document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('modal-overlay')) {
+        closeSpeedModal();
+        closeCopiesModal();
+    }
+});
+
 // 설정 내보내기 (다른 페이지에서 사용)
 function getSettings() {
     return settings;
@@ -711,4 +1080,6 @@ function getSettings() {
 // 백엔드 API 연결은 backend-config.js에서 관리됩니다
 
 console.log('YumYum 설정 화면 로드 완료');
+
+
 
