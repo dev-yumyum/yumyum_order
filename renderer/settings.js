@@ -745,27 +745,9 @@ function updateVolumeGaugeUI(level) {
 function playVolumeTestSound(level) {
     if (!settings.general.storeAlarmEnabled) return;
     
-    // 볼륨 레벨에 따른 실제 볼륨 값 (0-100)
-    const volumeValue = (level / 6) * 100;
-    
-    // 실제 사운드 재생 (Web Audio API 사용)
-    // 여기서는 간단한 비프음으로 테스트
-    try {
-        const context = new (window.AudioContext || window.webkitAudioContext)();
-        const oscillator = context.createOscillator();
-        const gainNode = context.createGain();
-        
-        oscillator.connect(gainNode);
-        gainNode.connect(context.destination);
-        
-        oscillator.frequency.value = 800; // 800Hz
-        gainNode.gain.value = volumeValue / 100 * 0.3; // 볼륨 조절
-        
-        oscillator.start();
-        setTimeout(() => oscillator.stop(), 100); // 0.1초 재생
-    } catch (error) {
-        console.log('사운드 테스트 실패:', error);
-    }
+    // 현재 설정된 알림음 재생
+    const soundId = settings.general.notificationSound || 'voice-order-received';
+    playNotificationSound(soundId, level);
 }
 
 // 볼륨 컨트롤 표시/숨김
@@ -1213,16 +1195,81 @@ function closeSoundModal() {
     }
 }
 
+// 알림음 재생 (공통 함수)
+function playNotificationSound(soundId, volumeLevel = null) {
+    try {
+        // 볼륨 레벨이 지정되지 않으면 현재 설정 사용
+        const level = volumeLevel !== null ? volumeLevel : settings.general.volumeLevel;
+        const volume = level / 6; // 0-1 범위로 변환
+        
+        // 오디오 파일 매핑 (실제 파일명)
+        const audioFiles = {
+            'voice-order-received': '주문이 접수되었습니다.m4a',
+            'voice-yumyum-pickup-order': '얌얌픽업 주문.m4a',
+            'voice-yumyum-pickup': '얌얌픽업.m4a',
+            'bell': null, // 파일 없음
+            'clear-notification': null // 파일 없음
+        };
+        
+        const audioFile = audioFiles[soundId];
+        
+        // 실제 오디오 파일이 있으면 재생
+        if (audioFile) {
+            const audio = new Audio(`../assets/sounds/${encodeURIComponent(audioFile)}`);
+            audio.volume = volume;
+            audio.play().catch(err => {
+                console.log('오디오 재생 실패:', err);
+                // 실패하면 비프음으로 대체
+                playBeepSound(soundId, volume);
+            });
+        } else {
+            // 파일이 없으면 비프음 재생
+            playBeepSound(soundId, volume);
+        }
+        
+    } catch (error) {
+        console.log('알림음 재생 실패:', error);
+    }
+}
+
+// 비프음 재생 (오디오 파일이 없을 때)
+function playBeepSound(soundId, volume) {
+    try {
+        const context = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = context.createOscillator();
+        const gainNode = context.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(context.destination);
+        
+        // 알림음 종류에 따라 다른 주파수 사용
+        const frequencies = {
+            'voice-order-received': 800,
+            'voice-yumyum-pickup-order': 900,
+            'voice-yumyum-pickup': 1000,
+            'bell': 600,
+            'clear-notification': 1200
+        };
+        
+        oscillator.frequency.value = frequencies[soundId] || 800;
+        gainNode.gain.value = volume * 0.3;
+        
+        oscillator.start();
+        setTimeout(() => {
+            oscillator.stop();
+            context.close();
+        }, 150);
+    } catch (error) {
+        console.log('비프음 재생 실패:', error);
+    }
+}
+
 // 알림음 미리듣기
 function playSound(soundId, event) {
     event.preventDefault();
     event.stopPropagation();
     
-    // TODO: 실제 오디오 파일 재생 구현
-    // const audio = new Audio(`/assets/sounds/${soundId}.mp3`);
-    // audio.volume = settings.general.volumeLevel / 6;
-    // audio.play();
-    
+    playNotificationSound(soundId);
     showToast(`"${soundNames[soundId]}" 미리듣기`, 'info');
 }
 
