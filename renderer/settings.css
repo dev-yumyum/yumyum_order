@@ -136,7 +136,7 @@ body {
 
 .settings-panel {
     display: none;
-    max-width: 800px;
+    max-width: 1200px;
 }
 
 .settings-panel.active {
@@ -146,19 +146,20 @@ body {
 .settings-section {
     background: white;
     border-radius: 8px;
-    padding: 30px;
+    padding: 36px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .settings-section h2 {
-    font-size: 18px;
-    margin-bottom: 25px;
+    font-size: 21px;
+    font-weight: 600;
+    margin-bottom: 30px;
     color: #333;
 }
 
 /* 설정 아이템 */
 .setting-item {
-    padding: 20px 0;
+    padding: 28px 0;
     border-bottom: 1px solid #f0f0f0;
     display: flex;
     justify-content: space-between;
@@ -172,8 +173,8 @@ body {
 .setting-item.clickable {
     cursor: pointer;
     transition: background 0.2s;
-    padding: 20px;
-    margin: 0 -20px;
+    padding: 28px 24px;
+    margin: 0 -24px;
 }
 
 .setting-item.clickable:hover {
@@ -182,27 +183,28 @@ body {
 
 .setting-info {
     flex: 1;
+    padding-right: 20px;
 }
 
 .setting-info h3 {
-    font-size: 16px;
-    font-weight: 500;
-    margin-bottom: 5px;
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 8px;
     color: #333;
 }
 
 .setting-info p {
-    font-size: 13px;
+    font-size: 14px;
     color: #666;
-    line-height: 1.5;
+    line-height: 1.6;
 }
 
 /* 토글 스위치 */
 .toggle-switch {
     position: relative;
     display: inline-block;
-    width: 50px;
-    height: 28px;
+    width: 56px;
+    height: 32px;
 }
 
 .toggle-switch input {
@@ -220,14 +222,14 @@ body {
     bottom: 0;
     background-color: #ccc;
     transition: .3s;
-    border-radius: 28px;
+    border-radius: 32px;
 }
 
 .slider:before {
     position: absolute;
     content: "";
-    height: 20px;
-    width: 20px;
+    height: 24px;
+    width: 24px;
     left: 4px;
     bottom: 4px;
     background-color: white;
@@ -240,7 +242,7 @@ input:checked + .slider {
 }
 
 input:checked + .slider:before {
-    transform: translateX(22px);
+    transform: translateX(24px);
 }
 
 /* 상세 버튼 */
@@ -271,11 +273,12 @@ input:checked + .slider:before {
 .btn-secondary {
     background: white;
     border: 1px solid #ddd;
-    padding: 8px 16px;
-    border-radius: 4px;
+    padding: 10px 20px;
+    border-radius: 6px;
     cursor: pointer;
     color: #666;
-    font-size: 14px;
+    font-size: 15px;
+    font-weight: 500;
     transition: all 0.2s;
 }
 
@@ -287,11 +290,12 @@ input:checked + .slider:before {
 .btn-primary {
     background: #2196F3;
     border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
+    padding: 12px 24px;
+    border-radius: 6px;
     cursor: pointer;
     color: white;
-    font-size: 14px;
+    font-size: 15px;
+    font-weight: 500;
     transition: all 0.2s;
 }
 
@@ -757,8 +761,8 @@ input:checked + .slider:before {
 .settings-two-column {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 40px;
-    margin-bottom: 30px;
+    gap: 50px;
+    margin-bottom: 40px;
 }
 
 .settings-column-left,
@@ -772,19 +776,19 @@ input:checked + .slider:before {
     background: #f8f9fa;
     border: 1px solid #e0e0e0;
     border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 20px;
+    padding: 24px;
+    margin-bottom: 24px;
 }
 
 .setting-group-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .setting-group-header h3 {
-    font-size: 16px;
+    font-size: 17px;
     font-weight: 600;
     color: #333;
     margin: 0;
@@ -792,9 +796,10 @@ input:checked + .slider:before {
 
 .group-description {
     color: #666;
-    font-size: 13px;
-    margin-top: 5px;
-    margin-bottom: 15px;
+    font-size: 14px;
+    margin-top: 8px;
+    margin-bottom: 20px;
+    line-height: 1.5;
 }
 
 .btn-link {
@@ -845,25 +850,27 @@ input:checked + .slider:before {
 .order-info-sequence {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 12px;
 }
 
 .sequence-item {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 15px;
+    gap: 16px;
+    padding: 18px 20px;
     background: white;
-    border: 1px solid #e0e0e0;
+    border: 2px solid #e0e0e0;
     border-radius: 8px;
     cursor: move;
     transition: all 0.2s;
+    min-height: 60px;
 }
 
 .sequence-item:hover {
     background: #f8f9fa;
     border-color: #2196F3;
     box-shadow: 0 2px 8px rgba(33, 150, 243, 0.1);
+    transform: translateY(-2px);
 }
 
 .sequence-item.dragging {
@@ -873,13 +880,14 @@ input:checked + .slider:before {
 
 .sequence-item i {
     color: #999;
-    font-size: 16px;
+    font-size: 18px;
 }
 
 .sequence-item span {
-    font-size: 14px;
+    font-size: 15px;
     color: #333;
     font-weight: 500;
+    letter-spacing: -0.3px;
 }
 
 /* 버튼 스타일 */
@@ -981,18 +989,30 @@ input:checked + .slider:before {
 .printer-left-section {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 24px;
+}
+
+.printer-left-section .setting-item {
+    padding: 0;
+    border: none;
+}
+
+.printer-left-section .setting-item .setting-info h3 {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 0;
+    color: #333;
 }
 
 .printer-field {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
 }
 
 .printer-field label {
-    font-size: 14px;
-    font-weight: 500;
+    font-size: 15px;
+    font-weight: 600;
     color: #333;
 }
 
@@ -1036,7 +1056,7 @@ input:checked + .slider:before {
 
 /* 테스트 출력 섹션 */
 .printer-test-section {
-    margin-top: 20px;
+    margin-top: 4px;
     padding: 20px;
     background: #f8f9fa;
     border: 1px solid #e0e0e0;
@@ -1044,7 +1064,7 @@ input:checked + .slider:before {
 }
 
 .printer-test-section h3 {
-    font-size: 16px;
+    font-size: 17px;
     font-weight: 600;
     color: #333;
     margin: 0 0 10px 0;
@@ -1082,14 +1102,14 @@ input:checked + .slider:before {
 }
 
 .auto-print-header {
-    margin-bottom: 15px;
+    margin-bottom: 4px;
 }
 
 .auto-print-header h3 {
-    font-size: 16px;
+    font-size: 17px;
     font-weight: 600;
     color: #333;
-    margin: 0 0 8px 0;
+    margin: 0 0 10px 0;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -1122,6 +1142,11 @@ input:checked + .slider:before {
     background: #f8f9fa;
     border: 1px solid #e0e0e0;
     border-radius: 8px;
+    margin-bottom: 16px;
+}
+
+.auto-print-item:last-child {
+    margin-bottom: 0;
 }
 
 .auto-print-label {
@@ -1133,7 +1158,7 @@ input:checked + .slider:before {
 
 .auto-print-label > span {
     font-size: 15px;
-    font-weight: 500;
+    font-weight: 600;
     color: #333;
 }
 
@@ -1459,5 +1484,74 @@ input:checked + .slider:before {
 .settings-content::-webkit-scrollbar-thumb:hover,
 .modal-body::-webkit-scrollbar-thumb:hover {
     background: #555;
+}
+
+/* 포트 선택 모달 */
+.btn-refresh {
+    width: 100%;
+    padding: 10px;
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s;
+}
+
+.btn-refresh:hover {
+    background: #e9ecef;
+    border-color: #2196F3;
+    color: #2196F3;
+}
+
+.btn-refresh i {
+    font-size: 14px;
+}
+
+.port-option {
+    padding: 15px !important;
+}
+
+.port-option .port-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    margin-left: 10px;
+}
+
+.port-label {
+    font-size: 15px;
+    font-weight: 500;
+    color: #333;
+}
+
+.port-detail {
+    font-size: 13px;
+    color: #666;
+}
+
+.loading-message,
+.error-message,
+.no-ports-message {
+    padding: 20px;
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+}
+
+.error-message {
+    color: #dc3545;
+}
+
+.no-ports-message {
+    color: #999;
 }
 

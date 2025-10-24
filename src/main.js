@@ -5,6 +5,7 @@
 
 const { app, BrowserWindow, Menu, ipcMain, dialog, shell } = require('electron');
 const path = require('path');
+const { SerialPort } = require('serialport');
 const isDev = process.env.NODE_ENV === 'development';
 
 // YumYum 애플리케이션 로직
@@ -185,6 +186,26 @@ function setupIpcHandlers() {
       const order = orderApp.getOrder(orderId);
       return { success: true, order };
     } catch (error) {
+      return { success: false, error: error.message };
+    }
+  });
+
+  // 시리얼 포트 목록 조회
+  ipcMain.handle('get-serial-ports', async () => {
+    try {
+      const ports = await SerialPort.list();
+      return { 
+        success: true, 
+        ports: ports.map(port => ({
+          path: port.path,
+          manufacturer: port.manufacturer,
+          serialNumber: port.serialNumber,
+          productId: port.productId,
+          vendorId: port.vendorId
+        }))
+      };
+    } catch (error) {
+      console.error('시리얼 포트 조회 오류:', error);
       return { success: false, error: error.message };
     }
   });

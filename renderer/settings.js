@@ -220,7 +220,7 @@ function applySettings() {
         document.getElementById('printerName').value = settings.printer.printerName;
     }
     if (document.getElementById('printerCopies')) {
-        document.getElementById('printerCopies').value = `${settings.printer.copies}출`;
+        document.getElementById('printerCopies').value = `${settings.printer.copies}줄`;
     }
     if (document.getElementById('connectionPort')) {
         document.getElementById('connectionPort').value = settings.printer.connectionPort;
@@ -941,7 +941,7 @@ function openPrinterNameModal() {
     }
 }
 
-// 출력꼬 선택 모달 열기
+// 줄바꿈 선택 모달 열기
 function openCopiesModal() {
     const modal = document.getElementById('copiesModal');
     if (modal) {
@@ -956,7 +956,7 @@ function openCopiesModal() {
     }
 }
 
-// 출력꼬 선택 모달 닫기
+// 줄바꿈 선택 모달 닫기
 function closeCopiesModal() {
     const modal = document.getElementById('copiesModal');
     if (modal) {
@@ -965,22 +965,119 @@ function closeCopiesModal() {
     }
 }
 
-// 출력꼬 저장
+// 줄바꿈 저장
 function saveCopies() {
     const selected = document.querySelector('input[name="copies"]:checked');
     if (selected) {
         const copies = parseInt(selected.value);
         settings.printer.copies = copies;
-        document.getElementById('printerCopies').value = `${copies}출`;
+        document.getElementById('printerCopies').value = `${copies}줄`;
         saveSettings();
-        showToast(`출력꼬가 ${copies}출로 설정되었습니다`, 'success');
+        showToast(`줄바꿈이 ${copies}줄로 설정되었습니다`, 'success');
         closeCopiesModal();
     }
 }
 
-// 연결포트 모달
-function openPortModal() {
-    showToast('연결포트 설정 기능은 준비 중입니다', 'info');
+// 연결포트 모달 열기
+async function openPortModal() {
+    const modal = document.getElementById('portModal');
+    if (modal) {
+        modal.classList.add('show');
+        modal.style.display = 'flex';
+        await loadSerialPorts();
+    }
+}
+
+// 연결포트 모달 닫기
+function closePortModal() {
+    const modal = document.getElementById('portModal');
+    if (modal) {
+        modal.classList.remove('show');
+        modal.style.display = 'none';
+    }
+}
+
+// 시리얼 포트 목록 로드
+async function loadSerialPorts() {
+    const portRadioGroup = document.getElementById('portRadioGroup');
+    if (!portRadioGroup) return;
+
+    // 로딩 메시지 표시
+    portRadioGroup.innerHTML = '<div class="loading-message">포트를 검색 중입니다...</div>';
+
+    try {
+        if (!window.electron || !window.electron.getSerialPorts) {
+            portRadioGroup.innerHTML = '<div class="error-message">포트 검색 기능을 사용할 수 없습니다.</div>';
+            return;
+        }
+
+        const result = await window.electron.getSerialPorts();
+        
+        if (!result.success) {
+            portRadioGroup.innerHTML = '<div class="error-message">포트 검색 중 오류가 발생했습니다.</div>';
+            return;
+        }
+
+        const ports = result.ports;
+
+        if (ports.length === 0) {
+            portRadioGroup.innerHTML = '<div class="no-ports-message">사용 가능한 포트가 없습니다.</div>';
+            return;
+        }
+
+        // 포트 목록 표시
+        let html = '';
+        ports.forEach((port, index) => {
+            const isChecked = port.path === settings.printer.connectionPort ? 'checked' : '';
+            const portLabel = port.manufacturer 
+                ? `${port.path} (${port.manufacturer})`
+                : port.path;
+            
+            html += `
+                <label class="radio-option port-option">
+                    <input type="radio" name="port" value="${port.path}" ${isChecked}>
+                    <div class="port-info">
+                        <span class="port-label">${portLabel}</span>
+                        ${port.serialNumber ? `<span class="port-detail">S/N: ${port.serialNumber}</span>` : ''}
+                    </div>
+                </label>
+            `;
+        });
+
+        // "선택없음" 옵션 추가
+        const noneChecked = settings.printer.connectionPort === '선택없음' ? 'checked' : '';
+        html += `
+            <label class="radio-option">
+                <input type="radio" name="port" value="선택없음" ${noneChecked}>
+                <span class="radio-label">선택없음</span>
+            </label>
+        `;
+
+        portRadioGroup.innerHTML = html;
+
+    } catch (error) {
+        console.error('포트 로드 오류:', error);
+        portRadioGroup.innerHTML = '<div class="error-message">포트 검색 중 오류가 발생했습니다.</div>';
+    }
+}
+
+// 포트 새로고침
+async function refreshPorts() {
+    await loadSerialPorts();
+    showToast('포트 목록을 새로고침했습니다', 'success');
+}
+
+// 연결포트 저장
+function savePort() {
+    const selected = document.querySelector('input[name="port"]:checked');
+    if (selected) {
+        const port = selected.value;
+        settings.printer.connectionPort = port;
+        document.getElementById('connectionPort').value = port;
+        saveSettings();
+        showToast(`연결포트가 ${port}로 설정되었습니다`, 'success');
+        closePortModal();
+    }
 }
 
 // 연결속도 선택 모달 열기

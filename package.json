@@ -136,5 +136,8 @@
       "icon": "assets/icon.png",
       "category": "Office"
     }
+  },
+  "dependencies": {
+    "serialport": "^13.0.0"
   }
 }

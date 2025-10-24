@@ -109,27 +109,6 @@
                             <div class="settings-section">
                                 <div class="setting-group">
                                     <div class="setting-group-header">
-                                        <h3>주문 준비시간 설정</h3>
-                                        <button class="btn-link" onclick="openPrepTimeSettings()">설정</button>
-                                    </div>
-                                    <div class="prep-time-list">
-                                        <div class="prep-time-item">
-                                            <span class="prep-time-label">가게배달 음식준비 + 배달시간</span>
-                                            <span class="prep-time-value">최근 시간 사용</span>
-                                        </div>
-                                        <div class="prep-time-item">
-                                            <span class="prep-time-label">얌딜 환전배달 음식 준비시간</span>
-                                            <span class="prep-time-value">15~20분</span>
-                                        </div>
-                                        <div class="prep-time-item">
-                                            <span class="prep-time-label">포장 방문 음식 준비시간</span>
-                                            <span class="prep-time-value">최근 시간 사용</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="setting-group">
-                                    <div class="setting-group-header">
                                         <h3>주문 상세 정보 순서 변경</h3>
                                         <p class="group-description">주문 상세 정보 항목을 드래그 앤 드롭하여 순서를 변경할 수 있습니다.</p>
                                     </div>
@@ -208,9 +187,9 @@
                             </div>
 
                             <div class="printer-field">
-                                <label>출력꼬</label>
+                                <label>줄바꿈</label>
                                 <div class="field-group">
-                                    <input type="text" class="input-box" id="printerCopies" value="3출" readonly>
+                                    <input type="text" class="input-box" id="printerCopies" value="3줄" readonly>
                                     <button class="btn-field" onclick="openCopiesModal()">변경</button>
                                 </div>
                             </div>
@@ -507,51 +486,88 @@
             </div>
         </div>
 
-        <!-- 출력꼬 선택 모달 -->
+        <!-- 줄바꿈 선택 모달 -->
         <div id="copiesModal" class="modal-overlay">
             <div class="modal-container copies-modal">
                 <div class="modal-header">
-                    <h3>출력꼬 선택</h3>
+                    <h3>줄바꿈 선택</h3>
                     <button class="modal-close" onclick="closeCopiesModal()">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p class="modal-description">출력꼬를 선택해주세요.</p>
+                    <p class="modal-description">줄바꿈을 선택해주세요.</p>
                     <div class="radio-group">
                         <label class="radio-option">
-                            <input type="radio" name="copies" value="0">
-                            <span class="radio-label">0출</span>
-                        </label>
-                        <label class="radio-option">
                             <input type="radio" name="copies" value="1">
-                            <span class="radio-label">1출</span>
+                            <span class="radio-label">1줄</span>
                         </label>
                         <label class="radio-option">
                             <input type="radio" name="copies" value="2">
-                            <span class="radio-label">2출</span>
+                            <span class="radio-label">2줄</span>
                         </label>
                         <label class="radio-option">
                             <input type="radio" name="copies" value="3" checked>
-                            <span class="radio-label">3출</span>
+                            <span class="radio-label">3줄</span>
                         </label>
                         <label class="radio-option">
                             <input type="radio" name="copies" value="4">
-                            <span class="radio-label">4출</span>
+                            <span class="radio-label">4줄</span>
                         </label>
                         <label class="radio-option">
                             <input type="radio" name="copies" value="5">
-                            <span class="radio-label">5출</span>
+                            <span class="radio-label">5줄</span>
                         </label>
                         <label class="radio-option">
                             <input type="radio" name="copies" value="6">
-                            <span class="radio-label">6출</span>
+                            <span class="radio-label">6줄</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="copies" value="7">
+                            <span class="radio-label">7줄</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="copies" value="8">
+                            <span class="radio-label">8줄</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="copies" value="9">
+                            <span class="radio-label">9줄</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="copies" value="10">
+                            <span class="radio-label">10줄</span>
                         </label>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn-cancel" onclick="closeCopiesModal()">취소</button>
                     <button class="btn-confirm" onclick="saveCopies()">저장</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 연결포트 선택 모달 -->
+        <div id="portModal" class="modal-overlay">
+            <div class="modal-container port-modal">
+                <div class="modal-header">
+                    <h3>연결포트 선택</h3>
+                    <button class="modal-close" onclick="closePortModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="modal-description">프린터가 연결된 포트를 선택해주세요.</p>
+                    <button class="btn-refresh" onclick="refreshPorts()">
+                        <i class="fas fa-sync-alt"></i> 포트 새로고침
+                    </button>
+                    <div class="radio-group" id="portRadioGroup">
+                        <div class="loading-message">포트를 검색 중입니다...</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-cancel" onclick="closePortModal()">취소</button>
+                    <button class="btn-confirm" onclick="savePort()">저장</button>
                 </div>
             </div>
         </div>
@@ -565,6 +581,7 @@
                 getPrinters: () => ipcRenderer.invoke('get-printers'),
                 checkPrinter: (name) => ipcRenderer.invoke('check-printer', name),
                 printReceipt: (printer, data) => ipcRenderer.invoke('print-receipt', printer, data),
+                getSerialPorts: () => ipcRenderer.invoke('get-serial-ports'),
                 closeApp: () => ipcRenderer.send('close-app')
             };
         }

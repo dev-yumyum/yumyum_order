@@ -32,6 +32,18 @@ const BUSINESS_RULES = {
     }
 };
 
+// 날짜 포맷팅 함수
+function formatOrderTime(date) {
+    const d = date instanceof Date ? date : new Date(date);
+    const year = d.getFullYear();
+    const month = d.getMonth() + 1;
+    const day = d.getDate();
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    
+    return `${year}년 ${month}월 ${day}일 ${hours}시 ${minutes}분`;
+}
+
 let orders = [
     {
         id: 'order-1',
@@ -42,7 +54,7 @@ let orders = [
         status: 'pending', // 신규 주문 상태로 변경
         customerName: '홍길동',
         customerPhone: '010-1234-5678',
-        orderTime: '02.29 14:30',
+        orderTime: formatOrderTime(new Date()),
         createdAt: new Date().toISOString(), // 생성 시간 추가
         items: [
             { name: '아이스 아메리카노', quantity: 1, price: 4000 }
@@ -304,16 +316,24 @@ function updateIntegratedOrderInfo(order) {
     // 요청사항 업데이트
     const requestsContent = document.getElementById('integratedRequests');
     if (requestsContent && order.requests) {
-        requestsContent.innerHTML = `
-            <div class="request-item">
-                <span class="request-label">가게</span>
-                <span class="request-text">${order.requests.store || '요청사항 없음'}</span>
-            </div>
-            <div class="request-item">
-                <span class="request-label">취급정</span>
-                <span class="request-text">${order.requests.extras || '요청사항 없음'}</span>
-            </div>
-        `;
+        let requestsHtml = '';
+        
+        // 가게 요청사항이 있으면 추가
+        if (order.requests.store && order.requests.store !== '요청사항 없음') {
+            requestsHtml += `<div class="request-message">${order.requests.store}</div>`;
+        }
+        
+        // 취급 요청사항이 있으면 추가
+        if (order.requests.extras && order.requests.extras !== '요청사항 없음') {
+            requestsHtml += `<div class="request-message">${order.requests.extras}</div>`;
+        }
+        
+        // 요청사항이 하나도 없으면
+        if (!requestsHtml) {
+            requestsHtml = '<div class="request-message">요청사항 없음</div>';
+        }
+        
+        requestsContent.innerHTML = requestsHtml;
     }
 }
 
@@ -427,8 +447,12 @@ function confirmReady() {
     const order = orders.find(o => o.id === selectedOrderId);
     if (order) {
         order.status = 'ready';
+        order.readyCompletedAt = new Date().toISOString(); // 준비완료 시간 저장
         showNotification('주문 준비가 완료되었습니다. 고객에게 알림을 발송했습니다.', 'success');
         console.log(`주문 ${selectedOrderId} 상태가 ready로 변경되었습니다.`);
+        
+        // 사이드바 UI 업데이트 - 준비완료 주문을 맨 아래로 이동
+        updatePreparingSection();
         
         // 주문 UI 업데이트 (필요시)
         updateOrderDisplay(order);
@@ -690,6 +714,7 @@ function filterOrdersByCondition(condition) {
 function updateTimers() {
     orders.forEach(order => {
         // 신규 상태(pending)거나 준비중(preparing) 상태일 때 타이머 증가
+        // 준비완료(ready) 상태일 때는 타이머 멈춤
         if (order.status === 'pending' || order.status === 'preparing') {
             // 초 단위로 증가 (timer는 초 단위로 저장)
             if (!order.timerSeconds) {
@@ -811,8 +836,8 @@ function showNotification(message, type = 'info') {
     // 기존 알림들을 위로 이동
     const existingNotifications = document.querySelectorAll('.notification');
     existingNotifications.forEach((notif, index) => {
-        const currentTop = parseInt(notif.style.top) || 70;
-        notif.style.top = (currentTop + 70) + 'px';
+        const currentBottom = parseInt(notif.style.bottom) || 20;
+        notif.style.bottom = (currentBottom + 70) + 'px';
     });
     
     // 새 알림 생성
@@ -841,7 +866,7 @@ function showNotification(message, type = 'info') {
     
     notification.style.cssText = `
         position: fixed;
-        top: 70px;
+        bottom: 20px;
         right: 20px;
         background: ${bgColor};
         color: white;
@@ -919,22 +944,22 @@ const style = document.createElement('style');
 style.textContent = `
     @keyframes slideIn {
         from {
-            transform: translateX(100%);
+            transform: translateY(-100%);
             opacity: 0;
         }
         to {
-            transform: translateX(0);
+            transform: translateY(0);
             opacity: 1;
         }
     }
     
     @keyframes slideOut {
         from {
-            transform: translateX(0);
+            transform: translateY(0);
             opacity: 1;
         }
         to {
-            transform: translateX(100%);
+            transform: translateY(-100%);
             opacity: 0;
         }
     }
@@ -1010,13 +1035,7 @@ function createTestOrder() {
         status: 'pending', // 신규 주문 상태
         customerName: randomCustomer.name,
         customerPhone: randomCustomer.phone,
-        orderTime: new Date().toLocaleString('ko-KR', {
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: false
-        }).replace(/\. /g, '.').replace(/, /g, ' '),
+        orderTime: formatOrderTime(new Date()),
         createdAt: new Date().toISOString(),
         items: [
             { 
@@ -1076,6 +1095,10 @@ function addOrderToSidebar(order) {
     
     if (!targetSection) return;
     
+    // 주문 시간에서 시간만 추출 (예: "2025년 10월 24일 14시 30분" -> "14:30")
+    const timeMatch = order.orderTime.match(/(\d+)시 (\d+)분/);
+    const shortTime = timeMatch ? `${timeMatch[1]}:${timeMatch[2]}` : order.orderTime;
+    
     // 주문 아이템 HTML 생성 (SVG 타이머 포함)
     const orderItemHTML = `
         <div class="order-item ${order.status === 'pending' ? 'new-order' : ''}" data-order-id="${order.id}" onclick="selectOrder('${order.id}')">
@@ -1083,7 +1106,7 @@ function addOrderToSidebar(order) {
                 <div class="order-type">${order.type} ${order.number}</div>
                 <div class="order-details">
                     <span class="menu-count">메뉴 ${order.menuCount}개</span>
-                    <span class="order-time">${order.orderTime.split(' ')[1]} ${statusLabel}</span>
+                    <span class="order-time">${shortTime} ${statusLabel}</span>
                 </div>
             </div>
             <div class="order-timer">
@@ -1112,7 +1135,7 @@ function addOrderToSidebar(order) {
 // 사이드바 카운터 업데이트
 function updateSidebarCounters() {
     const newOrders = orders.filter(o => o.status === 'pending');
-    const preparingOrders = orders.filter(o => o.status === 'preparing');
+    const preparingOrders = orders.filter(o => o.status === 'preparing' || o.status === 'ready');
     
     // 신규 카운터
     const newHeader = document.querySelector('.sidebar-section:nth-child(1) .section-header span:first-of-type');
@@ -1120,7 +1143,7 @@ function updateSidebarCounters() {
         newHeader.textContent = `신규 ${newOrders.length}건`;
     }
     
-    // 진행 카운터
+    // 진행 카운터 (준비중 + 준비완료)
     const preparingHeader = document.querySelector('.sidebar-section:nth-child(2) .section-header span:first-of-type');
     if (preparingHeader) {
         preparingHeader.textContent = `진행 ${preparingOrders.length}건`;
@@ -1185,6 +1208,7 @@ function acceptOrder() {
     order.preparationTime = currentPreparationTime;
     order.acceptedAt = new Date().toISOString();
     order.timer = 0;
+    order.timerSeconds = 0;
     
     // 접수 영역 숨김
     const acceptSection = document.getElementById('orderAcceptSection');
@@ -1196,13 +1220,11 @@ function acceptOrder() {
     showNotification(`주문이 접수되었습니다. 예상 준비시간: ${currentPreparationTime}분`, 'success');
     
     // 사이드바에서 신규에서 진행으로 이동
-    moveToPreparing(order);
+    removeFromSidebar(order.id);
+    updatePreparingSection();
     
     // 주문 디스플레이 업데이트
     updateOrderDisplay(order);
-    
-    // 사이드바 카운터 업데이트
-    updateSidebarCounters();
     
     // 영수증 자동 출력
     if (window.printHelper) {
@@ -1282,6 +1304,83 @@ function moveToPreparing(order) {
     
     // 진행중 섹션에 추가
     addOrderToSidebar(order);
+}
+
+// 진행중 섹션 업데이트 (정렬 포함)
+function updatePreparingSection() {
+    const preparingSection = document.querySelector('.sidebar-section:nth-child(2)');
+    if (!preparingSection) return;
+    
+    // 진행중 주문 필터링 및 정렬
+    const preparingOrders = orders.filter(o => o.status === 'preparing' || o.status === 'ready');
+    
+    // 정렬: 준비중(최신순) -> 준비완료(최신순)
+    preparingOrders.sort((a, b) => {
+        // 상태별로 먼저 그룹화
+        if (a.status === 'preparing' && b.status === 'ready') return -1;
+        if (a.status === 'ready' && b.status === 'preparing') return 1;
+        
+        // 같은 상태 내에서는 최신순 정렬
+        const timeA = a.status === 'ready' ? 
+            new Date(a.readyCompletedAt || a.createdAt).getTime() : 
+            new Date(a.createdAt).getTime();
+        const timeB = b.status === 'ready' ? 
+            new Date(b.readyCompletedAt || b.createdAt).getTime() : 
+            new Date(b.createdAt).getTime();
+        
+        return timeB - timeA; // 최신순 (내림차순)
+    });
+    
+    // 기존 주문 아이템 모두 제거
+    const existingOrders = preparingSection.querySelectorAll('.order-item');
+    existingOrders.forEach(item => item.remove());
+    
+    // 빈 상태 텍스트 제거
+    const noOrderText = preparingSection.querySelector('.order-status-text');
+    if (noOrderText) {
+        noOrderText.remove();
+    }
+    
+    // 정렬된 주문 아이템 다시 추가
+    if (preparingOrders.length === 0) {
+        preparingSection.insertAdjacentHTML('beforeend', '<div class="order-status-text">진행건이 없습니다</div>');
+    } else {
+        preparingOrders.forEach(order => {
+            const statusLabel = order.status === 'ready' ? '준비완료' : '접수';
+            const minutes = order.timerSeconds ? Math.floor(order.timerSeconds / 60) : 0;
+            
+            // 주문 시간에서 시간만 추출 (예: "2025년 10월 24일 14시 30분" -> "14:30")
+            const timeMatch = order.orderTime.match(/(\d+)시 (\d+)분/);
+            const shortTime = timeMatch ? `${timeMatch[1]}:${timeMatch[2]}` : order.orderTime;
+            
+            const orderItemHTML = `
+                <div class="order-item ${order.id === selectedOrderId ? 'active' : ''}" data-order-id="${order.id}" onclick="selectOrder('${order.id}')">
+                    <div class="order-info">
+                        <div class="order-type">${order.type} ${order.number}</div>
+                        <div class="order-details">
+                            <span class="menu-count">메뉴 ${order.menuCount}개</span>
+                            <span class="order-time">${order.status === 'ready' ? '준비완료' : shortTime + ' ' + statusLabel}</span>
+                        </div>
+                    </div>
+                    <div class="order-timer">
+                        <div class="timer-circle">
+                            <svg width="48" height="48">
+                                <circle class="timer-background" cx="24" cy="24" r="20" fill="none" stroke-width="3"/>
+                                <circle class="timer-progress" cx="24" cy="24" r="20" fill="none" stroke-width="3" 
+                                        stroke-dasharray="125.6" stroke-dashoffset="125.6"/>
+                            </svg>
+                            <span class="timer-text">${minutes}분</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            preparingSection.insertAdjacentHTML('beforeend', orderItemHTML);
+        });
+    }
+    
+    // 카운터 업데이트
+    updateSidebarCounters();
 }
 
 // 사이드바에서 주문 제거
@@ -1371,6 +1470,7 @@ function autoAcceptOrder(order) {
     order.preparationTime = autoTime;
     order.acceptedAt = new Date().toISOString();
     order.timer = 0;
+    order.timerSeconds = 0;
     
     // 접수 영역 숨김
     const acceptSection = document.getElementById('orderAcceptSection');
@@ -1385,13 +1485,11 @@ function autoAcceptOrder(order) {
     showNotification(`주문이 자동 접수되었습니다. 예상 준비시간: ${autoTime}분`, 'success');
     
     // 사이드바에서 신규에서 진행으로 이동
-    moveToPreparing(order);
+    removeFromSidebar(order.id);
+    updatePreparingSection();
     
     // 주문 디스플레이 업데이트
     updateOrderDisplay(order);
-    
-    // 사이드바 카운터 업데이트
-    updateSidebarCounters();
     
     // 영수증 자동 출력
     if (window.printHelper) {
