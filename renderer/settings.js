@@ -2,11 +2,21 @@
  * YumYum 설정 화면 - JavaScript
  */
 
+// 알림음 이름 매핑
+const soundNames = {
+    'voice-order-received': '주문이 접수되었습니다',
+    'voice-yumyum-pickup-order': '얍얍픽업 주문',
+    'voice-yumyum-pickup': '얌얌픽업',
+    'bell': '종소리',
+    'clear-notification': '맑은알림음'
+};
+
 // 설정 데이터
 let settings = {
     general: {
         storeAlarmEnabled: true,
         volumeLevel: 3, // 1-6 단계
+        notificationSound: 'voice-order-received', // 알림음 선택
         autoAcceptEnabled: false,
         autoAcceptTime: 15, // 5-60분
         pickupPrintEnabled: false,
@@ -200,6 +210,12 @@ function applySettings() {
     
     // 볼륨 레벨 적용
     setVolumeLevel(settings.general.volumeLevel || 3);
+    
+    // 알림음 설정 적용
+    if (document.getElementById('currentSoundDisplay')) {
+        const soundName = soundNames[settings.general.notificationSound] || '주문이 접수되었습니다';
+        document.getElementById('currentSoundDisplay').textContent = soundName;
+    }
     
     // 자동접수 시간 적용
     if (document.getElementById('autoAcceptTime')) {
@@ -1166,8 +1182,64 @@ document.addEventListener('click', (e) => {
     if (e.target.classList.contains('modal-overlay')) {
         closeSpeedModal();
         closeCopiesModal();
+        closePortModal();
+        closeSoundModal();
     }
 });
+
+// ============= 알림음 설정 =============
+
+// 알림음 선택 모달 열기
+function openSoundModal() {
+    const modal = document.getElementById('soundModal');
+    if (modal) {
+        // 현재 설정값 선택
+        const currentSound = settings.general.notificationSound;
+        const radio = document.querySelector(`input[name="sound"][value="${currentSound}"]`);
+        if (radio) {
+            radio.checked = true;
+        }
+        modal.classList.add('show');
+        modal.style.display = 'flex';
+    }
+}
+
+// 알림음 선택 모달 닫기
+function closeSoundModal() {
+    const modal = document.getElementById('soundModal');
+    if (modal) {
+        modal.classList.remove('show');
+        modal.style.display = 'none';
+    }
+}
+
+// 알림음 미리듣기
+function playSound(soundId, event) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    // TODO: 실제 오디오 파일 재생 구현
+    // const audio = new Audio(`/assets/sounds/${soundId}.mp3`);
+    // audio.volume = settings.general.volumeLevel / 6;
+    // audio.play();
+    
+    showToast(`"${soundNames[soundId]}" 미리듣기`, 'info');
+}
+
+// 알림음 저장
+function saveSound() {
+    const selected = document.querySelector('input[name="sound"]:checked');
+    if (selected) {
+        const soundId = selected.value;
+        const soundName = soundNames[soundId];
+        
+        settings.general.notificationSound = soundId;
+        document.getElementById('currentSoundDisplay').textContent = soundName;
+        saveSettings();
+        showToast(`알림음이 "${soundName}"로 설정되었습니다`, 'success');
+        closeSoundModal();
+    }
+}
 
 // 설정 내보내기 (다른 페이지에서 사용)
 function getSettings() {

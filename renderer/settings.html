@@ -302,6 +302,17 @@
 
                         <div class="setting-item">
                             <div class="setting-info">
+                                <h3>알림음 선택</h3>
+                                <p>주문 접수 시 재생될 알림음을 선택하세요</p>
+                            </div>
+                            <div class="sound-select-group">
+                                <button class="btn-field" onclick="openSoundModal()">변경</button>
+                                <div class="current-sound" id="currentSoundDisplay">주문이 접수되었습니다</div>
+                            </div>
+                        </div>
+
+                        <div class="setting-item">
+                            <div class="setting-info">
                                 <h3>자동접수</h3>
                                 <p>신규 주문이 들어오면 자동으로 접수합니다</p>
                             </div>
@@ -568,6 +579,86 @@
                 <div class="modal-footer">
                     <button class="btn-cancel" onclick="closePortModal()">취소</button>
                     <button class="btn-confirm" onclick="savePort()">저장</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 알림음 선택 모달 -->
+        <div id="soundModal" class="modal-overlay">
+            <div class="modal-container sound-modal">
+                <div class="modal-header">
+                    <h3>알림음 선택</h3>
+                    <button class="modal-close" onclick="closeSoundModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="modal-description">주문 접수 시 재생될 알림음을 선택해주세요.</p>
+                    
+                    <div class="sound-category">
+                        <h4 class="category-title">
+                            <i class="fas fa-microphone"></i> 음성 메시지
+                        </h4>
+                        <div class="radio-group">
+                            <label class="radio-option sound-option">
+                                <input type="radio" name="sound" value="voice-order-received" checked>
+                                <div class="sound-info">
+                                    <span class="sound-label">주문이 접수되었습니다</span>
+                                    <button class="btn-play" onclick="playSound('voice-order-received', event)">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </label>
+                            <label class="radio-option sound-option">
+                                <input type="radio" name="sound" value="voice-yumyum-pickup-order">
+                                <div class="sound-info">
+                                    <span class="sound-label">얍얍픽업 주문</span>
+                                    <button class="btn-play" onclick="playSound('voice-yumyum-pickup-order', event)">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </label>
+                            <label class="radio-option sound-option">
+                                <input type="radio" name="sound" value="voice-yumyum-pickup">
+                                <div class="sound-info">
+                                    <span class="sound-label">얌얌픽업</span>
+                                    <button class="btn-play" onclick="playSound('voice-yumyum-pickup', event)">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="sound-category">
+                        <h4 class="category-title">
+                            <i class="fas fa-volume-up"></i> 일반 소리
+                        </h4>
+                        <div class="radio-group">
+                            <label class="radio-option sound-option">
+                                <input type="radio" name="sound" value="bell">
+                                <div class="sound-info">
+                                    <span class="sound-label">종소리</span>
+                                    <button class="btn-play" onclick="playSound('bell', event)">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </label>
+                            <label class="radio-option sound-option">
+                                <input type="radio" name="sound" value="clear-notification">
+                                <div class="sound-info">
+                                    <span class="sound-label">맑은알림음</span>
+                                    <button class="btn-play" onclick="playSound('clear-notification', event)">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-cancel" onclick="closeSoundModal()">취소</button>
+                    <button class="btn-confirm" onclick="saveSound()">저장</button>
                 </div>
             </div>
         </div>
