@@ -1446,6 +1446,10 @@ function loadSettings() {
         const savedSettings = localStorage.getItem('yumyum_settings');
         if (savedSettings) {
             appSettings = JSON.parse(savedSettings);
+            // notificationSound가 없으면 기본값 설정
+            if (!appSettings.general.notificationSound) {
+                appSettings.general.notificationSound = 'voice-order-received';
+            }
             console.log('설정 로드 완료:', appSettings);
         } else {
             // 기본 설정
@@ -1453,6 +1457,7 @@ function loadSettings() {
                 general: {
                     storeAlarmEnabled: true,
                     volumeLevel: 3,
+                    notificationSound: 'voice-order-received',
                     autoAcceptEnabled: false,
                     autoAcceptTime: 15
                 }
@@ -1464,6 +1469,7 @@ function loadSettings() {
             general: {
                 storeAlarmEnabled: true,
                 volumeLevel: 3,
+                notificationSound: 'voice-order-received',
                 autoAcceptEnabled: false,
                 autoAcceptTime: 15
             }
@@ -1770,18 +1776,32 @@ function createBrowserNotification(order) {
 // 알림음 재생
 function playOrderAlertSound() {
     try {
+        console.log('=== 알림음 재생 시도 ===');
+        console.log('appSettings:', appSettings);
+        
         // 설정에서 선택한 알림음 재생
         if (appSettings && appSettings.general && appSettings.general.notificationSound) {
             const soundId = appSettings.general.notificationSound;
             const volumeLevel = appSettings.general.volumeLevel || 3;
             
-            // settings.js의 playNotificationSound 함수 호출 (있다면)
+            console.log('soundId:', soundId, 'volumeLevel:', volumeLevel);
+            console.log('playNotificationSound 함수 존재:', typeof playNotificationSound === 'function');
+            
+            // playNotificationSound 함수 호출
             if (typeof playNotificationSound === 'function') {
+                console.log('알림음 재생 함수 호출 중...');
                 playNotificationSound(soundId, volumeLevel);
+            } else if (typeof window.playNotificationSound === 'function') {
+                console.log('window.playNotificationSound 호출 중...');
+                window.playNotificationSound(soundId, volumeLevel);
+            } else {
+                console.error('playNotificationSound 함수를 찾을 수 없습니다!');
             }
+        } else {
+            console.error('appSettings 또는 notificationSound가 없습니다!');
         }
     } catch (error) {
-        console.log('알림음 재생 실패:', error);
+        console.error('알림음 재생 실패:', error);
     }
 }
 
