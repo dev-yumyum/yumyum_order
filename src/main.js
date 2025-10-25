@@ -33,8 +33,8 @@ function createMainWindow() {
     titleBarStyle: 'default'
   });
 
-  // HTML 파일 로드
-  const htmlPath = path.join(__dirname, '../renderer/index.html');
+  // HTML 파일 로드 - 로그인 화면부터 시작
+  const htmlPath = path.join(__dirname, '../renderer/login.html');
   mainWindow.loadFile(htmlPath);
 
   // 윈도우 준비되면 표시

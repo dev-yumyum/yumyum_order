@@ -2,6 +2,21 @@
  * YumYum 주문 내역 관리 시스템
  */
 
+// 로그인 확인
+function checkAuth() {
+    const authData = localStorage.getItem('yumyum_auth');
+    if (!authData) {
+        window.location.href = 'login.html';
+        return false;
+    }
+    return true;
+}
+
+// 페이지 로드 시 인증 확인
+if (!checkAuth()) {
+    // 로그인 페이지로 리다이렉트
+}
+
 // 전역 변수
 let orderHistory = [];
 let filteredOrders = [];

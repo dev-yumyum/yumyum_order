@@ -35,6 +35,9 @@
                 <button class="settings-btn" onclick="openSettings()">
                     <i class="fas fa-cog"></i>
                 </button>
+                <button class="logout-btn" onclick="logout()" title="로그아웃">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
                 <button class="close-btn" onclick="closeApp()">
                     <i class="fas fa-times"></i>
                 </button>
@@ -418,12 +421,73 @@
                 const audioFile = audioFiles[soundId];
                 
                 if (audioFile) {
-                    const audio = new Audio(`../assets/sounds/${encodeURIComponent(audioFile)}`);
-                    audio.volume = volume;
-                    audio.play().catch(err => console.log('오디오 재생 실패:', err));
+                    // Electron 앱에서 작동하는 경로 (여러 경로 시도)
+                    const paths = [
+                        `../assets/sounds/${encodeURIComponent(audioFile)}`,
+                        `./assets/sounds/${encodeURIComponent(audioFile)}`,
+                        `assets/sounds/${encodeURIComponent(audioFile)}`,
+                        `file://${__dirname}/../assets/sounds/${encodeURIComponent(audioFile)}`,
+                        `file://${process.resourcesPath}/app.asar.unpacked/assets/sounds/${encodeURIComponent(audioFile)}`
+                    ];
+                    
+                    const tryPlayAudio = (pathIndex) => {
+                        if (pathIndex >= paths.length) {
+                            console.log('모든 경로 실패, 비프음 재생');
+                            playBeepSound(soundId, volume);
+                            return;
+                        }
+                        
+                        const audio = new Audio(paths[pathIndex]);
+                        audio.volume = volume;
+                        
+                        audio.onerror = () => {
+                            console.log(`경로 ${pathIndex + 1} 실패, 다음 경로 시도...`);
+                            tryPlayAudio(pathIndex + 1);
+                        };
+                        
+                        audio.play().catch(err => {
+                            console.log(`재생 ${pathIndex + 1} 실패:`, err);
+                            tryPlayAudio(pathIndex + 1);
+                        });
+                    };
+                    
+                    tryPlayAudio(0);
+                } else {
+                    playBeepSound(soundId, volume);
                 }
             } catch (error) {
                 console.log('알림음 재생 실패:', error);
+            }
+        }
+        
+        // 비프음 재생 (폴백)
+        function playBeepSound(soundId, volume) {
+            try {
+                const context = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = context.createOscillator();
+                const gainNode = context.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(context.destination);
+                
+                const frequencies = {
+                    'voice-order-received': 800,
+                    'voice-yumyum-pickup-order': 900,
+                    'voice-yumyum-pickup': 1000,
+                    'bell': 600,
+                    'clear-notification': 1200
+                };
+                
+                oscillator.frequency.value = frequencies[soundId] || 800;
+                gainNode.gain.value = volume * 0.3;
+                
+                oscillator.start();
+                setTimeout(() => {
+                    oscillator.stop();
+                    context.close();
+                }, 150);
+            } catch (error) {
+                console.log('비프음 재생 실패:', error);
             }
         }
     </script>

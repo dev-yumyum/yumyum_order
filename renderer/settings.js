@@ -2,6 +2,21 @@
  * YumYum 설정 화면 - JavaScript
  */
 
+// 로그인 확인
+function checkAuth() {
+    const authData = localStorage.getItem('yumyum_auth');
+    if (!authData) {
+        window.location.href = 'login.html';
+        return false;
+    }
+    return true;
+}
+
+// 페이지 로드 시 인증 확인
+if (!checkAuth()) {
+    // 로그인 페이지로 리다이렉트
+}
+
 // 알림음 이름 매핑
 const soundNames = {
     'voice-order-received': '주문이 접수되었습니다',
@@ -1215,12 +1230,43 @@ function playNotificationSound(soundId, volumeLevel = null) {
         
         // 실제 오디오 파일이 있으면 재생
         if (audioFile) {
-            const audio = new Audio(`../assets/sounds/${encodeURIComponent(audioFile)}`);
+            // Electron 앱에서 작동하는 경로 (여러 경로 시도)
+            const paths = [
+                `../assets/sounds/${encodeURIComponent(audioFile)}`,
+                `./assets/sounds/${encodeURIComponent(audioFile)}`,
+                `assets/sounds/${encodeURIComponent(audioFile)}`,
+                `file://${__dirname}/../assets/sounds/${encodeURIComponent(audioFile)}`,
+                `file://${process.resourcesPath}/app.asar.unpacked/assets/sounds/${encodeURIComponent(audioFile)}`
+            ];
+            
+            const audio = new Audio(paths[0]);
             audio.volume = volume;
+            
+            // 첫 번째 경로 실패 시 다른 경로 시도
+            audio.onerror = () => {
+                console.log('첫 번째 경로 실패, 다른 경로 시도...');
+                const audio2 = new Audio(paths[1]);
+                audio2.volume = volume;
+                audio2.onerror = () => {
+                    console.log('두 번째 경로 실패, 세 번째 경로 시도...');
+                    const audio3 = new Audio(paths[2]);
+                    audio3.volume = volume;
+                    audio3.onerror = () => {
+                        console.log('모든 경로 실패, 비프음으로 대체');
+                        playBeepSound(soundId, volume);
+                    };
+                    audio3.play().catch(err => {
+                        console.log('세 번째 재생 실패:', err);
+                        playBeepSound(soundId, volume);
+                    });
+                };
+                audio2.play().catch(err => {
+                    console.log('두 번째 재생 실패:', err);
+                });
+            };
+            
             audio.play().catch(err => {
-                console.log('오디오 재생 실패:', err);
-                // 실패하면 비프음으로 대체
-                playBeepSound(soundId, volume);
+                console.log('첫 번째 재생 실패:', err);
             });
         } else {
             // 파일이 없으면 비프음 재생

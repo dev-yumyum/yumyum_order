@@ -95,13 +95,26 @@ body {
     font-size: 14px;
 }
 
-.settings-btn, .close-btn {
+.settings-btn, .logout-btn, .close-btn {
     background: none;
     border: none;
     color: #495057;
     font-size: 16px;
     cursor: pointer;
     padding: 4px;
+    transition: color 0.2s;
+}
+
+.settings-btn:hover, .logout-btn:hover, .close-btn:hover {
+    color: #007bff;
+}
+
+.logout-btn {
+    color: #dc3545;
+}
+
+.logout-btn:hover {
+    color: #c82333;
 }
 
 /* 메인 컨테이너 */

@@ -2,6 +2,21 @@
  * YumYum 주문 관리 시스템 - UI 인터랙션
  */
 
+// 로그인 확인
+function checkAuth() {
+    const authData = localStorage.getItem('yumyum_auth');
+    if (!authData) {
+        window.location.href = 'login.html';
+        return false;
+    }
+    return true;
+}
+
+// 페이지 로드 시 인증 확인
+if (!checkAuth()) {
+    // 로그인 페이지로 리다이렉트
+}
+
 // 전역 변수
 let selectedOrderId = null;
 let currentPreparationTime = 10; // 기본 준비시간 10분
@@ -1813,6 +1828,18 @@ function showOrderAcceptedPopup(order) {
             orderElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
     }, 500);
+}
+
+// 로그아웃 함수
+function logout() {
+    if (confirm('로그아웃 하시겠습니까?')) {
+        // 인증 정보 삭제
+        localStorage.removeItem('yumyum_auth');
+        localStorage.removeItem('yumyum_auto_login');
+        
+        // 로그인 페이지로 이동
+        window.location.href = 'login.html';
+    }
 }
 
 console.log('YumYum 주문 관리 시스템 스크립트 로드 완료');
