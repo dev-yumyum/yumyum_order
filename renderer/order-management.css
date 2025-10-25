@@ -1417,3 +1417,191 @@ body {
 .side-menu-right::-webkit-scrollbar-thumb:hover {
     background: #aaa;
 }
+
+/* ============= 새 주문 알림 팝업 ============= */
+
+.order-alert-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 99999;
+    justify-content: center;
+    align-items: center;
+}
+
+.order-alert-modal.show {
+    display: flex !important;
+}
+
+.order-alert-content {
+    background: white;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 500px;
+    padding: 0;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.3s ease;
+    overflow: hidden;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.order-alert-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 30px;
+    text-align: center;
+}
+
+.order-alert-header i {
+    font-size: 48px;
+    margin-bottom: 15px;
+    animation: bell-ring 1s ease infinite;
+}
+
+@keyframes bell-ring {
+    0%, 100% {
+        transform: rotate(0deg);
+    }
+    10%, 30% {
+        transform: rotate(-10deg);
+    }
+    20%, 40% {
+        transform: rotate(10deg);
+    }
+}
+
+.order-alert-header h2 {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.order-alert-body {
+    padding: 30px;
+}
+
+.order-alert-info {
+    text-align: center;
+}
+
+.order-alert-type {
+    display: inline-block;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-size: 20px;
+    font-weight: 700;
+    padding: 12px 30px;
+    border-radius: 25px;
+    margin-bottom: 20px;
+}
+
+.order-alert-details {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.order-alert-menu {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 10px 0;
+    line-height: 1.6;
+}
+
+.order-alert-amount {
+    font-size: 24px;
+    font-weight: 700;
+    color: #28a745;
+    margin: 0;
+}
+
+.order-alert-footer {
+    padding: 20px 30px 30px;
+    display: flex;
+    gap: 12px;
+}
+
+.btn-alert-confirm,
+.btn-alert-close {
+    flex: 1;
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-alert-confirm {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.btn-alert-confirm:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.btn-alert-close {
+    background: #e9ecef;
+    color: #666;
+}
+
+.btn-alert-close:hover {
+    background: #dee2e6;
+}
+
+/* ============= 알림 애니메이션 ============= */
+
+@keyframes slideIn {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+}

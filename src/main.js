@@ -3,7 +3,7 @@
  * Windows 데스크톱 애플리케이션 메인 프로세스
  */
 
-const { app, BrowserWindow, Menu, ipcMain, dialog, shell } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, dialog, shell, Notification } = require('electron');
 const path = require('path');
 const { SerialPort } = require('serialport');
 const isDev = process.env.NODE_ENV === 'development';
@@ -206,6 +206,43 @@ function setupIpcHandlers() {
       };
     } catch (error) {
       console.error('시리얼 포트 조회 오류:', error);
+      return { success: false, error: error.message };
+    }
+  });
+
+  // 시스템 알림 표시
+  ipcMain.handle('show-notification', async (event, options) => {
+    try {
+      const notification = new Notification({
+        title: options.title || 'YumYum 주문 관리',
+        body: options.body || '',
+        icon: path.join(__dirname, '../assets/icon.ico'),
+        silent: options.silent || false,
+        urgency: 'critical', // macOS에서 중요 알림으로 표시
+        timeoutType: 'default'
+      });
+
+      notification.show();
+
+      // 알림 클릭 시 윈도우 포커스
+      notification.on('click', () => {
+        if (mainWindow) {
+          if (mainWindow.isMinimized()) {
+            mainWindow.restore();
+          }
+          mainWindow.focus();
+          mainWindow.show();
+          
+          // 주문 ID가 있으면 해당 주문으로 이동
+          if (options.orderId) {
+            mainWindow.webContents.send('notification-clicked', options.orderId);
+          }
+        }
+      });
+
+      return { success: true };
+    } catch (error) {
+      console.error('시스템 알림 표시 오류:', error);
       return { success: false, error: error.message };
     }
   });

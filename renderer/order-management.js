@@ -873,7 +873,7 @@ function showNotification(message, type = 'info') {
         padding: 12px 20px;
         border-radius: 6px;
         font-size: 14px;
-        z-index: 1000;
+        z-index: 100000;
         animation: slideIn 0.3s ease;
         box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         max-width: 350px;
@@ -1061,16 +1061,11 @@ function createTestOrder() {
     // 사이드바에 주문 추가
     addOrderToSidebar(newOrder);
     
-    // 새 주문 선택 (자동접수 확인 포함)
-    selectOrder(newOrder.id);
-    
     // 사이드바 카운터 업데이트
     updateSidebarCounters();
     
-    // 알림 표시
-    if (!appSettings || !appSettings.general.autoAcceptEnabled) {
-        showNotification(`테스트 주문이 생성되었습니다. (${newOrder.type} ${newOrder.number})`, 'success');
-    }
+    // 주문 알림 팝업 표시 (오른쪽 하단 알림도 자동으로 표시됨)
+    showOrderAlert(newOrder);
     
     console.log('테스트 주문 생성:', newOrder);
 }
@@ -1218,6 +1213,9 @@ function acceptOrder() {
     
     // 알림 메시지 표시
     showNotification(`주문이 접수되었습니다. 예상 준비시간: ${currentPreparationTime}분`, 'success');
+    
+    // 주문 접수 확인 팝업 표시
+    showOrderAcceptedPopup(order);
     
     // 사이드바에서 신규에서 진행으로 이동
     removeFromSidebar(order.id);
@@ -1631,6 +1629,191 @@ document.addEventListener('click', (e) => {
         closeSideMenu();
     }
 });
+
+// ============= 주문 알림 팝업 관련 함수 =============
+
+let currentAlertOrderId = null;
+
+// 주문 알림 팝업 표시
+function showOrderAlert(order) {
+    console.log('showOrderAlert 호출됨:', order);
+    const modal = document.getElementById('orderAlertModal');
+    const alertType = document.getElementById('alertOrderType');
+    const alertMenu = document.getElementById('alertOrderMenu');
+    const alertAmount = document.getElementById('alertOrderAmount');
+    
+    console.log('모달 요소:', modal);
+    console.log('alertType:', alertType);
+    console.log('alertMenu:', alertMenu);
+    console.log('alertAmount:', alertAmount);
+    
+    if (!modal || !alertType || !alertMenu || !alertAmount) {
+        console.error('팝업 요소를 찾을 수 없습니다!');
+        return;
+    }
+    
+    // 주문 정보 설정
+    currentAlertOrderId = order.id;
+    alertType.textContent = `${order.type} ${order.number}`;
+    
+    // 메뉴 정보 생성
+    const menuText = order.menus.map(menu => 
+        `${menu.name} x ${menu.quantity}`
+    ).join(', ');
+    alertMenu.textContent = menuText;
+    
+    // 총 금액
+    alertAmount.textContent = `${order.totalAmount.toLocaleString()}원`;
+    
+    // 모달 표시
+    modal.classList.add('show');
+    modal.style.display = 'flex'; // 명시적으로 display 설정
+    console.log('모달 표시됨, classList:', modal.classList);
+    console.log('모달 display:', modal.style.display);
+    
+    // 오른쪽 하단 알림도 표시
+    showNotification(`새로운 주문이 들어왔습니다! (${order.type} ${order.number})`, 'warning');
+    
+    // 시스템 알림도 표시
+    showSystemNotification(order);
+    
+    // 알림음 재생
+    playOrderAlertSound();
+}
+
+// 시스템 알림 표시 (PC 알림)
+function showSystemNotification(order) {
+    // Electron 환경인지 확인
+    if (window.electron && window.electron.showNotification) {
+        // Electron 네이티브 알림 사용
+        const menuText = order.menus.map(menu => 
+            `${menu.name} x ${menu.quantity}`
+        ).join(', ');
+        
+        window.electron.showNotification({
+            title: '새로운 주문이 들어왔습니다!',
+            body: `${order.type} ${order.number}\n${menuText}\n${order.totalAmount.toLocaleString()}원`,
+            orderId: order.id,
+            silent: false
+        }).then(result => {
+            if (result.success) {
+                console.log('PC 시스템 알림 표시됨');
+            } else {
+                console.error('PC 시스템 알림 표시 실패:', result.error);
+            }
+        }).catch(error => {
+            console.error('PC 시스템 알림 오류:', error);
+        });
+    } else {
+        // 브라우저 환경 - 웹 Notification API 사용 (폴백)
+        if (!('Notification' in window)) {
+            console.log('이 브라우저는 데스크톱 알림을 지원하지 않습니다.');
+            return;
+        }
+        
+        // 권한 요청
+        if (Notification.permission === 'granted') {
+            createBrowserNotification(order);
+        } else if (Notification.permission !== 'denied') {
+            Notification.requestPermission().then(permission => {
+                if (permission === 'granted') {
+                    createBrowserNotification(order);
+                }
+            });
+        }
+    }
+}
+
+// 브라우저 알림 생성 (폴백용)
+function createBrowserNotification(order) {
+    const menuText = order.menus.map(menu => 
+        `${menu.name} x ${menu.quantity}`
+    ).join(', ');
+    
+    const notification = new Notification('새로운 주문이 들어왔습니다!', {
+        body: `${order.type} ${order.number}\n${menuText}\n${order.totalAmount.toLocaleString()}원`,
+        icon: '../assets/icon.ico',
+        badge: '../assets/icon.ico',
+        tag: order.id,
+        requireInteraction: true,
+        silent: false
+    });
+    
+    // 알림 클릭 시 해당 주문으로 이동
+    notification.onclick = function() {
+        window.focus();
+        selectOrder(order.id);
+        notification.close();
+    };
+    
+    // 10초 후 자동 닫기
+    setTimeout(() => {
+        notification.close();
+    }, 10000);
+}
+
+// 알림음 재생
+function playOrderAlertSound() {
+    try {
+        // 설정에서 선택한 알림음 재생
+        if (appSettings && appSettings.general && appSettings.general.notificationSound) {
+            const soundId = appSettings.general.notificationSound;
+            const volumeLevel = appSettings.general.volumeLevel || 3;
+            
+            // settings.js의 playNotificationSound 함수 호출 (있다면)
+            if (typeof playNotificationSound === 'function') {
+                playNotificationSound(soundId, volumeLevel);
+            }
+        }
+    } catch (error) {
+        console.log('알림음 재생 실패:', error);
+    }
+}
+
+// 확인 버튼 클릭 (주문으로 이동)
+function confirmOrderAlert() {
+    closeOrderAlert();
+    if (currentAlertOrderId) {
+        selectOrder(currentAlertOrderId);
+        currentAlertOrderId = null;
+    }
+}
+
+// 팝업 닫기
+function closeOrderAlert() {
+    const modal = document.getElementById('orderAlertModal');
+    if (modal) {
+        modal.classList.remove('show');
+        modal.style.display = 'none';
+        console.log('모달 닫힘');
+    }
+    currentAlertOrderId = null;
+}
+
+// ESC 키로 팝업 닫기
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        const modal = document.getElementById('orderAlertModal');
+        if (modal && modal.classList.contains('show')) {
+            closeOrderAlert();
+        }
+    }
+});
+
+// 주문 접수 완료 팝업 표시
+function showOrderAcceptedPopup(order) {
+    // 간단한 확인 알림 (3초 후 자동으로 진행중 섹션으로 이동)
+    setTimeout(() => {
+        // 진행중 섹션으로 스크롤
+        const preparingOrders = document.querySelectorAll('.sidebar-section:nth-child(2) .order-item');
+        const orderElement = Array.from(preparingOrders).find(el => 
+            el.getAttribute('data-order-id') === order.id
+        );
+        if (orderElement) {
+            orderElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    }, 500);
+}
 
 console.log('YumYum 주문 관리 시스템 스크립트 로드 완료');
 

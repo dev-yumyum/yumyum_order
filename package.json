@@ -2,7 +2,7 @@
   "name": "yumyum_order",
   "version": "1.0.0",
   "description": "YumYum Order Management System - 얌얌픽업 주문 접수 시스템",
-  "main": "src/main-simple.js",
+  "main": "src/main.js",
   "homepage": "./",
   "scripts": {
     "start": "node src/index.js",
