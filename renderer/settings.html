@@ -673,6 +673,7 @@
                 checkPrinter: (name) => ipcRenderer.invoke('check-printer', name),
                 printReceipt: (printer, data) => ipcRenderer.invoke('print-receipt', printer, data),
                 getSerialPorts: () => ipcRenderer.invoke('get-serial-ports'),
+                getAudioPath: (fileName) => ipcRenderer.invoke('get-audio-path', fileName),
                 closeApp: () => ipcRenderer.send('close-app')
             };
         }

@@ -1211,7 +1211,7 @@ function closeSoundModal() {
 }
 
 // 알림음 재생 (공통 함수)
-function playNotificationSound(soundId, volumeLevel = null) {
+async function playNotificationSound(soundId, volumeLevel = null) {
     try {
         // 볼륨 레벨이 지정되지 않으면 현재 설정 사용
         const level = volumeLevel !== null ? volumeLevel : settings.general.volumeLevel;
@@ -1229,52 +1229,32 @@ function playNotificationSound(soundId, volumeLevel = null) {
         const audioFile = audioFiles[soundId];
         
         // 실제 오디오 파일이 있으면 재생
-        if (audioFile) {
-            // Electron 앱에서 작동하는 경로 (여러 경로 시도)
-            const paths = [
-                `../assets/sounds/${encodeURIComponent(audioFile)}`,
-                `./assets/sounds/${encodeURIComponent(audioFile)}`,
-                `assets/sounds/${encodeURIComponent(audioFile)}`,
-                `file://${__dirname}/../assets/sounds/${encodeURIComponent(audioFile)}`,
-                `file://${process.resourcesPath}/app.asar.unpacked/assets/sounds/${encodeURIComponent(audioFile)}`
-            ];
-            
-            const audio = new Audio(paths[0]);
-            audio.volume = volume;
-            
-            // 첫 번째 경로 실패 시 다른 경로 시도
-            audio.onerror = () => {
-                console.log('첫 번째 경로 실패, 다른 경로 시도...');
-                const audio2 = new Audio(paths[1]);
-                audio2.volume = volume;
-                audio2.onerror = () => {
-                    console.log('두 번째 경로 실패, 세 번째 경로 시도...');
-                    const audio3 = new Audio(paths[2]);
-                    audio3.volume = volume;
-                    audio3.onerror = () => {
-                        console.log('모든 경로 실패, 비프음으로 대체');
-                        playBeepSound(soundId, volume);
-                    };
-                    audio3.play().catch(err => {
-                        console.log('세 번째 재생 실패:', err);
-                        playBeepSound(soundId, volume);
-                    });
-                };
-                audio2.play().catch(err => {
-                    console.log('두 번째 재생 실패:', err);
-                });
-            };
-            
-            audio.play().catch(err => {
-                console.log('첫 번째 재생 실패:', err);
-            });
+        if (audioFile && window.electron && window.electron.getAudioPath) {
+            // Electron 메인 프로세스에서 오디오 파일 경로 가져오기
+            try {
+                const result = await window.electron.getAudioPath(audioFile);
+                if (result.success) {
+                    console.log('오디오 파일 경로:', result.path);
+                    const audio = new Audio(`file://${result.path}`);
+                    audio.volume = volume;
+                    await audio.play();
+                    console.log('오디오 재생 성공');
+                } else {
+                    console.log('오디오 파일 경로 찾기 실패, 비프음 재생');
+                    playBeepSound(soundId, volume);
+                }
+            } catch (err) {
+                console.log('오디오 재생 실패:', err);
+                playBeepSound(soundId, volume);
+            }
         } else {
-            // 파일이 없으면 비프음 재생
+            console.log('오디오 파일 없음 또는 Electron 환경 아님, 비프음 재생');
             playBeepSound(soundId, volume);
         }
         
     } catch (error) {
         console.log('알림음 재생 실패:', error);
+        playBeepSound(soundId, volume || 0.5);
     }
 }
 

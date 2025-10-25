@@ -210,6 +210,33 @@ function setupIpcHandlers() {
     }
   });
 
+  // 오디오 파일 경로 가져오기
+  ipcMain.handle('get-audio-path', async (event, fileName) => {
+    try {
+      const fs = require('fs');
+      
+      // 여러 가능한 경로 확인
+      const possiblePaths = [
+        path.join(__dirname, '../assets/sounds', fileName),
+        path.join(process.resourcesPath, 'app.asar.unpacked/assets/sounds', fileName),
+        path.join(process.resourcesPath, 'assets/sounds', fileName)
+      ];
+      
+      for (const testPath of possiblePaths) {
+        if (fs.existsSync(testPath)) {
+          console.log('오디오 파일 찾음:', testPath);
+          return { success: true, path: testPath };
+        }
+      }
+      
+      console.error('오디오 파일을 찾을 수 없음:', fileName);
+      return { success: false, error: '파일을 찾을 수 없습니다' };
+    } catch (error) {
+      console.error('오디오 경로 조회 오류:', error);
+      return { success: false, error: error.message };
+    }
+  });
+
   // 시스템 알림 표시
   ipcMain.handle('show-notification', async (event, options) => {
     try {
