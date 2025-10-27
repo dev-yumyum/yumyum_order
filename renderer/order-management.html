@@ -27,6 +27,10 @@
             </div>
             
             <div class="header-right">
+                <button class="temp-close-btn" onclick="openTempCloseModal()">
+                    <i class="fas fa-pause-circle"></i>
+                    <span>임시운영중단</span>
+                </button>
                 <button class="test-order-btn" onclick="createTestOrder()">
                     <i class="fas fa-plus"></i>
                     <span>테스트 주문하기</span>
@@ -378,6 +382,50 @@
                 <button class="btn-alert-close" onclick="closeOrderAlert()">
                     <i class="fas fa-times"></i> 닫기
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 임시운영중단 모달 -->
+    <div id="tempCloseModal" class="temp-close-modal">
+        <div class="temp-close-content">
+            <div class="temp-close-header">
+                <i class="fas fa-pause-circle"></i>
+                <h2>임시운영중단</h2>
+                <button class="modal-close-btn" onclick="closeTempCloseModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="temp-close-body">
+                <p class="temp-close-description">운영을 임시로 중단할 시간을 선택하세요</p>
+                <div class="temp-close-options">
+                    <button class="temp-close-option" onclick="selectTempClose(60)">
+                        <i class="fas fa-clock"></i>
+                        <span>1시간</span>
+                    </button>
+                    <button class="temp-close-option" onclick="selectTempClose(120)">
+                        <i class="fas fa-clock"></i>
+                        <span>2시간</span>
+                    </button>
+                    <button class="temp-close-option" onclick="selectTempClose(180)">
+                        <i class="fas fa-clock"></i>
+                        <span>3시간</span>
+                    </button>
+                    <button class="temp-close-option" onclick="selectTempClose(1440)">
+                        <i class="fas fa-moon"></i>
+                        <span>하루종일</span>
+                    </button>
+                </div>
+                <div class="resume-operation-container" id="resumeOperationContainer" style="display: none;">
+                    <p class="resume-operation-info">
+                        <i class="fas fa-info-circle"></i>
+                        <span id="resumeTimeInfo"></span>
+                    </p>
+                    <button class="btn-resume-operation" onclick="resumeOperation()">
+                        <i class="fas fa-play-circle"></i>
+                        운영 재개하기
+                    </button>
+                </div>
             </div>
         </div>
     </div>

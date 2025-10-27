@@ -1862,5 +1862,148 @@ function logout() {
     }
 }
 
+// ============= 임시운영중단 관련 함수 =============
+
+let tempCloseTimer = null;
+let operationStatus = 'online'; // 'online' or 'offline'
+
+// 임시운영중단 모달 열기
+function openTempCloseModal() {
+    const modal = document.getElementById('tempCloseModal');
+    const resumeContainer = document.getElementById('resumeOperationContainer');
+    
+    if (operationStatus === 'offline') {
+        // 현재 운영중단 상태이면 재개 정보 표시
+        resumeContainer.style.display = 'block';
+    } else {
+        // 운영중이면 선택 옵션 표시
+        resumeContainer.style.display = 'none';
+    }
+    
+    modal.classList.add('show');
+    modal.style.display = 'flex';
+}
+
+// 임시운영중단 모달 닫기
+function closeTempCloseModal() {
+    const modal = document.getElementById('tempCloseModal');
+    modal.classList.remove('show');
+    modal.style.display = 'none';
+}
+
+// 임시운영중단 선택
+function selectTempClose(minutes) {
+    const statusIndicator = document.querySelector('.status-indicator i');
+    const statusText = document.querySelector('.status-indicator span');
+    const resumeContainer = document.getElementById('resumeOperationContainer');
+    const resumeTimeInfo = document.getElementById('resumeTimeInfo');
+    
+    // 운영 상태 변경
+    operationStatus = 'offline';
+    statusIndicator.classList.remove('online');
+    statusIndicator.classList.add('offline');
+    statusText.textContent = '운영중단';
+    
+    // 재개 시간 계산
+    const resumeTime = new Date();
+    resumeTime.setMinutes(resumeTime.getMinutes() + minutes);
+    
+    const resumeTimeStr = formatResumeTime(resumeTime, minutes);
+    resumeTimeInfo.textContent = resumeTimeStr;
+    
+    // 로컬 스토리지에 저장
+    localStorage.setItem('yumyum_operation_status', JSON.stringify({
+        status: 'offline',
+        resumeTime: resumeTime.toISOString(),
+        closedMinutes: minutes
+    }));
+    
+    // 재개 컨테이너 표시
+    resumeContainer.style.display = 'block';
+    
+    // 타이머 설정
+    if (tempCloseTimer) {
+        clearTimeout(tempCloseTimer);
+    }
+    
+    tempCloseTimer = setTimeout(() => {
+        resumeOperation();
+    }, minutes * 60 * 1000);
+    
+    showNotification(`운영이 ${minutes >= 1440 ? '하루종일' : minutes / 60 + '시간'} 중단되었습니다`, 'info');
+}
+
+// 운영 재개
+function resumeOperation() {
+    const statusIndicator = document.querySelector('.status-indicator i');
+    const statusText = document.querySelector('.status-indicator span');
+    
+    // 운영 상태 변경
+    operationStatus = 'online';
+    statusIndicator.classList.remove('offline');
+    statusIndicator.classList.add('online');
+    statusText.textContent = '영업중';
+    
+    // 타이머 취소
+    if (tempCloseTimer) {
+        clearTimeout(tempCloseTimer);
+        tempCloseTimer = null;
+    }
+    
+    // 로컬 스토리지에서 제거
+    localStorage.removeItem('yumyum_operation_status');
+    
+    // 모달 닫기
+    closeTempCloseModal();
+    
+    showNotification('운영이 재개되었습니다', 'success');
+}
+
+// 재개 시간 포맷팅
+function formatResumeTime(resumeTime, minutes) {
+    if (minutes >= 1440) {
+        return '하루종일 운영이 중단됩니다';
+    }
+    
+    const hours = String(resumeTime.getHours()).padStart(2, '0');
+    const mins = String(resumeTime.getMinutes()).padStart(2, '0');
+    return `${hours}:${mins}에 자동으로 운영이 재개됩니다`;
+}
+
+// 페이지 로드 시 운영 상태 복원
+function restoreOperationStatus() {
+    const savedStatus = localStorage.getItem('yumyum_operation_status');
+    if (savedStatus) {
+        const status = JSON.parse(savedStatus);
+        const resumeTime = new Date(status.resumeTime);
+        const now = new Date();
+        
+        if (resumeTime > now) {
+            // 아직 재개 시간이 안됐으면 운영중단 상태 유지
+            const statusIndicator = document.querySelector('.status-indicator i');
+            const statusText = document.querySelector('.status-indicator span');
+            
+            operationStatus = 'offline';
+            statusIndicator.classList.remove('online');
+            statusIndicator.classList.add('offline');
+            statusText.textContent = '운영중단';
+            
+            // 남은 시간 계산하여 타이머 설정
+            const remainingMs = resumeTime - now;
+            tempCloseTimer = setTimeout(() => {
+                resumeOperation();
+            }, remainingMs);
+            
+            console.log('운영중단 상태 복원 완료. 재개 시간:', resumeTime);
+        } else {
+            // 재개 시간이 지났으면 자동으로 운영 재개
+            resumeOperation();
+        }
+    }
+}
+
+// 페이지 로드 시 운영 상태 복원 실행
+restoreOperationStatus();
+
 console.log('YumYum 주문 관리 시스템 스크립트 로드 완료');
 
