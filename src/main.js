@@ -5,7 +5,15 @@
 
 const { app, BrowserWindow, Menu, ipcMain, dialog, shell, Notification } = require('electron');
 const path = require('path');
-const { SerialPort } = require('serialport');
+
+// SerialPort를 안전하게 로드 (선택적 의존성)
+let SerialPort = null;
+try {
+  SerialPort = require('serialport').SerialPort;
+} catch (error) {
+  console.warn('SerialPort 모듈을 로드할 수 없습니다. 시리얼 포트 기능이 비활성화됩니다.', error.message);
+}
+
 const isDev = process.env.NODE_ENV === 'development';
 
 // YumYum 애플리케이션 로직
@@ -193,6 +201,15 @@ function setupIpcHandlers() {
   // 시리얼 포트 목록 조회
   ipcMain.handle('get-serial-ports', async () => {
     try {
+      if (!SerialPort) {
+        console.warn('SerialPort 모듈을 사용할 수 없습니다.');
+        return { 
+          success: true, 
+          ports: [],
+          message: 'SerialPort 기능을 사용할 수 없습니다.'
+        };
+      }
+      
       const ports = await SerialPort.list();
       return { 
         success: true, 
@@ -206,7 +223,7 @@ function setupIpcHandlers() {
       };
     } catch (error) {
       console.error('시리얼 포트 조회 오류:', error);
-      return { success: false, error: error.message };
+      return { success: false, error: error.message, ports: [] };
     }
   });
 
