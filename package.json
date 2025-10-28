@@ -45,6 +45,7 @@
   "build": {
     "appId": "com.yumyum.order.management",
     "productName": "YumYum 주문접수",
+    "npmRebuild": false,
     "directories": {
       "output": "dist",
       "buildResources": "assets"
@@ -75,7 +76,7 @@
           ]
         }
       ],
-      "icon": "assets/icon.ico",
+      "icon": "assets/icon.png",
       "requestedExecutionLevel": "asInvoker",
       "artifactName": "${productName}-Setup-${version}-${arch}.${ext}"
     },
@@ -86,9 +87,6 @@
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
       "shortcutName": "YumYum 주문접수",
-      "installerIcon": "assets/icon.ico",
-      "uninstallerIcon": "assets/icon.ico",
-      "installerHeaderIcon": "assets/icon.ico",
       "perMachine": false,
       "deleteAppDataOnUninstall": false,
       "language": "2066"
