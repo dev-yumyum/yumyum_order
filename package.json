@@ -1,6 +1,6 @@
 {
   "name": "yumyum_order",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "YumYum Order Management System - 얌얌픽업 주문 접수 시스템",
   "main": "src/main.js",
   "homepage": "./",
@@ -113,6 +113,7 @@
           ]
         }
       ],
+      "icon": "assets/icon.icns",
       "category": "public.app-category.business",
       "artifactName": "${productName}-${version}-${arch}.${ext}"
     },

@@ -22,7 +22,7 @@ function createMainWindow() {
     minWidth: 800,
     minHeight: 600,
     title: 'YumYum 주문 접수 시스템',
-    icon: path.join(__dirname, '../assets/icon.ico'), // 아이콘 경로
+    icon: path.join(__dirname, '../assets/icon.png'), // 아이콘 경로
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -243,7 +243,7 @@ function setupIpcHandlers() {
       const notification = new Notification({
         title: options.title || 'YumYum 주문 관리',
         body: options.body || '',
-        icon: path.join(__dirname, '../assets/icon.ico'),
+        icon: path.join(__dirname, '../assets/icon.png'),
         silent: options.silent || false,
         urgency: 'critical', // macOS에서 중요 알림으로 표시
         timeoutType: 'default'

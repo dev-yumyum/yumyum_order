@@ -1753,8 +1753,8 @@ function createBrowserNotification(order) {
     
     const notification = new Notification('새로운 주문이 들어왔습니다!', {
         body: `${order.type} ${order.number}\n${menuText}\n${order.totalAmount.toLocaleString()}원`,
-        icon: '../assets/icon.ico',
-        badge: '../assets/icon.ico',
+        icon: '../assets/icon.png',
+        badge: '../assets/icon.png',
         tag: order.id,
         requireInteraction: true,
         silent: false
