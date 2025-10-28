@@ -911,6 +911,80 @@ body {
     font-size: 16px;
 }
 
+/* 주문 메뉴 통합 스타일 */
+.info-row-divider {
+    height: 1px;
+    background: #dee2e6;
+    margin: 8px 0;
+}
+
+.info-row.menu-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 12px 0;
+}
+
+.menu-list-inline {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.menu-item-inline {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px dashed #e9ecef;
+}
+
+.menu-item-inline:last-child {
+    border-bottom: none;
+}
+
+.menu-item-inline .menu-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #212529;
+}
+
+.menu-item-inline .menu-details {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.menu-item-inline .quantity {
+    background: #007bff;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.menu-item-inline .price {
+    font-size: 15px;
+    font-weight: 700;
+    color: #28a745;
+}
+
+.info-row.total-row-inline {
+    background: #f8f9fa;
+    margin: 8px -16px -6px -16px;
+    padding: 12px 16px;
+    border-radius: 0 0 6px 6px;
+    border-bottom: none;
+}
+
+.total-amount-inline {
+    font-size: 18px;
+    font-weight: 700;
+    color: #28a745;
+}
+
 /* 모달 스타일 */
 .modal-overlay {
     display: none;

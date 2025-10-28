@@ -312,7 +312,7 @@ function updateIntegratedOrderInfo(order) {
     const menuList = document.getElementById('integratedMenuList');
     if (menuList && order.items) {
         menuList.innerHTML = order.items.map(item => `
-            <div class="menu-item-row">
+            <div class="menu-item-inline">
                 <span class="menu-name">${item.name}</span>
                 <div class="menu-details">
                     <span class="quantity">${item.quantity}개</span>
