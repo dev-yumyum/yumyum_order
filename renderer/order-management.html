@@ -226,7 +226,12 @@
 
                     <!-- 주문 관리 액션 -->
                     <div class="order-actions-bottom">
-                        <button class="btn btn-reorder">주문정보 재출력</button>
+                        <button class="btn btn-reorder" onclick="printCurrentReceipt()">
+                            <i class="fas fa-print"></i> 영수증 출력
+                        </button>
+                        <button class="btn btn-preview" onclick="previewCurrentReceipt()">
+                            <i class="fas fa-eye"></i> 미리보기
+                        </button>
                     </div>
                 </div>
             </main>

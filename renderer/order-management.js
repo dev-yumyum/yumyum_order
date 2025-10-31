@@ -1220,6 +1220,9 @@ function acceptOrder() {
     order.timer = 0;
     order.timerSeconds = 0;
     
+    // 주문을 로컬 스토리지 히스토리에 저장
+    saveOrderToHistory(order);
+    
     // 접수 영역 숨김
     const acceptSection = document.getElementById('orderAcceptSection');
     if (acceptSection) {
@@ -1560,6 +1563,83 @@ function playOrderNotification() {
         console.log(`알림음 재생 (볼륨: ${volumeLevel}단계)`);
     } catch (error) {
         console.error('알림음 재생 실패:', error);
+    }
+}
+
+// ============= 영수증 출력 관련 함수 =============
+
+// 주문을 히스토리에 저장
+function saveOrderToHistory(order) {
+    try {
+        // 기존 히스토리 가져오기
+        const history = JSON.parse(localStorage.getItem('yumyum_order_history') || '[]');
+        
+        // 중복 체크 (이미 저장된 주문은 업데이트)
+        const existingIndex = history.findIndex(o => o.id === order.id);
+        
+        if (existingIndex >= 0) {
+            // 기존 주문 업데이트
+            history[existingIndex] = { ...order };
+        } else {
+            // 새 주문 추가
+            history.push({ ...order });
+        }
+        
+        // 히스토리 저장 (최신 순으로 정렬)
+        history.sort((a, b) => {
+            const dateA = new Date(a.createdAt || a.orderTime);
+            const dateB = new Date(b.createdAt || b.orderTime);
+            return dateB - dateA; // 최신순
+        });
+        
+        // 로컬 스토리지에 저장
+        localStorage.setItem('yumyum_order_history', JSON.stringify(history));
+        
+        console.log(`주문 ${order.id} 히스토리에 저장됨`);
+    } catch (error) {
+        console.error('주문 히스토리 저장 실패:', error);
+    }
+}
+
+// 현재 선택된 주문의 영수증 출력
+function printCurrentReceipt() {
+    if (!selectedOrderId) {
+        showNotification('출력할 주문을 선택해주세요', 'warning');
+        return;
+    }
+    
+    const order = orders.find(o => o.id === selectedOrderId);
+    if (!order) {
+        showNotification('주문 정보를 찾을 수 없습니다', 'error');
+        return;
+    }
+    
+    // print-helper.js의 함수 사용
+    if (window.printHelper && window.printHelper.printOrderReceipt) {
+        window.printHelper.printOrderReceipt(order);
+    } else {
+        showNotification('프린터 기능을 사용할 수 없습니다', 'error');
+    }
+}
+
+// 현재 선택된 주문의 영수증 미리보기
+function previewCurrentReceipt() {
+    if (!selectedOrderId) {
+        showNotification('미리볼 주문을 선택해주세요', 'warning');
+        return;
+    }
+    
+    const order = orders.find(o => o.id === selectedOrderId);
+    if (!order) {
+        showNotification('주문 정보를 찾을 수 없습니다', 'error');
+        return;
+    }
+    
+    // print-helper.js의 함수 사용
+    if (window.printHelper && window.printHelper.previewReceipt) {
+        window.printHelper.previewReceipt(order);
+    } else {
+        showNotification('미리보기 기능을 사용할 수 없습니다', 'error');
     }
 }
 

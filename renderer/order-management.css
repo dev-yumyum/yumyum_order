@@ -796,10 +796,56 @@ body {
 
 /* 하단 액션 버튼 */
 .order-actions-bottom {
-    margin-top: 16px;
-    padding-top: 12px;
-    border-top: 1px solid #e9ecef;
-    text-align: center;
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.order-actions-bottom .btn {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-reorder {
+    background: #2196F3;
+    color: white;
+}
+
+.btn-reorder:hover {
+    background: #1976D2;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+}
+
+.btn-preview {
+    background: #fff;
+    color: #666;
+    border: 1px solid #ddd;
+}
+
+.btn-preview:hover {
+    background: #f8f9fa;
+    border-color: #2196F3;
+    color: #2196F3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.2);
+}
+
+.btn-reorder i,
+.btn-preview i {
+    font-size: 16px;
 }
 
 /* 메뉴 정보 */
