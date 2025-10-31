@@ -432,6 +432,26 @@
         </div>
     </div>
 
+    <!-- 영수증 미리보기 모달 -->
+    <div id="receiptPreviewModal" class="modal-overlay receipt-preview-modal">
+        <div class="receipt-preview-content">
+            <div class="receipt-preview-header">
+                <h3>영수증 미리보기</h3>
+                <div class="receipt-preview-actions">
+                    <button class="btn-preview-print" onclick="printFromPreview()">
+                        <i class="fas fa-print"></i> 출력하기
+                    </button>
+                    <button class="modal-close" onclick="closeReceiptPreview()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="receipt-preview-body" id="receiptPreviewBody">
+                <!-- 영수증 내용이 동적으로 삽입됩니다 -->
+            </div>
+        </div>
+    </div>
+
     <script src="backend-config.js"></script>
     <script src="print-helper.js"></script>
     <script>

@@ -420,19 +420,144 @@ function generateReceiptHTML(receiptData) {
     `;
 }
 
-// 영수증 미리보기 (새 창)
+// 영수증 미리보기 (모달)
 function previewReceipt(order) {
     const receiptData = convertOrderToReceiptData(order);
-    const html = generateReceiptHTML(receiptData);
     
-    const printWindow = window.open('', '_blank', 'width=400,height=800');
-    printWindow.document.write(html);
-    printWindow.document.close();
+    // 모달 HTML 생성
+    const receiptHTML = generateReceiptPreviewHTML(receiptData);
     
-    // 인쇄 버튼 추가
-    setTimeout(() => {
-        printWindow.focus();
-    }, 500);
+    // 모달에 HTML 삽입
+    const modal = document.getElementById('receiptPreviewModal');
+    const body = document.getElementById('receiptPreviewBody');
+    
+    if (modal && body) {
+        body.innerHTML = receiptHTML;
+        modal.classList.add('show');
+        
+        // 현재 주문 ID 저장 (출력용)
+        modal.setAttribute('data-order-id', order.id);
+    } else {
+        console.error('영수증 미리보기 모달을 찾을 수 없습니다.');
+    }
+}
+
+// 영수증 미리보기 HTML 생성 (모달용)
+function generateReceiptPreviewHTML(data) {
+    const itemsHTML = (data.items || []).map(item => `
+        <div class="receipt-item-row">
+            <span class="receipt-item-name">${item.name || '메뉴'}</span>
+            <span class="receipt-item-qty">x${item.quantity || 1}</span>
+            <span class="receipt-item-price">${(item.price || 0).toLocaleString()}원</span>
+        </div>
+    `).join('');
+
+    return `
+        <div class="receipt-container">
+            <!-- 헤더 -->
+            <div class="receipt-header">
+                <div class="receipt-store-name">${data.storeName || '얌얌픽업'}</div>
+            </div>
+
+            <!-- 주문번호 -->
+            <div class="receipt-order-number">주문번호: ${data.orderNumber || '21'}</div>
+
+            <!-- 주문 일시 -->
+            <div class="receipt-section">
+                <div class="receipt-info-row">
+                    <span class="receipt-info-label">주문일자</span>
+                    <span class="receipt-info-value">${data.orderDate || ''}</span>
+                </div>
+                <div class="receipt-info-row">
+                    <span class="receipt-info-label">주문시간</span>
+                    <span class="receipt-info-value">${data.orderTime || ''}</span>
+                </div>
+            </div>
+
+            <!-- 고객 정보 -->
+            <div class="receipt-section">
+                <div class="receipt-section-title">고객 정보</div>
+                <div class="receipt-info-row">
+                    <span class="receipt-info-label">고객명</span>
+                    <span class="receipt-info-value">${data.customerName || '고객'}</span>
+                </div>
+                <div class="receipt-info-row">
+                    <span class="receipt-info-label">연락처</span>
+                    <span class="receipt-info-value">${data.customerPhone || '***-****-****'}</span>
+                </div>
+                <div class="receipt-info-row">
+                    <span class="receipt-info-label">주문유형</span>
+                    <span class="receipt-info-value">${data.orderType || '포장'}</span>
+                </div>
+            </div>
+
+            <!-- 주문 메뉴 -->
+            <div class="receipt-section">
+                <div class="receipt-section-title">주문 메뉴</div>
+                ${itemsHTML}
+            </div>
+
+            <!-- 요청사항 -->
+            ${data.requests && data.requests !== '없음' ? `
+            <div class="receipt-section">
+                <div class="receipt-section-title">요청사항</div>
+                <div class="receipt-requests">${data.requests}</div>
+            </div>
+            ` : ''}
+
+            <!-- 예상 완료 시간 -->
+            <div class="receipt-expected-time">
+                <div class="receipt-expected-time-label">예상 완료시간</div>
+                <div class="receipt-expected-time-value">${data.expectedCompletionTime || '오전 08:43'}</div>
+            </div>
+
+            <!-- 합계 -->
+            <div class="receipt-total">
+                <div class="receipt-total-row">
+                    <span>합계</span>
+                    <span>${(data.totalAmount || 0).toLocaleString()}원</span>
+                </div>
+            </div>
+
+            <!-- 푸터 -->
+            <div class="receipt-footer">
+                <div class="receipt-thank-you">${data.thankYouMessage || '감사합니다'}</div>
+            </div>
+        </div>
+    `;
+}
+
+// 영수증 미리보기 닫기
+function closeReceiptPreview() {
+    const modal = document.getElementById('receiptPreviewModal');
+    if (modal) {
+        modal.classList.remove('show');
+    }
+}
+
+// 미리보기에서 출력하기
+function printFromPreview() {
+    const modal = document.getElementById('receiptPreviewModal');
+    if (!modal) return;
+    
+    const orderId = modal.getAttribute('data-order-id');
+    if (!orderId) {
+        alert('주문 정보를 찾을 수 없습니다.');
+        return;
+    }
+    
+    // order-management.js의 orders 배열에서 주문 찾기
+    if (typeof orders !== 'undefined') {
+        const order = orders.find(o => o.id === orderId);
+        if (order) {
+            printOrderReceipt(order);
+            closeReceiptPreview();
+        } else {
+            alert('주문 정보를 찾을 수 없습니다.');
+        }
+    } else {
+        alert('주문 목록을 불러올 수 없습니다.');
+    }
 }
 
 // 전역으로 함수 노출
@@ -443,11 +568,36 @@ if (typeof window !== 'undefined') {
         convertOrderToReceiptData,
         getStoredPrinterSettings,
         generateReceiptHTML,
+        generateReceiptPreviewHTML,
         previewReceipt,
+        closeReceiptPreview,
+        printFromPreview,
         maskPhoneNumber,
         getTodayOrderNumber,
         calculateExpectedTime
     };
+    
+    // 전역 함수로도 노출 (HTML onclick에서 사용)
+    window.closeReceiptPreview = closeReceiptPreview;
+    window.printFromPreview = printFromPreview;
+    
+    // 모달 외부 클릭 시 닫기
+    document.addEventListener('click', (e) => {
+        const modal = document.getElementById('receiptPreviewModal');
+        if (modal && e.target === modal) {
+            closeReceiptPreview();
+        }
+    });
+    
+    // ESC 키로 모달 닫기
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            const modal = document.getElementById('receiptPreviewModal');
+            if (modal && modal.classList.contains('show')) {
+                closeReceiptPreview();
+            }
+        }
+    });
 }
 
 
