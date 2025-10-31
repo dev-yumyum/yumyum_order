@@ -123,9 +123,6 @@ function convertOrderToReceiptData(order) {
         totalAmount: order.totalAmount || 0,
         requests: requests || '없음',
         
-        // 예상 완료 시간
-        expectedCompletionTime: formatTimeWithSeconds(expectedTime),
-        
         // 푸터
         thankYouMessage: `${order.customerName || '고객'}님 냠냠픽업을 주문해주셔서 감사합니다`
     };
@@ -397,11 +394,6 @@ function generateReceiptHTML(receiptData) {
         </div>
         ` : ''}
 
-        <!-- 예상 완료 시간 -->
-        <div class="expected-time">
-            예상 완료시간: ${receiptData.expectedCompletionTime}
-        </div>
-
         <!-- 합계 -->
         <div class="total-section">
             <div class="total-row">
@@ -504,12 +496,6 @@ function generateReceiptPreviewHTML(data) {
                 <div class="receipt-requests">${data.requests}</div>
             </div>
             ` : ''}
-
-            <!-- 예상 완료 시간 -->
-            <div class="receipt-expected-time">
-                <div class="receipt-expected-time-label">예상 완료시간</div>
-                <div class="receipt-expected-time-value">${data.expectedCompletionTime || '오전 08:43'}</div>
-            </div>
 
             <!-- 합계 -->
             <div class="receipt-total">
