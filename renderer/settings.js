@@ -20,8 +20,8 @@ if (!checkAuth()) {
 // 알림음 이름 매핑
 const soundNames = {
     'voice-order-received': '주문이 접수되었습니다',
-    'voice-yumyum-pickup-order': '얍얍픽업 주문',
-    'voice-yumyum-pickup': '얌얌픽업',
+    'voice-yumyum-pickup-order': '냠냠픽업 주문',
+    'voice-yumyum-pickup': '냠냠픽업',
     'bell': '종소리',
     'clear-notification': '맑은알림음'
 };
@@ -1220,8 +1220,8 @@ async function playNotificationSound(soundId, volumeLevel = null) {
         // 오디오 파일 매핑 (실제 파일명)
         const audioFiles = {
             'voice-order-received': '주문이 접수되었습니다.m4a',
-            'voice-yumyum-pickup-order': '얌얌픽업 주문.m4a',
-            'voice-yumyum-pickup': '얌얌픽업.m4a',
+            'voice-yumyum-pickup-order': '냠냠픽업 주문.m4a',
+            'voice-yumyum-pickup': '냠냠픽업.m4a',
             'bell': null, // 파일 없음
             'clear-notification': null // 파일 없음
         };

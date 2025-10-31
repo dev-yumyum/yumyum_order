@@ -1,6 +1,6 @@
 # YumYum Order Management System
 
-> 얌얌픽업 주문 접수 시스템 - Windows & macOS 데스크탑 애플리케이션
+> 냠냠픽업 주문 접수 시스템 - Windows & macOS 데스크탑 애플리케이션
 
 ## 🚀 빠른 시작
 

@@ -1,7 +1,7 @@
 {
   "name": "yumyum_order",
   "version": "1.0.12",
-  "description": "YumYum Order Management System - 얌얌픽업 주문 접수 시스템",
+  "description": "YumYum Order Management System - 냠냠픽업 주문 접수 시스템",
   "main": "src/main.js",
   "homepage": "./",
   "scripts": {
