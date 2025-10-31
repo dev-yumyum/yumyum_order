@@ -16,22 +16,19 @@ function getStoredPrinterSettings() {
     return null;
 }
 
-// 전화번호 마스킹 처리 (중간 4자리)
-function maskPhoneNumber(phone) {
-    if (!phone) return '***-****-****';
+// 전화번호 뒤 4자리만 추출
+function getLastFourDigits(phone) {
+    if (!phone) return '****';
     
     // 하이픈 제거
     const cleaned = phone.replace(/-/g, '');
     
-    if (cleaned.length === 11) {
-        // 010-****-5678 형식
-        return `${cleaned.substring(0, 3)}-****-${cleaned.substring(7)}`;
-    } else if (cleaned.length === 10) {
-        // 02-****-5678 형식
-        return `${cleaned.substring(0, 2)}-****-${cleaned.substring(6)}`;
+    // 뒤 4자리만 반환
+    if (cleaned.length >= 4) {
+        return cleaned.slice(-4);
     }
     
-    return '***-****-****';
+    return '****';
 }
 
 // 당일 주문 번호 가져오기
@@ -103,22 +100,23 @@ function convertOrderToReceiptData(order) {
     const orderTime = new Date(order.createdAt || order.orderTime);
     const expectedTime = calculateExpectedTime(order);
     const orderNumber = getTodayOrderNumber(order);
+    const orderType = order.type || '포장';
 
     return {
-        // 헤더
-        storeName: '냠냠픽업',
+        // 헤더 (냠냠픽업 + 주문유형)
+        storeName: `냠냠픽업 ${orderType}`,
         
         // 주문 정보
         orderNumber: orderNumber,
         orderDate: formatDate(orderTime),
         orderTime: formatTimeWithSeconds(orderTime),
         
-        // 고객 정보
+        // 고객 정보 (이름 + 전화번호 뒤 4자리)
         customerName: order.customerName || '고객',
-        customerPhone: maskPhoneNumber(order.customerPhone),
+        customerPhoneLast4: getLastFourDigits(order.customerPhone),
         
         // 주문 내역
-        orderType: order.type || '포장',
+        orderType: orderType,
         items: order.items || [],
         totalAmount: order.totalAmount || 0,
         requests: requests || '없음',
@@ -280,6 +278,13 @@ function generateReceiptHTML(receiptData) {
             text-align: center;
             margin: 10px 0;
         }
+        .customer-info-inline {
+            font-size: 14pt;
+            font-weight: 600;
+            text-align: center;
+            margin: 5px 0 15px 0;
+            color: #333;
+        }
         .receipt-item {
             display: flex;
             justify-content: space-between;
@@ -348,8 +353,11 @@ function generateReceiptHTML(receiptData) {
             <div class="store-name">${receiptData.storeName}</div>
         </div>
 
-        <!-- 주문번호 -->
+        <!-- 주문번호와 고객정보 통합 -->
         <div class="order-number">주문번호: ${receiptData.orderNumber}</div>
+        <div class="customer-info-inline">
+            ${receiptData.customerName} (${receiptData.customerPhoneLast4})
+        </div>
 
         <!-- 주문 일시 -->
         <div class="section">
@@ -360,23 +368,6 @@ function generateReceiptHTML(receiptData) {
             <div class="info-row">
                 <span class="info-label">주문시간:</span>
                 <span class="info-value">${receiptData.orderTime}</span>
-            </div>
-        </div>
-
-        <!-- 고객 정보 -->
-        <div class="section">
-            <div class="section-title">고객 정보</div>
-            <div class="info-row">
-                <span class="info-label">고객명:</span>
-                <span class="info-value">${receiptData.customerName}</span>
-            </div>
-            <div class="info-row">
-                <span class="info-label">연락처:</span>
-                <span class="info-value">${receiptData.customerPhone}</span>
-            </div>
-            <div class="info-row">
-                <span class="info-label">주문유형:</span>
-                <span class="info-value">${receiptData.orderType}</span>
             </div>
         </div>
 
@@ -448,11 +439,14 @@ function generateReceiptPreviewHTML(data) {
         <div class="receipt-container">
             <!-- 헤더 -->
             <div class="receipt-header">
-                <div class="receipt-store-name">${data.storeName || '냠냠픽업'}</div>
+                <div class="receipt-store-name">${data.storeName || '냠냠픽업 포장'}</div>
             </div>
 
-            <!-- 주문번호 -->
+            <!-- 주문번호와 고객정보 통합 -->
             <div class="receipt-order-number">주문번호: ${data.orderNumber || '21'}</div>
+            <div class="customer-info-inline">
+                ${data.customerName || '고객'} (${data.customerPhoneLast4 || '****'})
+            </div>
 
             <!-- 주문 일시 -->
             <div class="receipt-section">
@@ -463,23 +457,6 @@ function generateReceiptPreviewHTML(data) {
                 <div class="receipt-info-row">
                     <span class="receipt-info-label">주문시간</span>
                     <span class="receipt-info-value">${data.orderTime || ''}</span>
-                </div>
-            </div>
-
-            <!-- 고객 정보 -->
-            <div class="receipt-section">
-                <div class="receipt-section-title">고객 정보</div>
-                <div class="receipt-info-row">
-                    <span class="receipt-info-label">고객명</span>
-                    <span class="receipt-info-value">${data.customerName || '고객'}</span>
-                </div>
-                <div class="receipt-info-row">
-                    <span class="receipt-info-label">연락처</span>
-                    <span class="receipt-info-value">${data.customerPhone || '***-****-****'}</span>
-                </div>
-                <div class="receipt-info-row">
-                    <span class="receipt-info-label">주문유형</span>
-                    <span class="receipt-info-value">${data.orderType || '포장'}</span>
                 </div>
             </div>
 
@@ -558,7 +535,7 @@ if (typeof window !== 'undefined') {
         previewReceipt,
         closeReceiptPreview,
         printFromPreview,
-        maskPhoneNumber,
+        getLastFourDigits,
         getTodayOrderNumber,
         calculateExpectedTime
     };
