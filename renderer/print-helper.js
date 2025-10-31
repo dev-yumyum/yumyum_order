@@ -106,7 +106,7 @@ function convertOrderToReceiptData(order) {
 
     return {
         // 헤더
-        storeName: '얌얌픽업',
+        storeName: '냠냠픽업',
         
         // 주문 정보
         orderNumber: orderNumber,
@@ -127,7 +127,7 @@ function convertOrderToReceiptData(order) {
         expectedCompletionTime: formatTimeWithSeconds(expectedTime),
         
         // 푸터
-        thankYouMessage: `${order.customerName || '고객'}님 얌얌픽업을 주문해주셔서 감사합니다`
+        thankYouMessage: `${order.customerName || '고객'}님 냠냠픽업을 주문해주셔서 감사합니다`
     };
 }
 
@@ -456,7 +456,7 @@ function generateReceiptPreviewHTML(data) {
         <div class="receipt-container">
             <!-- 헤더 -->
             <div class="receipt-header">
-                <div class="receipt-store-name">${data.storeName || '얌얌픽업'}</div>
+                <div class="receipt-store-name">${data.storeName || '냠냠픽업'}</div>
             </div>
 
             <!-- 주문번호 -->
