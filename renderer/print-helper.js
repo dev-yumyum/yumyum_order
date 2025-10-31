@@ -276,13 +276,19 @@ function generateReceiptHTML(receiptData) {
             font-size: 18pt;
             font-weight: bold;
             text-align: center;
-            margin: 10px 0;
+            margin: 10px 0 0 0;
+            padding: 15px;
+            background: #e3f2fd;
+            border-radius: 8px;
         }
         .customer-info-inline {
             font-size: 14pt;
             font-weight: 600;
             text-align: center;
-            margin: 5px 0 15px 0;
+            padding: 0 15px 15px 15px;
+            background: #e3f2fd;
+            border-radius: 0 0 8px 8px;
+            margin: 0 0 15px 0;
             color: #333;
         }
         .receipt-item {
