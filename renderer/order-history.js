@@ -160,7 +160,7 @@ function loadOrderHistory() {
 function generateTestOrderHistory() {
     const testData = [];
     const statuses = ['completed', 'cancelled', 'rejected'];
-    const types = ['포장', '매장'];
+    const types = ['포장', '매장식사'];
     const menus = [
         { name: '아이스 아메리카노', price: 4000 },
         { name: '카페라떼', price: 4500 },

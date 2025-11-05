@@ -536,6 +536,11 @@ function validateOrderConditions(order) {
         errors.push('포장 주문은 예약이 불가능합니다');
     }
     
+    // 매장식사 주문 검증 (예약 기능 제외)
+    if (order.type === '매장식사' && (order.reservationTime || order.reservationDate)) {
+        errors.push('매장식사 주문은 예약이 불가능합니다');
+    }
+    
     // 4. 준비 시간 초과 검증
     if (order.timer && order.timer > BUSINESS_RULES.TIME_LIMITS.maxPreparationTime) {
         errors.push(`최대 준비시간(${BUSINESS_RULES.TIME_LIMITS.maxPreparationTime}분) 초과`);
@@ -1029,7 +1034,7 @@ function createTestOrder() {
         { name: '최동훈', phone: '010-5678-9012' }
     ];
     
-    const orderTypes = ['포장', '매장'];
+    const orderTypes = ['포장', '매장식사'];
     
     // 랜덤 선택
     const randomMenu = testMenus[Math.floor(Math.random() * testMenus.length)];
