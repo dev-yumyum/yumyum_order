@@ -36,7 +36,7 @@ function createMainWindow() {
       contextIsolation: false,
       enableRemoteModule: true
     },
-    show: false, // 준비가 완료되면 표시
+    show: true, // 즉시 표시
     autoHideMenuBar: !isDev, // 개발 모드가 아니면 메뉴바 숨김
     titleBarStyle: 'default'
   });
@@ -48,6 +48,7 @@ function createMainWindow() {
   // 윈도우 준비되면 표시
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();
+    mainWindow.focus(); // 창을 앞으로 가져오기
     if (isDev) {
       mainWindow.webContents.openDevTools();
     }
