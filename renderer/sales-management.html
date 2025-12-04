@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>매출 관리 - YumYum 주문 관리</title>
+    <link rel="stylesheet" href="sales-management.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+</head>
+<body>
+    <div class="sales-container">
+        <!-- 상단 헤더 -->
+        <header class="sales-header">
+            <div class="header-left">
+                <button class="back-btn" onclick="goBack()">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>이전</span>
+                </button>
+            </div>
+            <div class="header-center">
+                <h1>매출 관리</h1>
+            </div>
+            <div class="header-right">
+                <span class="current-time" id="currentTime"></span>
+            </div>
+        </header>
+
+        <div class="sales-main">
+            <!-- 기간 선택 -->
+            <div class="period-selector">
+                <button class="period-btn" data-period="today">오늘</button>
+                <button class="period-btn" data-period="yesterday">어제</button>
+                <button class="period-btn active" data-period="last7days">최근 7일</button>
+                <button class="period-btn" data-period="last30days">최근 30일</button>
+                <button class="period-btn" data-period="custom">
+                    <i class="fas fa-calendar-alt"></i>
+                    사용자 지정
+                </button>
+                <div class="selected-period-text" id="selectedPeriodText">
+                    최근 7일
+                </div>
+            </div>
+
+            <!-- 요약 카드 -->
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <div class="card-icon sales">
+                        <i class="fas fa-won-sign"></i>
+                    </div>
+                    <div class="card-content">
+                        <p class="card-label">총 매출액</p>
+                        <p class="card-value" id="totalSales">0원</p>
+                    </div>
+                </div>
+
+                <div class="summary-card">
+                    <div class="card-icon orders">
+                        <i class="fas fa-receipt"></i>
+                    </div>
+                    <div class="card-content">
+                        <p class="card-label">총 주문 수</p>
+                        <p class="card-value" id="totalOrders">0건</p>
+                    </div>
+                </div>
+
+                <div class="summary-card">
+                    <div class="card-icon average">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <div class="card-content">
+                        <p class="card-label">평균 객단가</p>
+                        <p class="card-value" id="avgOrderAmount">0원</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 그래프 영역 -->
+            <div class="charts-section">
+                <div class="chart-container">
+                    <h3 class="chart-title">요일별 매출</h3>
+                    <canvas id="salesByDayChart"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h3 class="chart-title">시간대별 매출</h3>
+                    <canvas id="salesByHourChart"></canvas>
+                </div>
+            </div>
+
+            <!-- 베스트 메뉴 -->
+            <div class="best-menus-section">
+                <h2 class="section-title">베스트 메뉴</h2>
+                
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="hourly">시간대별</button>
+                    <button class="tab-btn" data-tab="daily">요일별</button>
+                </div>
+
+                <!-- 시간대별 베스트 메뉴 -->
+                <div class="tab-content active" id="hourlyBestMenus">
+                    <div class="time-slots">
+                        <div class="time-slot">
+                            <h4 class="time-slot-title">00:00 - 06:00</h4>
+                            <ul class="menu-list" id="bestMenus00"></ul>
+                        </div>
+
+                        <div class="time-slot">
+                            <h4 class="time-slot-title">06:00 - 12:00</h4>
+                            <ul class="menu-list" id="bestMenus06"></ul>
+                        </div>
+
+                        <div class="time-slot">
+                            <h4 class="time-slot-title">12:00 - 18:00</h4>
+                            <ul class="menu-list" id="bestMenus12"></ul>
+                        </div>
+
+                        <div class="time-slot">
+                            <h4 class="time-slot-title">18:00 - 24:00</h4>
+                            <ul class="menu-list" id="bestMenus18"></ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 요일별 베스트 메뉴 -->
+                <div class="tab-content" id="dailyBestMenus">
+                    <div class="day-slots">
+                        <div class="day-slot">
+                            <h4 class="day-slot-title">월요일</h4>
+                            <ul class="menu-list" id="bestMenusMon"></ul>
+                        </div>
+
+                        <div class="day-slot">
+                            <h4 class="day-slot-title">화요일</h4>
+                            <ul class="menu-list" id="bestMenusTue"></ul>
+                        </div>
+
+                        <div class="day-slot">
+                            <h4 class="day-slot-title">수요일</h4>
+                            <ul class="menu-list" id="bestMenusWed"></ul>
+                        </div>
+
+                        <div class="day-slot">
+                            <h4 class="day-slot-title">목요일</h4>
+                            <ul class="menu-list" id="bestMenusThu"></ul>
+                        </div>
+
+                        <div class="day-slot">
+                            <h4 class="day-slot-title">금요일</h4>
+                            <ul class="menu-list" id="bestMenusFri"></ul>
+                        </div>
+
+                        <div class="day-slot">
+                            <h4 class="day-slot-title">토요일</h4>
+                            <ul class="menu-list" id="bestMenusSat"></ul>
+                        </div>
+
+                        <div class="day-slot">
+                            <h4 class="day-slot-title">일요일</h4>
+                            <ul class="menu-list" id="bestMenusSun"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 예상 주문 수 -->
+            <div class="prediction-section">
+                <h2 class="section-title">예상 주문 수 (다음 7일)</h2>
+                <div class="chart-container">
+                    <canvas id="predictionChart"></canvas>
+                </div>
+            </div>
+
+            <!-- 월별 비교 -->
+            <div class="comparison-section">
+                <h2 class="section-title">월별 비교</h2>
+                <div class="comparison-content">
+                    <div class="comparison-summary">
+                        <div class="month-data current-month">
+                            <h3>이번 달</h3>
+                            <p class="month-sales" id="currentMonthSales">0원</p>
+                            <p class="month-orders" id="currentMonthOrders">0건</p>
+                        </div>
+
+                        <div class="growth-rate">
+                            <i class="fas fa-arrow-up"></i>
+                            <span id="growthRate">0%</span>
+                        </div>
+
+                        <div class="month-data last-month">
+                            <h3>지난 달</h3>
+                            <p class="month-sales" id="lastMonthSales">0원</p>
+                            <p class="month-orders" id="lastMonthOrders">0건</p>
+                        </div>
+                    </div>
+
+                    <div class="menu-comparison">
+                        <div class="menu-rank">
+                            <h4>이번 달 베스트 메뉴</h4>
+                            <ul class="menu-list" id="currentMonthBestMenus"></ul>
+                        </div>
+
+                        <div class="menu-rank">
+                            <h4>지난 달 베스트 메뉴</h4>
+                            <ul class="menu-list" id="lastMonthBestMenus"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 사용자 지정 기간 선택 모달 -->
+    <div id="customPeriodModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>기간 선택</h3>
+                <button class="modal-close" onclick="closeCustomPeriodModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="date-inputs">
+                    <div class="input-group">
+                        <label>시작일</label>
+                        <input type="date" id="customStartDate">
+                    </div>
+                    <div class="input-group">
+                        <label>종료일</label>
+                        <input type="date" id="customEndDate">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeCustomPeriodModal()">취소</button>
+                <button class="btn-primary" onclick="applyCustomPeriod()">적용</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="mock-data.js"></script>
+    <script src="utils.js"></script>
+    <script src="sales-management.js"></script>
+</body>
+</html>
+

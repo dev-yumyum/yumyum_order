@@ -1680,15 +1680,21 @@ function openOrderHistory() {
     closeSideMenu();
 }
 
+// 매출 관리
+function openSalesManagement() {
+    window.location.href = 'sales-management.html';
+    closeSideMenu();
+}
+
 // 운영정보 관리
 function openOperationInfo() {
-    showNotification('운영정보 관리 기능은 준비 중입니다', 'info');
+    window.location.href = 'operation-info.html';
     closeSideMenu();
 }
 
 // 메뉴 품절 관리
 function openMenuManagement() {
-    showNotification('메뉴 품절 관리 기능은 준비 중입니다', 'info');
+    window.location.href = 'menu-soldout.html';
     closeSideMenu();
 }
 
