@@ -736,7 +736,7 @@ function updateTimers() {
         // 신규 상태(pending)거나 준비중(preparing) 상태일 때 타이머 증가
         // 준비완료(ready) 상태일 때는 타이머 멈춤
         if (order.status === 'pending' || order.status === 'preparing') {
-            // 초 단위로 증가 (timer는 초 단위로 저장)
+            // 초 단위로 증가 (timerSeconds는 초 단위로 저장)
             if (!order.timerSeconds) {
                 order.timerSeconds = 0;
             }
@@ -1429,21 +1429,35 @@ function navigateTo(page) {
 
 // 주문 내역 저장 (완료/취소/거부 시)
 function saveOrderToHistory(order) {
-    // localStorage에서 기존 내역 가져오기
-    const history = JSON.parse(localStorage.getItem('orderHistory') || '[]');
-    
-    // 이미 있는 주문이면 업데이트, 없으면 추가
-    const existingIndex = history.findIndex(o => o.id === order.id);
-    if (existingIndex !== -1) {
-        history[existingIndex] = order;
-    } else {
-        history.push(order);
+    try {
+        // 기존 히스토리 가져오기 (통합된 키 사용)
+        const history = JSON.parse(localStorage.getItem('yumyum_order_history') || '[]');
+        
+        // 중복 체크 (이미 저장된 주문은 업데이트)
+        const existingIndex = history.findIndex(o => o.id === order.id);
+        
+        if (existingIndex >= 0) {
+            // 기존 주문 업데이트
+            history[existingIndex] = { ...order };
+        } else {
+            // 새 주문 추가
+            history.push({ ...order });
+        }
+        
+        // 히스토리 저장 (최신 순으로 정렬)
+        history.sort((a, b) => {
+            const dateA = new Date(a.createdAt || a.orderTime);
+            const dateB = new Date(b.createdAt || b.orderTime);
+            return dateB - dateA; // 최신순
+        });
+        
+        // 로컬 스토리지에 저장
+        localStorage.setItem('yumyum_order_history', JSON.stringify(history));
+        
+        console.log(`주문 ${order.id} 히스토리에 저장됨`);
+    } catch (error) {
+        console.error('주문 히스토리 저장 실패:', error);
     }
-    
-    // localStorage에 저장
-    localStorage.setItem('orderHistory', JSON.stringify(history));
-    
-    console.log('주문 내역 저장:', order.id);
 }
 
 // ============= 설정 관련 함수 =============
@@ -1572,39 +1586,6 @@ function playOrderNotification() {
 }
 
 // ============= 영수증 출력 관련 함수 =============
-
-// 주문을 히스토리에 저장
-function saveOrderToHistory(order) {
-    try {
-        // 기존 히스토리 가져오기
-        const history = JSON.parse(localStorage.getItem('yumyum_order_history') || '[]');
-        
-        // 중복 체크 (이미 저장된 주문은 업데이트)
-        const existingIndex = history.findIndex(o => o.id === order.id);
-        
-        if (existingIndex >= 0) {
-            // 기존 주문 업데이트
-            history[existingIndex] = { ...order };
-        } else {
-            // 새 주문 추가
-            history.push({ ...order });
-        }
-        
-        // 히스토리 저장 (최신 순으로 정렬)
-        history.sort((a, b) => {
-            const dateA = new Date(a.createdAt || a.orderTime);
-            const dateB = new Date(b.createdAt || b.orderTime);
-            return dateB - dateA; // 최신순
-        });
-        
-        // 로컬 스토리지에 저장
-        localStorage.setItem('yumyum_order_history', JSON.stringify(history));
-        
-        console.log(`주문 ${order.id} 히스토리에 저장됨`);
-    } catch (error) {
-        console.error('주문 히스토리 저장 실패:', error);
-    }
-}
 
 // 현재 선택된 주문의 영수증 출력
 function printCurrentReceipt() {
@@ -1768,8 +1749,9 @@ function showOrderAlert(order) {
     currentAlertOrderId = order.id;
     alertType.textContent = `${order.type} ${order.number}`;
     
-    // 메뉴 정보 생성
-    const menuText = order.menus.map(menu => 
+    // 메뉴 정보 생성 - order.items 사용 (order.menus는 존재하지 않을 수 있음)
+    const menuItems = order.items || order.menus || [];
+    const menuText = menuItems.map(menu => 
         `${menu.name} x ${menu.quantity}`
     ).join(', ');
     alertMenu.textContent = menuText;
@@ -1798,7 +1780,8 @@ function showSystemNotification(order) {
     // Electron 환경인지 확인
     if (window.electron && window.electron.showNotification) {
         // Electron 네이티브 알림 사용
-        const menuText = order.menus.map(menu => 
+        const menuItems = order.items || order.menus || [];
+        const menuText = menuItems.map(menu => 
             `${menu.name} x ${menu.quantity}`
         ).join(', ');
         
@@ -1838,7 +1821,8 @@ function showSystemNotification(order) {
 
 // 브라우저 알림 생성 (폴백용)
 function createBrowserNotification(order) {
-    const menuText = order.menus.map(menu => 
+    const menuItems = order.items || order.menus || [];
+    const menuText = menuItems.map(menu => 
         `${menu.name} x ${menu.quantity}`
     ).join(', ');
     
@@ -1876,9 +1860,8 @@ function playOrderAlertSound() {
             const volumeLevel = appSettings.general.volumeLevel || 3;
             
             console.log('soundId:', soundId, 'volumeLevel:', volumeLevel);
-            console.log('playNotificationSound 함수 존재:', typeof playNotificationSound === 'function');
             
-            // playNotificationSound 함수 호출
+            // playNotificationSound 함수 호출 (settings.js에서 정의됨)
             if (typeof playNotificationSound === 'function') {
                 console.log('알림음 재생 함수 호출 중...');
                 playNotificationSound(soundId, volumeLevel);
@@ -1886,13 +1869,37 @@ function playOrderAlertSound() {
                 console.log('window.playNotificationSound 호출 중...');
                 window.playNotificationSound(soundId, volumeLevel);
             } else {
-                console.error('playNotificationSound 함수를 찾을 수 없습니다!');
+                console.warn('playNotificationSound 함수를 찾을 수 없습니다. 기본 알림음을 사용합니다.');
+                // 폴백: 기본 비프음
+                playDefaultBeep(volumeLevel);
             }
         } else {
             console.error('appSettings 또는 notificationSound가 없습니다!');
         }
     } catch (error) {
         console.error('알림음 재생 실패:', error);
+    }
+}
+
+// 기본 비프음 재생 (폴백)
+function playDefaultBeep(volumeLevel = 3) {
+    try {
+        const context = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = context.createOscillator();
+        const gainNode = context.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(context.destination);
+        
+        oscillator.frequency.value = 880; // A5 음
+        gainNode.gain.value = (volumeLevel / 6) * 0.3;
+        
+        oscillator.start();
+        setTimeout(() => oscillator.stop(), 200);
+        
+        console.log('기본 비프음 재생됨');
+    } catch (error) {
+        console.error('기본 비프음 재생 실패:', error);
     }
 }
 
