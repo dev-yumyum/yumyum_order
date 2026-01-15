@@ -666,13 +666,8 @@
 
     <script src="web-adapter.js"></script>
     <script>
-        // Electron 또는 웹 환경에 맞는 API 설정
-        if (typeof WebAdapter !== 'undefined') {
-            window.electron = WebAdapter;
-        }
-        
-        // Electron 환경 대체 (이전 버전 호환)
-        if (typeof require !== 'undefined' && !window.electron) {
+        // Electron API 노출 (Electron 우선, 웹 환경은 WebAdapter 사용)
+        if (typeof require !== 'undefined') {
             try {
                 const { ipcRenderer } = require('electron');
                 window.electron = {
@@ -684,8 +679,13 @@
                     closeApp: () => ipcRenderer.send('close-app')
                 };
             } catch (e) {
-                console.log('Electron 환경이 아닙니다.');
+                console.log('Electron 환경이 아닙니다. WebAdapter 사용.');
             }
+        }
+        
+        // 웹 환경 대체 (WebAdapter 사용)
+        if (!window.electron && typeof WebAdapter !== 'undefined') {
+            window.electron = WebAdapter;
         }
     </script>
     <script src="settings.js"></script>
