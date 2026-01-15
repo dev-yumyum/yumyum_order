@@ -1903,7 +1903,34 @@ function playDefaultBeep(volumeLevel = 3) {
     }
 }
 
-// 확인 버튼 클릭 (주문으로 이동)
+// 바로접수 버튼 클릭 (자동으로 주문 접수 처리)
+function acceptOrderDirectly() {
+    closeOrderAlert();
+    if (currentAlertOrderId) {
+        // 해당 주문을 찾아서 자동으로 접수 처리
+        const order = orders.find(o => o.id === currentAlertOrderId);
+        if (order && order.status === 'pending') {
+            // 상태를 confirmed(접수)로 변경
+            order.status = 'confirmed';
+            order.confirmedAt = new Date().toISOString();
+            
+            // 로컬 스토리지 업데이트
+            saveOrdersToStorage();
+            
+            // UI 업데이트
+            updateOrderList();
+            
+            // 알림 표시
+            showNotification(`주문이 자동 접수되었습니다 (${order.type} ${order.number})`, 'success');
+            
+            // 주문 선택 (상세 정보 표시)
+            selectOrder(currentAlertOrderId);
+        }
+        currentAlertOrderId = null;
+    }
+}
+
+// 확인 버튼 클릭 (주문 상세 정보 모달 열기)
 function confirmOrderAlert() {
     closeOrderAlert();
     if (currentAlertOrderId) {
