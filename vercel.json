@@ -1,11 +1,13 @@
 {
-  "buildCommand": null,
-  "installCommand": null,
+  "framework": null,
+  "buildCommand": "echo 'Static site - no build required'",
+  "installCommand": "echo 'No dependencies needed'",
   "outputDirectory": ".",
   "rewrites": [
     {
       "source": "/(.*)",
       "destination": "/public/index.html"
     }
-  ]
+  ],
+  "ignoreCommand": "echo 'Skipping build'"
 }
