@@ -1,9 +1,7 @@
 node_modules
 dist
 build
-src/main.js
-src/app.js
-src/index.js
+src/
 test
 *.test.js
 .git
@@ -12,3 +10,11 @@ test
 !README.md
 build-*.sh
 build-*.bat
+oracleJdk-25.jdk
+pom.xml
+target
+*.jar
+*.jdk
+eslint.config.js
+jest.config.js
+.prettierrc.json
