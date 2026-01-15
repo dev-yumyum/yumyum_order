@@ -151,20 +151,28 @@
                     document.head.appendChild(fontLink);
                 }
                 
-                // 새 CSS 로드
-                const cssPath = `/renderer/${page}.css`;
-                try {
-                    const response = await fetch(cssPath, { method: 'HEAD' });
-                    if (response.ok) {
-                        const link = document.createElement('link');
-                        link.rel = 'stylesheet';
-                        link.href = cssPath;
-                        link.setAttribute('data-page', page);
-                        document.head.appendChild(link);
-                    }
-                } catch (error) {
-                    console.log(`CSS 파일 없음: ${cssPath}`);
-                }
+                // 새 CSS 로드 (캐시 버스팅 추가)
+                const cssPath = `/renderer/${page}.css?t=${Date.now()}`;
+                const link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = cssPath;
+                link.setAttribute('data-page', page);
+                
+                // CSS 로드 완료 대기
+                await new Promise((resolve, reject) => {
+                    link.onload = () => {
+                        console.log(`CSS 로드 완료: ${cssPath}`);
+                        resolve();
+                    };
+                    link.onerror = () => {
+                        console.error(`CSS 로드 실패: ${cssPath}`);
+                        resolve(); // 실패해도 계속 진행
+                    };
+                    document.head.appendChild(link);
+                    
+                    // 5초 타임아웃
+                    setTimeout(resolve, 5000);
+                });
             },
             
             async loadJS(page) {
