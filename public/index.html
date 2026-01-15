@@ -135,6 +135,22 @@
                     existingCSS.remove();
                 }
                 
+                // Font Awesome이 없으면 추가
+                if (!document.querySelector('link[href*="font-awesome"]')) {
+                    const faLink = document.createElement('link');
+                    faLink.rel = 'stylesheet';
+                    faLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css';
+                    document.head.appendChild(faLink);
+                }
+                
+                // Noto Sans KR 폰트가 없으면 추가
+                if (!document.querySelector('link[href*="Noto+Sans+KR"]')) {
+                    const fontLink = document.createElement('link');
+                    fontLink.href = 'https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap';
+                    fontLink.rel = 'stylesheet';
+                    document.head.appendChild(fontLink);
+                }
+                
                 // 새 CSS 로드
                 const cssPath = `/renderer/${page}.css`;
                 try {
