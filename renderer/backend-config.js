@@ -1,10 +1,10 @@
 // 백엔드 API 설정
 const BACKEND_CONFIG = {
     // API 서버 URL - Spring Boot 서버 (포트 8080)
-    apiUrl: process.env.API_URL || 'http://localhost:8080',
+    apiUrl: (typeof process !== 'undefined' && process.env && process.env.API_URL) || 'http://localhost:8080',
     
     // API 인증 키 (필요시)
-    apiKey: process.env.API_KEY || '',
+    apiKey: (typeof process !== 'undefined' && process.env && process.env.API_KEY) || '',
     
     // 연결 타임아웃 (밀리초)
     timeout: 10000,
