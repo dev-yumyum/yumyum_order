@@ -1,27 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/(login|order-management|settings|sales-management|order-history|menu-soldout|operation-info)",
-      "destination": "/public/index.html"
-    },
-    {
-      "source": "/",
-      "destination": "/public/index.html"
-    },
-    {
       "source": "/(.*)",
       "destination": "/public/index.html"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=3600, must-revalidate"
-        }
-      ]
     }
   ]
 }
