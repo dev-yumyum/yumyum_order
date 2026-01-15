@@ -81,51 +81,8 @@
             currentPage: null,
             
             async navigate(page) {
-                const app = document.getElementById('app');
-                
-                try {
-                    // 페이지 로드
-                    const response = await fetch(`/renderer/${page}.html`);
-                    if (!response.ok) {
-                        throw new Error(`페이지를 찾을 수 없습니다: ${page}`);
-                    }
-                    
-                    const html = await response.text();
-                    
-                    // HTML 파싱 및 body 내용만 추출
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(html, 'text/html');
-                    
-                    // 기존 스크립트 제거
-                    const scripts = doc.querySelectorAll('script');
-                    scripts.forEach(script => script.remove());
-                    
-                    // body 내용 삽입
-                    app.innerHTML = doc.body.innerHTML;
-                    
-                    // CSS 파일 로드
-                    await this.loadCSS(page);
-                    
-                    // JS 파일 로드
-                    await this.loadJS(page);
-                    
-                    this.currentPage = page;
-                    
-                    // URL 업데이트 (히스토리 API)
-                    window.history.pushState({ page }, '', `/${page}`);
-                    
-                } catch (error) {
-                    console.error('페이지 로드 실패:', error);
-                    app.innerHTML = `
-                        <div style="padding: 40px; text-align: center;">
-                            <h2>페이지를 로드할 수 없습니다</h2>
-                            <p>${error.message}</p>
-                            <button onclick="Router.navigate('login')" style="padding: 10px 20px; margin-top: 20px;">
-                                로그인 페이지로 이동
-                            </button>
-                        </div>
-                    `;
-                }
+                // 직접 페이지로 이동 (SPA 대신 전체 페이지 로드)
+                window.location.href = `/renderer/${page}.html`;
             },
             
             async loadCSS(page) {
@@ -198,28 +155,12 @@
             },
             
             init() {
-                // 뒤로가기/앞으로가기 처리
-                window.addEventListener('popstate', (e) => {
-                    if (e.state && e.state.page) {
-                        this.navigate(e.state.page);
-                    } else {
-                        this.navigate('login');
-                    }
-                });
-                
-                // 초기 페이지 로드
-                const path = window.location.pathname;
-                if (path === '/' || path === '/index.html') {
-                    // 로그인 여부 확인
-                    const authData = localStorage.getItem('yumyum_auth');
-                    if (authData) {
-                        this.navigate('order-management');
-                    } else {
-                        this.navigate('login');
-                    }
+                // 초기 페이지 로드 - 로그인 여부 확인
+                const authData = localStorage.getItem('yumyum_auth');
+                if (authData) {
+                    window.location.href = '/renderer/order-management.html';
                 } else {
-                    const page = path.replace('/', '').replace('.html', '') || 'login';
-                    this.navigate(page);
+                    window.location.href = '/renderer/login.html';
                 }
             }
         };
