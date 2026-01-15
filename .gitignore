@@ -35,3 +35,13 @@ coverage/
 # Temporary files
 *.tmp
 *.temp
+
+# Java/Spring
+*.jar
+*.war
+*.class
+target/
+pom.xml
+src/main/
+oracleJdk-*.jdk/
+*.jdk

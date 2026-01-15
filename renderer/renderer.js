@@ -3,7 +3,16 @@
  * UI 상호작용 및 IPC 통신 처리
  */
 
-const { ipcRenderer } = require('electron');
+// Electron ipcRenderer 로드 (Electron 환경에서만)
+let ipcRenderer = null;
+if (typeof require !== 'undefined') {
+    try {
+        const electron = require('electron');
+        ipcRenderer = electron.ipcRenderer;
+    } catch (error) {
+        console.log('Electron 환경이 아닙니다. 웹 모드로 실행합니다.');
+    }
+}
 
 // 전역 변수
 let currentOrders = [];
