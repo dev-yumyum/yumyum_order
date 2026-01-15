@@ -664,18 +664,28 @@
         </div>
     </div>
 
+    <script src="web-adapter.js"></script>
     <script>
-        // Electron API 노출
-        if (typeof require !== 'undefined') {
-            const { ipcRenderer } = require('electron');
-            window.electron = {
-                getPrinters: () => ipcRenderer.invoke('get-printers'),
-                checkPrinter: (name) => ipcRenderer.invoke('check-printer', name),
-                printReceipt: (printer, data) => ipcRenderer.invoke('print-receipt', printer, data),
-                getSerialPorts: () => ipcRenderer.invoke('get-serial-ports'),
-                getAudioPath: (fileName) => ipcRenderer.invoke('get-audio-path', fileName),
-                closeApp: () => ipcRenderer.send('close-app')
-            };
+        // Electron 또는 웹 환경에 맞는 API 설정
+        if (typeof WebAdapter !== 'undefined') {
+            window.electron = WebAdapter;
+        }
+        
+        // Electron 환경 대체 (이전 버전 호환)
+        if (typeof require !== 'undefined' && !window.electron) {
+            try {
+                const { ipcRenderer } = require('electron');
+                window.electron = {
+                    getPrinters: () => ipcRenderer.invoke('get-printers'),
+                    checkPrinter: (name) => ipcRenderer.invoke('check-printer', name),
+                    printReceipt: (printer, data) => ipcRenderer.invoke('print-receipt', printer, data),
+                    getSerialPorts: () => ipcRenderer.invoke('get-serial-ports'),
+                    getAudioPath: (fileName) => ipcRenderer.invoke('get-audio-path', fileName),
+                    closeApp: () => ipcRenderer.send('close-app')
+                };
+            } catch (e) {
+                console.log('Electron 환경이 아닙니다.');
+            }
         }
     </script>
     <script src="settings.js"></script>

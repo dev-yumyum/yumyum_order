@@ -9,6 +9,8 @@
     "dev": "nodemon src/index.js",
     "electron": "electron .",
     "electron-dev": "electron . --dev",
+    "web": "npx http-server . -p 3000 -o /public/index.html",
+    "web:dev": "npx http-server . -p 3000 -c-1 -o /public/index.html",
     "test": "jest",
     "test:watch": "jest --watch",
     "lint": "eslint src/",
@@ -21,7 +23,9 @@
     "build:mac-arm": "electron-builder --mac --arm64",
     "build:mac-intel": "electron-builder --mac --x64",
     "build:all": "electron-builder --win --mac",
-    "pack": "electron-builder --dir"
+    "pack": "electron-builder --dir",
+    "vercel:deploy": "vercel --prod",
+    "vercel:dev": "vercel dev"
   },
   "keywords": [
     "yumyum",

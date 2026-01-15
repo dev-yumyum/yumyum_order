@@ -1,120 +1,37 @@
 # Dependencies
 node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 package-lock.json
 
-# Runtime data
-pids
-*.pid
-*.seed
-*.pid.lock
+# Build outputs
+dist/
+build/
+out/
 
-# Coverage directory used by tools like istanbul
-coverage/
-*.lcov
+# Electron
+*.log
 
-# nyc test coverage
-.nyc_output
-
-# Grunt intermediate storage
-.grunt
-
-# node-waf configuration
-.lock-wscript
-
-# Compiled binary addons
-build/Release
-
-# Dependency directories
-jspm_packages/
-
-# Optional npm cache directory
-.npm
-
-# Optional eslint cache
-.eslintcache
-
-# Output of 'npm pack'
-*.tgz
-
-# Yarn Integrity file
-.yarn-integrity
-
-# dotenv environment variables file
+# Environment variables
 .env
 .env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*.local
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
-
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-# Electron Builder output
-dist/
-dist-electron/
-out/
-
-# Electron build cache
-.cache/
-
-# Application data
-*.db
-*.sqlite
-*.sqlite3
-
-# Logs
-logs/
-*.log
-
-# macOS
-oracleJdk-25.jdk/
-
-# Java files (if any)
-pom.xml
-src/main/
-target/
-
-# Temporary files
-tmp/
-temp/
-*.tmp
-
-# Backup files
-*.bak
-*.backup
 *~
 
-# Windows installer files
-*.msi
-*.msm
-*.msp
+# OS
+.DS_Store
+Thumbs.db
 
-# Built application bundles
-*.app
-*.dmg
-*.pkg
-*.deb
-*.rpm
-*.exe
-*.zip
-*.tar.gz
+# Test coverage
+coverage/
 
-# Exclude built apps but keep source
-!assets/*.icns
-!assets/*.ico
-!assets/*.png
+# Vercel
+.vercel
+
+# Temporary files
+*.tmp
+*.temp

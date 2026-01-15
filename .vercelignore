@@ -1,0 +1,14 @@
+node_modules
+dist
+build
+src/main.js
+src/app.js
+src/index.js
+test
+*.test.js
+.git
+.gitignore
+*.md
+!README.md
+build-*.sh
+build-*.bat

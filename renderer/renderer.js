@@ -3,7 +3,16 @@
  * UI 상호작용 및 IPC 통신 처리
  */
 
-const { ipcRenderer } = require('electron');
+// Electron 환경 감지 및 API 로드
+let ipcRenderer = null;
+if (typeof require !== 'undefined' && typeof window !== 'undefined' && typeof window.process === 'object') {
+    try {
+        const electron = require('electron');
+        ipcRenderer = electron.ipcRenderer;
+    } catch (error) {
+        console.log('Electron 환경이 아닙니다. 웹 모드로 실행합니다.');
+    }
+}
 
 // 전역 변수
 let currentOrders = [];
@@ -101,6 +110,12 @@ function setupEventListeners() {
 
 // IPC 리스너 설정
 function setupIpcListeners() {
+    // Electron 환경이 아니면 리스너 설정 건너뛰기
+    if (!ipcRenderer) {
+        console.log('웹 환경: IPC 리스너 설정 건너뛰기');
+        return;
+    }
+    
     // 메뉴에서 온 메시지들
     ipcRenderer.on('menu-new-order', resetOrderForm);
     ipcRenderer.on('menu-take-order', () => switchTab('orders'));
@@ -223,8 +238,29 @@ async function handleOrderSubmit(e) {
             totalAmount: calculateTotal()
         };
         
-        // 메인 프로세스로 주문 데이터 전송
-        const result = await ipcRenderer.invoke('add-order', orderData);
+        // 주문 데이터 전송 (Electron 또는 웹)
+        let result;
+        if (ipcRenderer) {
+            // Electron 환경: 메인 프로세스로 전송
+            result = await ipcRenderer.invoke('add-order', orderData);
+        } else {
+            // 웹 환경: localStorage 또는 백엔드 API 사용
+            if (typeof BackendAPI !== 'undefined' && !BackendAPI.config.localMode) {
+                result = await BackendAPI.createOrder(orderData);
+            } else {
+                // 로컬 스토리지에 저장
+                const orders = JSON.parse(localStorage.getItem('yumyum_orders') || '[]');
+                const newOrder = {
+                    id: 'ORD-' + Date.now(),
+                    ...orderData,
+                    status: 'pending',
+                    createdAt: new Date().toISOString()
+                };
+                orders.push(newOrder);
+                localStorage.setItem('yumyum_orders', JSON.stringify(orders));
+                result = { success: true, order: newOrder };
+            }
+        }
         
         if (result.success) {
             showToast(`주문이 성공적으로 접수되었습니다. (주문번호: ${result.order.id})`, 'success');
@@ -280,7 +316,24 @@ function resetOrderForm() {
 // 주문 목록 로드
 async function loadOrders() {
     try {
-        const result = await ipcRenderer.invoke('get-all-orders');
+        let result;
+        
+        if (ipcRenderer) {
+            // Electron 환경
+            result = await ipcRenderer.invoke('get-all-orders');
+        } else {
+            // 웹 환경
+            if (typeof BackendAPI !== 'undefined' && !BackendAPI.config.localMode) {
+                result = await BackendAPI.fetchOrders();
+                if (result.success) {
+                    result.orders = result.data;
+                }
+            } else {
+                // 로컬 스토리지에서 로드
+                const orders = JSON.parse(localStorage.getItem('yumyum_orders') || '[]');
+                result = { success: true, orders: orders };
+            }
+        }
         
         if (result.success) {
             currentOrders = result.orders;
@@ -352,7 +405,24 @@ function filterOrders() {
 async function showOrderDetail(orderId) {
     try {
         selectedOrderId = orderId;
-        const result = await ipcRenderer.invoke('get-order', orderId);
+        let result;
+        
+        if (ipcRenderer) {
+            result = await ipcRenderer.invoke('get-order', orderId);
+        } else {
+            // 웹 환경
+            if (typeof BackendAPI !== 'undefined' && !BackendAPI.config.localMode) {
+                result = await BackendAPI.fetchOrderById(orderId);
+                if (result.success) {
+                    result.order = result.data;
+                }
+            } else {
+                // 로컬 스토리지에서 찾기
+                const orders = JSON.parse(localStorage.getItem('yumyum_orders') || '[]');
+                const order = orders.find(o => o.id === orderId);
+                result = { success: !!order, order: order };
+            }
+        }
         
         if (result.success && result.order) {
             const order = result.order;
@@ -428,7 +498,27 @@ async function updateOrderStatus() {
     
     try {
         const newStatus = document.getElementById('orderStatusUpdate').value;
-        const result = await ipcRenderer.invoke('update-order-status', selectedOrderId, newStatus);
+        let result;
+        
+        if (ipcRenderer) {
+            result = await ipcRenderer.invoke('update-order-status', selectedOrderId, newStatus);
+        } else {
+            // 웹 환경
+            if (typeof BackendAPI !== 'undefined' && !BackendAPI.config.localMode) {
+                result = await BackendAPI.updateOrderStatus(selectedOrderId, newStatus);
+            } else {
+                // 로컬 스토리지에서 업데이트
+                const orders = JSON.parse(localStorage.getItem('yumyum_orders') || '[]');
+                const orderIndex = orders.findIndex(o => o.id === selectedOrderId);
+                if (orderIndex !== -1) {
+                    orders[orderIndex].status = newStatus;
+                    localStorage.setItem('yumyum_orders', JSON.stringify(orders));
+                    result = { success: true };
+                } else {
+                    result = { success: false, error: '주문을 찾을 수 없습니다.' };
+                }
+            }
+        }
         
         if (result.success) {
             showToast('주문 상태가 업데이트되었습니다.', 'success');

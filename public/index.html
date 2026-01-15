@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="YumYum 주문 접수 시스템 - 냠냠픽업 주문 관리 웹 애플리케이션">
+    <title>YumYum 주문 접수 시스템</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    
+    <!-- 스타일시트 -->
+    <link rel="stylesheet" href="/renderer/styles.css">
+    <link rel="stylesheet" href="/renderer/login.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        
+        #app {
+            min-height: 100vh;
+        }
+        
+        .loading-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .loading-content {
+            text-align: center;
+            color: white;
+        }
+        
+        .loading-spinner {
+            font-size: 48px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="loading-screen">
+            <div class="loading-content">
+                <div class="loading-spinner">
+                    <i class="fas fa-spinner"></i>
+                </div>
+                <div class="loading-text">YumYum 주문 접수 시스템 로딩 중...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 웹 어댑터 로드 -->
+    <script src="/renderer/web-adapter.js"></script>
+    
+    <!-- 백엔드 설정 로드 -->
+    <script src="/renderer/backend-config.js"></script>
+    
+    <!-- 유틸리티 로드 -->
+    <script src="/renderer/utils.js"></script>
+    
+    <!-- 라우터 및 앱 초기화 -->
+    <script>
+        // 간단한 SPA 라우터
+        const Router = {
+            currentPage: null,
+            
+            async navigate(page) {
+                const app = document.getElementById('app');
+                
+                try {
+                    // 페이지 로드
+                    const response = await fetch(`/renderer/${page}.html`);
+                    if (!response.ok) {
+                        throw new Error(`페이지를 찾을 수 없습니다: ${page}`);
+                    }
+                    
+                    const html = await response.text();
+                    
+                    // HTML 파싱 및 body 내용만 추출
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    
+                    // 기존 스크립트 제거
+                    const scripts = doc.querySelectorAll('script');
+                    scripts.forEach(script => script.remove());
+                    
+                    // body 내용 삽입
+                    app.innerHTML = doc.body.innerHTML;
+                    
+                    // CSS 파일 로드
+                    await this.loadCSS(page);
+                    
+                    // JS 파일 로드
+                    await this.loadJS(page);
+                    
+                    this.currentPage = page;
+                    
+                    // URL 업데이트 (히스토리 API)
+                    window.history.pushState({ page }, '', `/${page}`);
+                    
+                } catch (error) {
+                    console.error('페이지 로드 실패:', error);
+                    app.innerHTML = `
+                        <div style="padding: 40px; text-align: center;">
+                            <h2>페이지를 로드할 수 없습니다</h2>
+                            <p>${error.message}</p>
+                            <button onclick="Router.navigate('login')" style="padding: 10px 20px; margin-top: 20px;">
+                                로그인 페이지로 이동
+                            </button>
+                        </div>
+                    `;
+                }
+            },
+            
+            async loadCSS(page) {
+                // 기존 페이지 CSS 제거
+                const existingCSS = document.querySelector(`link[data-page]`);
+                if (existingCSS) {
+                    existingCSS.remove();
+                }
+                
+                // 새 CSS 로드
+                const cssPath = `/renderer/${page}.css`;
+                try {
+                    const response = await fetch(cssPath, { method: 'HEAD' });
+                    if (response.ok) {
+                        const link = document.createElement('link');
+                        link.rel = 'stylesheet';
+                        link.href = cssPath;
+                        link.setAttribute('data-page', page);
+                        document.head.appendChild(link);
+                    }
+                } catch (error) {
+                    console.log(`CSS 파일 없음: ${cssPath}`);
+                }
+            },
+            
+            async loadJS(page) {
+                const jsPath = `/renderer/${page}.js`;
+                try {
+                    const response = await fetch(jsPath, { method: 'HEAD' });
+                    if (response.ok) {
+                        // 기존 스크립트 제거
+                        const existingScript = document.querySelector(`script[data-page="${page}"]`);
+                        if (existingScript) {
+                            existingScript.remove();
+                        }
+                        
+                        // 새 스크립트 로드
+                        const script = document.createElement('script');
+                        script.src = jsPath;
+                        script.setAttribute('data-page', page);
+                        document.body.appendChild(script);
+                    }
+                } catch (error) {
+                    console.log(`JS 파일 없음: ${jsPath}`);
+                }
+            },
+            
+            init() {
+                // 뒤로가기/앞으로가기 처리
+                window.addEventListener('popstate', (e) => {
+                    if (e.state && e.state.page) {
+                        this.navigate(e.state.page);
+                    } else {
+                        this.navigate('login');
+                    }
+                });
+                
+                // 초기 페이지 로드
+                const path = window.location.pathname;
+                if (path === '/' || path === '/index.html') {
+                    // 로그인 여부 확인
+                    const authData = localStorage.getItem('yumyum_auth');
+                    if (authData) {
+                        this.navigate('order-management');
+                    } else {
+                        this.navigate('login');
+                    }
+                } else {
+                    const page = path.replace('/', '').replace('.html', '') || 'login';
+                    this.navigate(page);
+                }
+            }
+        };
+        
+        // 전역으로 노출
+        window.Router = Router;
+        
+        // 앱 초기화
+        document.addEventListener('DOMContentLoaded', () => {
+            Router.init();
+        });
+    </script>
+</body>
+</html>

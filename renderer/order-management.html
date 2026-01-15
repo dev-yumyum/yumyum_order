@@ -459,25 +459,43 @@
 
     <script src="backend-config.js"></script>
     <script src="print-helper.js"></script>
+    <script src="web-adapter.js"></script>
     <script>
-        // Electron API 노출
-        if (typeof require !== 'undefined') {
-            const { ipcRenderer } = require('electron');
-            window.electron = {
-                getPrinters: () => ipcRenderer.invoke('get-printers'),
-                checkPrinter: (name) => ipcRenderer.invoke('check-printer', name),
-                printReceipt: (printer, data) => ipcRenderer.invoke('print-receipt', printer, data),
-                showNotification: (options) => ipcRenderer.invoke('show-notification', options),
-                getAudioPath: (fileName) => ipcRenderer.invoke('get-audio-path', fileName)
-            };
-
-            // 알림 클릭 이벤트 리스너
-            ipcRenderer.on('notification-clicked', (event, orderId) => {
+        // Electron 또는 웹 환경에 맞는 API 설정
+        if (typeof WebAdapter !== 'undefined') {
+            window.electron = WebAdapter;
+            
+            // 웹 환경에서 알림 클릭 이벤트 리스너
+            WebAdapter.on('notification-clicked', (event, orderId) => {
                 console.log('알림 클릭됨, 주문 ID:', orderId);
                 if (typeof selectOrder === 'function') {
                     selectOrder(orderId);
                 }
             });
+        }
+        
+        // Electron 환경 대체 (이전 버전 호환)
+        if (typeof require !== 'undefined' && !window.electron) {
+            try {
+                const { ipcRenderer } = require('electron');
+                window.electron = {
+                    getPrinters: () => ipcRenderer.invoke('get-printers'),
+                    checkPrinter: (name) => ipcRenderer.invoke('check-printer', name),
+                    printReceipt: (printer, data) => ipcRenderer.invoke('print-receipt', printer, data),
+                    showNotification: (options) => ipcRenderer.invoke('show-notification', options),
+                    getAudioPath: (fileName) => ipcRenderer.invoke('get-audio-path', fileName)
+                };
+
+                // 알림 클릭 이벤트 리스너
+                ipcRenderer.on('notification-clicked', (event, orderId) => {
+                    console.log('알림 클릭됨, 주문 ID:', orderId);
+                    if (typeof selectOrder === 'function') {
+                        selectOrder(orderId);
+                    }
+                });
+            } catch (e) {
+                console.log('Electron 환경이 아닙니다.');
+            }
         }
 
         // 알림음 재생 함수 (주문 관리 페이지용)
