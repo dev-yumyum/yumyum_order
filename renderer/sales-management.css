@@ -45,7 +45,7 @@ body {
 }
 
 .header-center h1 {
-    font-size: 20px;
+    font-size: 26px;
     font-weight: 600;
     color: #2d3748;
 }
@@ -58,7 +58,7 @@ body {
     background-color: transparent;
     border: none;
     color: #4a5568;
-    font-size: 14px;
+    font-size: 18px;
     cursor: pointer;
     border-radius: 6px;
     transition: all 0.2s;
@@ -70,7 +70,7 @@ body {
 }
 
 .current-time {
-    font-size: 14px;
+    font-size: 18px;
     color: #718096;
 }
 
@@ -100,7 +100,7 @@ body {
     background-color: #ffffff;
     color: #4a5568;
     border-radius: 8px;
-    font-size: 14px;
+    font-size: 18px;
     cursor: pointer;
     transition: all 0.2s;
     font-weight: 500;
@@ -119,7 +119,7 @@ body {
 
 .selected-period-text {
     margin-left: auto;
-    font-size: 14px;
+    font-size: 18px;
     color: #718096;
     font-weight: 500;
 }
@@ -149,7 +149,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
+    font-size: 31px;
     color: #ffffff;
 }
 
@@ -170,13 +170,13 @@ body {
 }
 
 .card-label {
-    font-size: 14px;
+    font-size: 18px;
     color: #718096;
     margin-bottom: 8px;
 }
 
 .card-value {
-    font-size: 28px;
+    font-size: 36px;
     font-weight: 700;
     color: #2d3748;
 }
@@ -197,7 +197,7 @@ body {
 }
 
 .chart-title {
-    font-size: 16px;
+    font-size: 21px;
     font-weight: 600;
     color: #2d3748;
     margin-bottom: 20px;
@@ -209,7 +209,7 @@ canvas {
 
 /* 섹션 타이틀 */
 .section-title {
-    font-size: 20px;
+    font-size: 26px;
     font-weight: 600;
     color: #2d3748;
     margin-bottom: 20px;
@@ -236,7 +236,7 @@ canvas {
     border: none;
     background-color: transparent;
     color: #718096;
-    font-size: 15px;
+    font-size: 20px;
     font-weight: 500;
     cursor: pointer;
     border-bottom: 3px solid transparent;
@@ -274,7 +274,7 @@ canvas {
 }
 
 .time-slot-title, .day-slot-title {
-    font-size: 14px;
+    font-size: 18px;
     font-weight: 600;
     color: #4a5568;
     margin-bottom: 12px;
@@ -290,7 +290,7 @@ canvas {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 14px;
+    font-size: 18px;
 }
 
 .menu-list li:last-child {
@@ -306,7 +306,7 @@ canvas {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 12px;
+    font-size: 16px;
     font-weight: 600;
     margin-right: 8px;
 }
@@ -318,7 +318,7 @@ canvas {
 
 .menu-list .menu-quantity {
     color: #718096;
-    font-size: 13px;
+    font-size: 17px;
 }
 
 .menu-list.empty {
@@ -360,20 +360,20 @@ canvas {
 }
 
 .month-data h3 {
-    font-size: 16px;
+    font-size: 21px;
     color: #718096;
     margin-bottom: 12px;
 }
 
 .month-sales {
-    font-size: 28px;
+    font-size: 36px;
     font-weight: 700;
     color: #2d3748;
     margin-bottom: 4px;
 }
 
 .month-orders {
-    font-size: 14px;
+    font-size: 18px;
     color: #718096;
 }
 
@@ -382,7 +382,7 @@ canvas {
     flex-direction: column;
     align-items: center;
     gap: 8px;
-    font-size: 32px;
+    font-size: 42px;
     font-weight: 700;
     color: #48bb78;
 }
@@ -392,7 +392,7 @@ canvas {
 }
 
 .growth-rate i {
-    font-size: 28px;
+    font-size: 36px;
 }
 
 .menu-comparison {
@@ -402,7 +402,7 @@ canvas {
 }
 
 .menu-rank h4 {
-    font-size: 16px;
+    font-size: 21px;
     font-weight: 600;
     color: #2d3748;
     margin-bottom: 16px;
@@ -443,7 +443,7 @@ canvas {
 }
 
 .modal-header h3 {
-    font-size: 18px;
+    font-size: 23px;
     font-weight: 600;
     color: #2d3748;
 }
@@ -451,7 +451,7 @@ canvas {
 .modal-close {
     background: none;
     border: none;
-    font-size: 20px;
+    font-size: 26px;
     color: #718096;
     cursor: pointer;
 }
@@ -471,7 +471,7 @@ canvas {
 
 .input-group label {
     display: block;
-    font-size: 14px;
+    font-size: 18px;
     color: #4a5568;
     margin-bottom: 8px;
     font-weight: 500;
@@ -482,7 +482,7 @@ canvas {
     padding: 10px;
     border: 1px solid #e2e8f0;
     border-radius: 6px;
-    font-size: 14px;
+    font-size: 18px;
 }
 
 .modal-footer {
@@ -497,7 +497,7 @@ canvas {
     padding: 10px 24px;
     border: none;
     border-radius: 6px;
-    font-size: 14px;
+    font-size: 18px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s;

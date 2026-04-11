@@ -61,14 +61,14 @@ body {
 }
 
 .login-header h1 {
-    font-size: 28px;
+    font-size: 36px;
     color: #2d3748;
     margin-bottom: 8px;
     font-weight: 700;
 }
 
 .subtitle {
-    font-size: 15px;
+    font-size: 20px;
     color: #718096;
 }
 
@@ -82,7 +82,7 @@ body {
 
 .form-group label {
     display: block;
-    font-size: 14px;
+    font-size: 18px;
     font-weight: 600;
     color: #4a5568;
     margin-bottom: 8px;
@@ -91,7 +91,7 @@ body {
 .form-group input {
     width: 100%;
     padding: 14px 16px;
-    font-size: 15px;
+    font-size: 20px;
     border: 2px solid #e2e8f0;
     border-radius: 10px;
     transition: all 0.3s ease;
@@ -130,14 +130,14 @@ body {
 }
 
 .checkbox-label span {
-    font-size: 14px;
+    font-size: 18px;
     color: #4a5568;
 }
 
 .btn-login {
     width: 100%;
     padding: 16px;
-    font-size: 16px;
+    font-size: 21px;
     font-weight: 600;
     color: white;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -164,7 +164,7 @@ body {
     border: 1px solid #fc8181;
     border-radius: 8px;
     color: #c53030;
-    font-size: 14px;
+    font-size: 18px;
     text-align: center;
     display: none;
 }
@@ -187,7 +187,7 @@ body {
 }
 
 .login-footer p {
-    font-size: 13px;
+    font-size: 17px;
     color: #a0aec0;
 }
 

@@ -1084,8 +1084,15 @@ function createTestOrder() {
     // 사이드바 카운터 업데이트
     updateSidebarCounters();
     
-    // 주문 알림 팝업 표시 (오른쪽 하단 알림도 자동으로 표시됨)
-    showOrderAlert(newOrder);
+    // 자동접수가 켜져 있으면 바로 접수 처리
+    if (appSettings && appSettings.general.autoAcceptEnabled) {
+        selectedOrderId = newOrder.id;
+        autoAcceptOrder(newOrder);
+        showNotification(`새 주문이 자동 접수되었습니다! (${newOrder.type} ${newOrder.number})`, 'success');
+    } else {
+        // 수동 접수 모드: 주문 알림 팝업 표시
+        showOrderAlert(newOrder);
+    }
     
     console.log('테스트 주문 생성:', newOrder);
 }
@@ -1513,6 +1520,9 @@ function autoAcceptOrder(order) {
     order.timer = 0;
     order.timerSeconds = 0;
     
+    // 주문을 로컬 스토리지 히스토리에 저장
+    saveOrderToHistory(order);
+    
     // 접수 영역 숨김
     const acceptSection = document.getElementById('orderAcceptSection');
     if (acceptSection) {
@@ -1521,9 +1531,6 @@ function autoAcceptOrder(order) {
     
     // 알림 재생
     playOrderNotification();
-    
-    // 알림 메시지 표시
-    showNotification(`주문이 자동 접수되었습니다. 예상 준비시간: ${autoTime}분`, 'success');
     
     // 사이드바에서 신규에서 진행으로 이동
     removeFromSidebar(order.id);
