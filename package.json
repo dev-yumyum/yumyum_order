@@ -35,7 +35,7 @@
   "type": "commonjs",
   "devDependencies": {
     "@eslint/js": "^9.36.0",
-    "electron": "^25.9.8",
+    "electron": "^33.4.11",
     "electron-builder": "^26.0.12",
     "eslint": "^9.36.0",
     "jest": "^30.2.0",
@@ -48,7 +48,11 @@
     "npmRebuild": false,
     "asar": true,
     "compression": "maximum",
-    "electronLanguages": ["ko", "en", "en-US"],
+    "electronLanguages": [
+      "ko",
+      "en",
+      "en-US"
+    ],
     "directories": {
       "output": "dist",
       "buildResources": "assets"
@@ -70,20 +74,13 @@
         {
           "target": "nsis",
           "arch": [
-            "x64",
-            "ia32"
-          ]
-        },
-        {
-          "target": "portable",
-          "arch": [
             "x64"
           ]
         }
       ],
       "icon": "assets/icon.png",
       "requestedExecutionLevel": "asInvoker",
-      "artifactName": "${productName}-Setup-${version}-${arch}.${ext}"
+      "artifactName": "${productName}-Setup-${version}.${ext}"
     },
     "nsis": {
       "oneClick": false,
@@ -94,31 +91,23 @@
       "shortcutName": "YumYum 주문접수",
       "perMachine": false,
       "deleteAppDataOnUninstall": false,
-      "language": "2066",
-      "differentialPackage": true
-    },
-    "portable": {
-      "artifactName": "${productName}-Portable-${version}-${arch}.${ext}"
+      "language": "2066"
     },
     "mac": {
       "target": [
         {
           "target": "dmg",
           "arch": [
-            "x64",
-            "arm64"
-          ]
-        },
-        {
-          "target": "zip",
-          "arch": [
-            "x64",
             "arm64"
           ]
         }
       ],
       "icon": "assets/icon.icns",
       "category": "public.app-category.business",
+      "sign": "./scripts/customSign.js",
+      "hardenedRuntime": true,
+      "entitlements": "assets/entitlements.mac.plist",
+      "entitlementsInherit": "assets/entitlements.mac.plist",
       "artifactName": "${productName}-${version}-${arch}.${ext}"
     },
     "dmg": {

@@ -55,7 +55,7 @@ class YumYumApp {
   // 주문 ID 생성
   generateOrderId() {
     const timestamp = Date.now().toString();
-    const random = Math.random().toString(36).substr(2, 5);
+    const random = Math.random().toString(36).slice(2, 7);
     return `ORDER_${timestamp}_${random}`.toUpperCase();
   }
 

@@ -85,23 +85,25 @@ let orders = [
 ];
 
 // DOM이 로드된 후 초기화
+let _timers = [];
 document.addEventListener('DOMContentLoaded', function() {
+    loadSettings();
     initializeApp();
     setupEventListeners();
     updateCurrentTime();
-    loadSettings(); // 설정 로드
     
-    // 1초마다 시간 업데이트
-    setInterval(updateCurrentTime, 1000);
+    _timers.push(setInterval(function() {
+        updateCurrentTime();
+        updateTimers();
+    }, 1000));
     
-    // 1초마다 타이머 업데이트 (내부에서 초 단위로 카운팅)
-    setInterval(updateTimers, 1000);
-    
-    // 5분마다 실시간 조건 검증
-    setInterval(performRealTimeValidation, 5 * 60 * 1000);
-    
-    // 10분마다 모든 주문 재검증
-    setInterval(validateAllOrders, 10 * 60 * 1000);
+    _timers.push(setInterval(performRealTimeValidation, 5 * 60 * 1000));
+    _timers.push(setInterval(validateAllOrders, 10 * 60 * 1000));
+});
+
+window.addEventListener('beforeunload', function() {
+    _timers.forEach(function(id) { clearInterval(id); });
+    _timers = [];
 });
 
 // 애플리케이션 초기화
@@ -400,31 +402,32 @@ function updateOrderStatus(status) {
         return;
     }
     
-    // 상태에 따른 액션
     switch (status) {
         case 'cancelled':
             order.status = status;
             order.updatedAt = new Date().toISOString();
             order.cancelledAt = new Date().toISOString();
+            removeFromSidebar(order.id);
+            updatePreparingSection();
             showNotification('주문이 취소되었습니다.', 'warning');
             logOrderStatusChange(order, status, '관리자에 의한 취소');
-            saveOrderToHistory(order); // 주문 내역에 저장
+            saveOrderToHistory(order);
             break;
         case 'ready':
-            // 준비완료 모달 표시
             showReadyModal();
             break;
         case 'completed':
             order.status = status;
             order.updatedAt = new Date().toISOString();
             order.completedAt = new Date().toISOString();
+            removeFromSidebar(order.id);
+            updatePreparingSection();
             showNotification('주문이 완료되었습니다.', 'success');
             logOrderStatusChange(order, status, '주문 완료 처리');
-            saveOrderToHistory(order); // 주문 내역에 저장
+            saveOrderToHistory(order);
             break;
     }
     
-    // 주문 목록 UI 업데이트
     updateOrderDisplay(order);
     
     console.log(`주문 ${selectedOrderId} 상태 처리: ${status}`);
@@ -730,23 +733,17 @@ function filterOrdersByCondition(condition) {
     }
 }
 
-// 타이머 업데이트
 function updateTimers() {
-    orders.forEach(order => {
-        // 신규 상태(pending)거나 준비중(preparing) 상태일 때 타이머 증가
-        // 준비완료(ready) 상태일 때는 타이머 멈춤
+    orders.forEach(function(order) {
         if (order.status === 'pending' || order.status === 'preparing') {
-            // 초 단위로 증가 (timerSeconds는 초 단위로 저장)
-            if (!order.timerSeconds) {
-                order.timerSeconds = 0;
-            }
+            if (!order.timerSeconds) order.timerSeconds = 0;
+            var prevMin = Math.floor(order.timerSeconds / 60);
             order.timerSeconds += 1;
-            
-            // 분 단위로 변환
-            const minutes = Math.floor(order.timerSeconds / 60);
-            
-            // 해당 주문의 타이머 UI 업데이트
-            updateOrderTimerUI(order.id, minutes, order.timerSeconds);
+            var curMin = Math.floor(order.timerSeconds / 60);
+            order.timer = curMin;
+            if (curMin !== prevMin) {
+                updateOrderTimerUI(order.id, curMin, order.timerSeconds);
+            }
         }
     });
 }
@@ -834,15 +831,9 @@ function toggleSidebar() {
     }
 }
 
-// 설정 열기
-function openSettings() {
-    showNotification('설정 화면을 준비 중입니다.', 'info');
-}
-
 // 애플리케이션 닫기
 function closeApplication() {
     if (confirm('애플리케이션을 종료하시겠습니까?')) {
-        // Electron 환경에서는 window.close() 또는 ipcRenderer 사용
         if (typeof window !== 'undefined' && window.close) {
             window.close();
         } else {
@@ -851,11 +842,12 @@ function closeApplication() {
     }
 }
 
-// 알림 표시 (개선된 버전)
 function showNotification(message, type = 'info') {
-    // 기존 알림들을 위로 이동
     const existingNotifications = document.querySelectorAll('.notification');
-    existingNotifications.forEach((notif, index) => {
+    if (existingNotifications.length >= 5) {
+        existingNotifications[0].remove();
+    }
+    existingNotifications.forEach(function(notif) {
         const currentBottom = parseInt(notif.style.bottom) || 20;
         notif.style.bottom = (currentBottom + 70) + 'px';
     });
@@ -1411,12 +1403,9 @@ function updatePreparingSection() {
     updateSidebarCounters();
 }
 
-// 사이드바에서 주문 제거
 function removeFromSidebar(orderId) {
-    const orderItem = document.querySelector(`[onclick="selectOrder('${orderId}')"]`);
-    if (orderItem) {
-        orderItem.remove();
-    }
+    const items = document.querySelectorAll(`[onclick="selectOrder('${orderId}')"]`);
+    items.forEach(function(el) { el.remove(); });
 }
 
 // 페이지 네비게이션
@@ -1565,8 +1554,7 @@ function playOrderNotification() {
     const volumeValue = (volumeLevel / 6) * 100;
     
     try {
-        // Web Audio API로 알림음 재생
-        const context = new (window.AudioContext || window.webkitAudioContext)();
+        const context = getAudioContext();
         const oscillator = context.createOscillator();
         const gainNode = context.createGain();
         
@@ -1888,50 +1876,49 @@ function playOrderAlertSound() {
     }
 }
 
-// 기본 비프음 재생 (폴백)
+let _sharedAudioCtx = null;
+function getAudioContext() {
+    if (!_sharedAudioCtx || _sharedAudioCtx.state === 'closed') {
+        _sharedAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    return _sharedAudioCtx;
+}
+
 function playDefaultBeep(volumeLevel = 3) {
     try {
-        const context = new (window.AudioContext || window.webkitAudioContext)();
+        const context = getAudioContext();
         const oscillator = context.createOscillator();
         const gainNode = context.createGain();
         
         oscillator.connect(gainNode);
         gainNode.connect(context.destination);
         
-        oscillator.frequency.value = 880; // A5 음
+        oscillator.frequency.value = 880;
         gainNode.gain.value = (volumeLevel / 6) * 0.3;
         
         oscillator.start();
         setTimeout(() => oscillator.stop(), 200);
-        
-        console.log('기본 비프음 재생됨');
     } catch (error) {
         console.error('기본 비프음 재생 실패:', error);
     }
 }
 
-// 바로접수 버튼 클릭 (자동으로 주문 접수 처리)
 function acceptOrderDirectly() {
     closeOrderAlert();
     if (currentAlertOrderId) {
-        // 해당 주문을 찾아서 자동으로 접수 처리
         const order = orders.find(o => o.id === currentAlertOrderId);
         if (order && order.status === 'pending') {
-            // 상태를 confirmed(접수)로 변경
-            order.status = 'confirmed';
-            order.confirmedAt = new Date().toISOString();
-            
-            // 로컬 스토리지 업데이트
-            saveOrdersToStorage();
-            
-            // UI 업데이트
-            updateOrderList();
-            
-            // 알림 표시
-            showNotification(`주문이 자동 접수되었습니다 (${order.type} ${order.number})`, 'success');
-            
-            // 주문 선택 (상세 정보 표시)
-            selectOrder(currentAlertOrderId);
+            order.status = 'preparing';
+            order.acceptedAt = new Date().toISOString();
+            order.preparationTime = currentPreparationTime;
+            order.timer = 0;
+
+            removeFromSidebar(order.id);
+            updatePreparingSection();
+            updateOrderDisplay(order);
+            showNotification(`주문이 바로 접수되었습니다 (${order.type} ${order.number}번)`, 'success');
+            selectOrder(order.id);
+            saveOrderToHistory(order);
         }
         currentAlertOrderId = null;
     }
@@ -2111,9 +2098,9 @@ function restoreOperationStatus() {
         const now = new Date();
         
         if (resumeTime > now) {
-            // 아직 재개 시간이 안됐으면 운영중단 상태 유지
             const statusIndicator = document.querySelector('.status-indicator i');
             const statusText = document.querySelector('.status-indicator span');
+            if (!statusIndicator || !statusText) return;
             
             operationStatus = 'offline';
             statusIndicator.classList.remove('online');

@@ -5,6 +5,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 
+
 let mainWindow;
 const YumYumApp = require('./app');
 const appInstance = new YumYumApp();
@@ -70,10 +71,9 @@ function setupIpcHandlers() {
     }
   });
 
-  // 프린터 목록 가져오기
   ipcMain.handle('get-printers', async () => {
     try {
-      // getPrintersAsync() 사용 (deprecated 경고 해결)
+      if (!mainWindow || mainWindow.isDestroyed()) return [];
       const printers = await mainWindow.webContents.getPrintersAsync();
       return printers;
     } catch (error) {
@@ -82,10 +82,9 @@ function setupIpcHandlers() {
     }
   });
 
-  // 프린터 연결 확인
   ipcMain.handle('check-printer', async (event, printerName) => {
     try {
-      // getPrintersAsync() 사용 (deprecated 경고 해결)
+      if (!mainWindow || mainWindow.isDestroyed()) return false;
       const printers = await mainWindow.webContents.getPrintersAsync();
       const printer = printers.find(p => p.name === printerName);
       return printer ? printer.status === 0 : false;
@@ -342,13 +341,13 @@ function generateReceiptHtml(data) {
 app.whenReady().then(() => {
   setupIpcHandlers();
   createWindow();
+}).catch(err => {
+  console.error('App initialization failed:', err);
 });
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    appInstance.shutdown();
-    app.quit();
-  }
+  appInstance.shutdown();
+  app.quit();
 });
 
 app.on('activate', () => {
@@ -356,5 +355,3 @@ app.on('activate', () => {
     createWindow();
   }
 });
-
-console.log('YumYum Order Management System starting...');
