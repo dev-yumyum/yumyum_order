@@ -310,10 +310,10 @@ if (BACKEND_CONFIG.autoConnect && typeof window !== 'undefined') {
         const connected = await testConnection();
         
         if (connected) {
-            console.log('✅ 백엔드 서버와 정상적으로 연결되었습니다.');
+            console.log('백엔드 서버와 정상적으로 연결되었습니다.');
             console.log('백엔드 모드로 작동합니다.');
         } else {
-            console.warn('⚠️ 백엔드 서버 연결에 실패했습니다.');
+            console.warn('백엔드 서버 연결에 실패했습니다.');
             console.warn('로컬 모드로 작동합니다. (백엔드 없이 작동)');
             enableLocalMode();
         }

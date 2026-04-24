@@ -1,5 +1,3 @@
-/* YumYum 주문 접수 시스템 스타일 */
-
 * {
     margin: 0;
     padding: 0;
@@ -8,8 +6,8 @@
 
 body {
     font-family: 'Noto Sans KR', sans-serif;
-    background: #f8f9fa;
-    color: #333;
+    background: rgba(34,34,34,0.03);
+    color: #222;
     overflow-x: hidden;
 }
 
@@ -19,12 +17,11 @@ body {
     height: 100vh;
 }
 
-/* 헤더 */
 .app-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #ff6b35;
     color: white;
     padding: 1rem 2rem;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 10px rgba(34,34,34,0.1);
     z-index: 1000;
 }
 
@@ -44,7 +41,7 @@ body {
 
 .logo-icon {
     font-size: 2.6rem;
-    color: #ffd700;
+    color: #fff;
 }
 
 .header-content h1 {
@@ -74,7 +71,7 @@ body {
 }
 
 .status-icon {
-    color: #00ff88;
+    color: #fff;
     animation: pulse 2s infinite;
 }
 
@@ -83,19 +80,17 @@ body {
     50% { opacity: 0.5; }
 }
 
-/* 메인 컨텐츠 */
 .main-content {
     display: flex;
     flex: 1;
     overflow: hidden;
 }
 
-/* 사이드바 */
 .sidebar {
     width: 250px;
-    background: white;
-    border-right: 1px solid #e9ecef;
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+    background: #fff;
+    border-right: 1px solid rgba(34,34,34,0.12);
+    box-shadow: 2px 0 10px rgba(34,34,34,0.05);
 }
 
 .nav-menu {
@@ -114,14 +109,14 @@ body {
 }
 
 .nav-item:hover {
-    background: #f8f9fa;
-    border-left-color: #667eea;
+    background: rgba(34,34,34,0.03);
+    border-left-color: #ff6b35;
 }
 
 .nav-item.active {
-    background: #e3f2fd;
-    border-left-color: #667eea;
-    color: #667eea;
+    background: rgba(255,107,53,0.08);
+    border-left-color: #ff6b35;
+    color: #ff6b35;
     font-weight: 500;
 }
 
@@ -130,10 +125,9 @@ body {
     text-align: center;
 }
 
-/* 컨텐츠 영역 */
 .content-area {
     flex: 1;
-    background: white;
+    background: #fff;
     overflow-y: auto;
 }
 
@@ -154,14 +148,14 @@ body {
     align-items: center;
     margin-bottom: 2rem;
     padding-bottom: 1rem;
-    border-bottom: 2px solid #e9ecef;
+    border-bottom: 2px solid rgba(34,34,34,0.12);
 }
 
 .content-header h2 {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    color: #333;
+    color: #222;
     font-weight: 600;
 }
 
@@ -171,7 +165,6 @@ body {
     align-items: center;
 }
 
-/* 버튼 스타일 */
 .btn {
     padding: 0.75rem 1.5rem;
     border: none;
@@ -187,41 +180,40 @@ body {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: #ff6b35;
     color: white;
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 4px 15px rgba(255,107,53,0.4);
 }
 
 .btn-secondary {
-    background: #6c757d;
+    background: rgba(34,34,34,0.6);
     color: white;
 }
 
 .btn-secondary:hover {
-    background: #5a6268;
+    background: rgba(34,34,34,0.75);
     transform: translateY(-2px);
 }
 
 .btn-success {
-    background: linear-gradient(135deg, #28a745, #20c997);
+    background: #ff6b35;
     color: white;
 }
 
 .btn-success:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+    box-shadow: 0 4px 15px rgba(255,107,53,0.4);
 }
 
-/* 폼 스타일 */
 .order-form-container {
-    background: white;
+    background: #fff;
     border-radius: 12px;
     padding: 2rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 20px rgba(34,34,34,0.08);
 }
 
 .order-form {
@@ -243,7 +235,7 @@ body {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 500;
-    color: #555;
+    color: rgba(34,34,34,0.6);
 }
 
 .form-group input,
@@ -251,7 +243,7 @@ body {
 .form-group select {
     width: 100%;
     padding: 0.75rem;
-    border: 2px solid #e9ecef;
+    border: 2px solid rgba(34,34,34,0.12);
     border-radius: 8px;
     font-size: 1.3rem;
     transition: border-color 0.3s ease;
@@ -261,13 +253,12 @@ body {
 .form-group textarea:focus,
 .form-group select:focus {
     outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    border-color: #ff6b35;
+    box-shadow: 0 0 0 3px rgba(255,107,53,0.1);
 }
 
-/* 메뉴 섹션 */
 .menu-section {
-    background: #f8f9fa;
+    background: rgba(34,34,34,0.03);
     padding: 1.5rem;
     border-radius: 8px;
     margin-bottom: 1.5rem;
@@ -275,7 +266,7 @@ body {
 
 .menu-section h3 {
     margin-bottom: 1rem;
-    color: #333;
+    color: #222;
 }
 
 .menu-items {
@@ -290,20 +281,20 @@ body {
     grid-template-columns: 2fr 1fr 1fr auto;
     gap: 1rem;
     align-items: center;
-    background: white;
+    background: #fff;
     padding: 1rem;
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 8px rgba(34,34,34,0.05);
 }
 
 .menu-item input {
     padding: 0.5rem;
-    border: 1px solid #ddd;
+    border: 1px solid rgba(34,34,34,0.12);
     border-radius: 4px;
 }
 
 .remove-menu {
-    background: #dc3545;
+    background: #222;
     color: white;
     border: none;
     padding: 0.5rem;
@@ -313,12 +304,11 @@ body {
 }
 
 .remove-menu:hover {
-    background: #c82333;
+    background: rgba(34,34,34,0.85);
 }
 
-/* 주문 요약 */
 .order-summary {
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: #ff6b35;
     color: white;
     padding: 1.5rem;
     border-radius: 8px;
@@ -338,24 +328,22 @@ body {
 }
 
 .amount {
-    color: #ffd700;
+    color: #fff;
 }
 
-/* 폼 액션 */
 .form-actions {
     display: flex;
     gap: 1rem;
     justify-content: flex-end;
-    border-top: 2px solid #e9ecef;
+    border-top: 2px solid rgba(34,34,34,0.12);
     padding-top: 2rem;
 }
 
-/* 주문 리스트 */
 .orders-container {
-    background: white;
+    background: #fff;
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 20px rgba(34,34,34,0.08);
 }
 
 .orders-list {
@@ -365,13 +353,13 @@ body {
 
 .order-item {
     padding: 1.5rem;
-    border-bottom: 1px solid #e9ecef;
+    border-bottom: 1px solid rgba(34,34,34,0.12);
     cursor: pointer;
     transition: background 0.3s ease;
 }
 
 .order-item:hover {
-    background: #f8f9fa;
+    background: rgba(34,34,34,0.03);
 }
 
 .order-header {
@@ -383,7 +371,7 @@ body {
 
 .order-id {
     font-weight: 600;
-    color: #667eea;
+    color: #ff6b35;
 }
 
 .order-status {
@@ -394,12 +382,12 @@ body {
     text-transform: uppercase;
 }
 
-.status-pending { background: #fff3cd; color: #856404; }
-.status-confirmed { background: #d1ecf1; color: #0c5460; }
-.status-preparing { background: #f8d7da; color: #721c24; }
-.status-ready { background: #d4edda; color: #155724; }
-.status-delivered { background: #d1ecf1; color: #0c5460; }
-.status-cancelled { background: #f8d7da; color: #721c24; }
+.status-pending { background: rgba(255,107,53,0.08); color: #ff6b35; }
+.status-confirmed { background: rgba(255,107,53,0.08); color: #ff6b35; }
+.status-preparing { background: rgba(34,34,34,0.06); color: #222; }
+.status-ready { background: rgba(255,107,53,0.08); color: #ff6b35; }
+.status-delivered { background: rgba(255,107,53,0.08); color: #ff6b35; }
+.status-cancelled { background: rgba(34,34,34,0.06); color: #222; }
 
 .order-info {
     display: grid;
@@ -414,7 +402,7 @@ body {
 
 .info-label {
     font-size: 1.04rem;
-    color: #666;
+    color: rgba(34,34,34,0.6);
     margin-bottom: 0.25rem;
 }
 
@@ -422,7 +410,6 @@ body {
     font-weight: 500;
 }
 
-/* 통계 카드 */
 .stats-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -430,10 +417,10 @@ body {
 }
 
 .stat-card {
-    background: white;
+    background: #fff;
     padding: 2rem;
     border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 20px rgba(34,34,34,0.08);
     display: flex;
     align-items: center;
     gap: 1.5rem;
@@ -450,23 +437,22 @@ body {
     color: white;
 }
 
-.stat-card:nth-child(1) .stat-icon { background: linear-gradient(135deg, #667eea, #764ba2); }
-.stat-card:nth-child(2) .stat-icon { background: linear-gradient(135deg, #28a745, #20c997); }
-.stat-card:nth-child(3) .stat-icon { background: linear-gradient(135deg, #ffc107, #fd7e14); }
+.stat-card:nth-child(1) .stat-icon { background: #ff6b35; }
+.stat-card:nth-child(2) .stat-icon { background: #ff6b35; }
+.stat-card:nth-child(3) .stat-icon { background: #ff6b35; }
 
 .stat-content h3 {
     font-size: 2.6rem;
     font-weight: 700;
-    color: #333;
+    color: #222;
     margin-bottom: 0.5rem;
 }
 
 .stat-content p {
-    color: #666;
+    color: rgba(34,34,34,0.6);
     font-size: 1.17rem;
 }
 
-/* 모달 */
 .modal {
     display: none;
     position: fixed;
@@ -474,7 +460,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(34,34,34,0.5);
     z-index: 2000;
 }
 
@@ -485,13 +471,13 @@ body {
 }
 
 .modal-content {
-    background: white;
+    background: #fff;
     border-radius: 12px;
     max-width: 600px;
     width: 90%;
     max-height: 80vh;
     overflow-y: auto;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 10px 40px rgba(34,34,34,0.2);
     animation: modalSlideIn 0.3s ease;
 }
 
@@ -508,7 +494,7 @@ body {
 
 .modal-header {
     padding: 1.5rem;
-    border-bottom: 1px solid #e9ecef;
+    border-bottom: 1px solid rgba(34,34,34,0.12);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -519,7 +505,7 @@ body {
     border: none;
     font-size: 1.95rem;
     cursor: pointer;
-    color: #666;
+    color: rgba(34,34,34,0.6);
     padding: 0;
     width: 30px;
     height: 30px;
@@ -534,26 +520,25 @@ body {
 
 .modal-footer {
     padding: 1.5rem;
-    border-top: 1px solid #e9ecef;
+    border-top: 1px solid rgba(34,34,34,0.12);
     display: flex;
     gap: 1rem;
     justify-content: flex-end;
     align-items: center;
 }
 
-/* 토스트 알림 */
 .toast {
     position: fixed;
     top: 100px;
     right: 20px;
-    background: white;
+    background: #fff;
     border-radius: 8px;
     padding: 1rem 1.5rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 20px rgba(34,34,34,0.15);
     transform: translateX(400px);
     transition: transform 0.3s ease;
     z-index: 3000;
-    border-left: 4px solid #28a745;
+    border-left: 4px solid #ff6b35;
 }
 
 .toast.show {
@@ -561,7 +546,7 @@ body {
 }
 
 .toast.error {
-    border-left-color: #dc3545;
+    border-left-color: #222;
 }
 
 .toast-content {
@@ -571,27 +556,25 @@ body {
 }
 
 .toast-icon {
-    color: #28a745;
+    color: #ff6b35;
 }
 
 .toast.error .toast-icon {
-    color: #dc3545;
+    color: #222;
 }
 
-/* 필터 */
 .filter-select {
     padding: 0.5rem;
-    border: 1px solid #ddd;
+    border: 1px solid rgba(34,34,34,0.12);
     border-radius: 4px;
-    background: white;
+    background: #fff;
 }
 
-/* 설정 */
 .settings-container {
-    background: white;
+    background: #fff;
     border-radius: 12px;
     padding: 2rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 20px rgba(34,34,34,0.08);
 }
 
 .settings-section {
@@ -600,12 +583,11 @@ body {
 
 .settings-section h3 {
     margin-bottom: 1rem;
-    color: #333;
-    border-bottom: 2px solid #e9ecef;
+    color: #222;
+    border-bottom: 2px solid rgba(34,34,34,0.12);
     padding-bottom: 0.5rem;
 }
 
-/* 반응형 */
 @media (max-width: 768px) {
     .main-content {
         flex-direction: column;
@@ -636,7 +618,7 @@ body {
     .nav-item.active,
     .nav-item:hover {
         border-left: none;
-        border-bottom-color: #667eea;
+        border-bottom-color: #ff6b35;
     }
     
     .form-row {

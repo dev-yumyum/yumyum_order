@@ -183,8 +183,8 @@ function updateSalesByHourChart(orders) {
             datasets: [{
                 label: '매출액',
                 data: salesByHour.map(d => d.sales),
-                borderColor: 'rgba(102, 126, 234, 1)',
-                backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                borderColor: 'rgba(255, 107, 53, 1)',
+                backgroundColor: 'rgba(255, 107, 53, 0.1)',
                 tension: 0,
                 fill: true
             }]
@@ -292,8 +292,8 @@ function loadPrediction() {
             datasets: [{
                 label: '예상 주문 수',
                 data: prediction.map(p => p.predictedOrders),
-                backgroundColor: 'rgba(72, 187, 120, 0.8)',
-                borderColor: 'rgba(72, 187, 120, 1)',
+                backgroundColor: 'rgba(255, 107, 53, 0.8)',
+                borderColor: 'rgba(255, 107, 53, 1)',
                 borderWidth: 1
             }]
         },

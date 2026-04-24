@@ -514,7 +514,7 @@ function updatePortInfo(printers) {
             <div class="port-item">
                 <div>
                     <div class="port-name">${printer.name}</div>
-                    <div style="font-size: 12px; color: #999; margin-top: 4px;">${portName}</div>
+                    <div style="font-size: 12px; color: rgba(34,34,34,0.4); margin-top: 4px;">${portName}</div>
                 </div>
                 <span class="port-status ${isConnected ? 'connected' : 'disconnected'}">
                     ${isConnected ? '연결됨' : '오프라인'}
@@ -547,23 +547,23 @@ async function checkPrinterConnection() {
             const isConnected = await window.electron.checkPrinter(selectedPrinter);
             
             if (isConnected) {
-                statusElement.textContent = '✓ 프린터가 정상적으로 연결되었습니다';
+                statusElement.textContent = '프린터가 정상적으로 연결되었습니다';
                 statusElement.className = 'status-text success';
                 showToast('프린터 연결이 정상입니다', 'success');
             } else {
-                statusElement.textContent = '✗ 프린터 연결에 실패했습니다';
+                statusElement.textContent = '프린터 연결에 실패했습니다';
                 statusElement.className = 'status-text error';
                 showToast('프린터 연결을 확인해주세요', 'error');
             }
         } else {
             // 개발 모드에서는 성공으로 표시
-            statusElement.textContent = '✓ 프린터가 정상적으로 연결되었습니다 (개발 모드)';
+            statusElement.textContent = '프린터가 정상적으로 연결되었습니다 (개발 모드)';
             statusElement.className = 'status-text success';
             showToast('프린터 연결이 정상입니다 (개발 모드)', 'success');
         }
     } catch (error) {
         console.error('프린터 연결 확인 실패:', error);
-        statusElement.textContent = '✗ 연결 확인 중 오류가 발생했습니다';
+        statusElement.textContent = '연결 확인 중 오류가 발생했습니다';
         statusElement.className = 'status-text error';
         showToast('프린터 연결 확인 실패', 'error');
     }
@@ -644,11 +644,11 @@ function showToast(message, type = 'info') {
         position: fixed;
         bottom: 30px;
         right: 30px;
-        background: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : '#2196F3'};
-        color: white;
+        background: ${type === 'success' ? '#ff6b35' : type === 'error' ? '#222' : '#ff6b35'};
+        color: #fff;
         padding: 15px 20px;
         border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        box-shadow: 0 4px 12px rgba(34,34,34,0.3);
         display: flex;
         align-items: center;
         gap: 10px;

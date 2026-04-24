@@ -496,10 +496,10 @@ function checkOperatingStatus() {
     if (statusIndicator && statusIcon) {
         if (isOperating) {
             statusIndicator.textContent = '영업중';
-            statusIcon.style.color = '#28a745';
+            statusIcon.style.color = '#ff6b35';
         } else {
             statusIndicator.textContent = '영업종료';
-            statusIcon.style.color = '#dc3545';
+            statusIcon.style.color = '#222';
         }
     }
     
@@ -759,7 +759,7 @@ function updateOrderTimerUI(orderId, minutes, seconds) {
     
     if (timerText) {
         timerText.textContent = `${minutes}분`;
-        timerText.style.color = '#ff4444';
+        timerText.style.color = '#222';
     }
     
     if (timerProgress) {
@@ -774,11 +774,11 @@ function updateOrderTimerUI(orderId, minutes, seconds) {
         
         // 시간에 따라 색상 변경
         if (minutes < 10) {
-            timerProgress.style.stroke = '#ff4444'; // 빨강
+            timerProgress.style.stroke = '#222';
         } else if (minutes < 20) {
-            timerProgress.style.stroke = '#ff8800'; // 주황
+            timerProgress.style.stroke = '#ff6b35';
         } else {
-            timerProgress.style.stroke = '#ff0000'; // 진한 빨강
+            timerProgress.style.stroke = '#222';
         }
     }
 }
@@ -856,43 +856,23 @@ function showNotification(message, type = 'info') {
     const notification = document.createElement('div');
     notification.className = `notification notification-${type}`;
     
-    // 타입별 색상 및 아이콘
-    let bgColor, icon;
-    switch (type) {
-        case 'success':
-            bgColor = '#28a745';
-            icon = '✓';
-            break;
-        case 'warning':
-            bgColor = '#ffc107';
-            icon = '⚠';
-            break;
-        case 'error':
-            bgColor = '#dc3545';
-            icon = '✗';
-            break;
-        default:
-            bgColor = '#007bff';
-            icon = 'ℹ';
-    }
-    
     notification.style.cssText = `
         position: fixed;
         bottom: 20px;
         right: 20px;
-        background: ${bgColor};
-        color: white;
+        background: ${type === 'error' ? '#222' : '#ff6b35'};
+        color: #fff;
         padding: 12px 20px;
         border-radius: 6px;
         font-size: 14px;
         z-index: 100000;
         animation: slideIn 0.3s ease;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        box-shadow: 0 4px 12px rgba(34,34,34,0.15);
         max-width: 350px;
         word-wrap: break-word;
     `;
     
-    notification.innerHTML = `<span style="margin-right: 8px;">${icon}</span>${message}`;
+    notification.textContent = message;
     
     document.body.appendChild(notification);
     

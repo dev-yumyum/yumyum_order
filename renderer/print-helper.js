@@ -243,7 +243,7 @@ function generateReceiptHTML(receiptData) {
             text-align: center;
             margin-bottom: 15px;
             padding-bottom: 10px;
-            border-bottom: 2px solid #000;
+            border-bottom: 2px solid #222;
         }
         .store-name {
             font-size: 20pt;
@@ -253,7 +253,7 @@ function generateReceiptHTML(receiptData) {
         .section {
             margin-bottom: 15px;
             padding-bottom: 10px;
-            border-bottom: 1px dashed #999;
+            border-bottom: 1px dashed rgba(34,34,34,0.4);
         }
         .section-title {
             font-weight: bold;
@@ -278,7 +278,7 @@ function generateReceiptHTML(receiptData) {
             text-align: center;
             margin: 10px 0 0 0;
             padding: 15px;
-            background: #e3f2fd;
+            background: rgba(255,107,53,0.06);
             border-radius: 8px;
         }
         .customer-info-inline {
@@ -286,10 +286,10 @@ function generateReceiptHTML(receiptData) {
             font-weight: 600;
             text-align: center;
             padding: 0 15px 15px 15px;
-            background: #e3f2fd;
+            background: rgba(255,107,53,0.06);
             border-radius: 0 0 8px 8px;
             margin: 0 0 15px 0;
-            color: #333;
+            color: #222;
         }
         .receipt-item {
             display: flex;
@@ -311,7 +311,7 @@ function generateReceiptHTML(receiptData) {
         .total-section {
             margin-top: 15px;
             padding-top: 10px;
-            border-top: 2px solid #000;
+            border-top: 2px solid #222;
         }
         .total-row {
             display: flex;
@@ -325,7 +325,7 @@ function generateReceiptHTML(receiptData) {
             word-break: break-word;
             margin-top: 5px;
             padding: 8px;
-            background: #f5f5f5;
+            background: rgba(34,34,34,0.03);
             border-radius: 4px;
             font-size: 10pt;
         }
@@ -335,15 +335,15 @@ function generateReceiptHTML(receiptData) {
             font-weight: bold;
             margin: 15px 0;
             padding: 10px;
-            background: #fff3cd;
-            border: 2px solid #ffc107;
+            background: rgba(255,107,53,0.1);
+            border: 2px solid #ff6b35;
             border-radius: 4px;
         }
         .footer {
             text-align: center;
             margin-top: 20px;
             padding-top: 15px;
-            border-top: 2px solid #000;
+            border-top: 2px solid #222;
             font-size: 11pt;
         }
         .thank-you {

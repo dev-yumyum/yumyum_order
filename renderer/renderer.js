@@ -311,7 +311,7 @@ function displayOrders(orders) {
     if (orders.length === 0) {
         ordersList.innerHTML = `
             <div class="empty-state">
-                <i class="fas fa-inbox" style="font-size: 3rem; color: #ccc; margin-bottom: 1rem;"></i>
+                <i class="fas fa-inbox" style="font-size: 3rem; color: rgba(34,34,34,0.12); margin-bottom: 1rem;"></i>
                 <h3>주문이 없습니다</h3>
                 <p>새로운 주문을 기다리고 있습니다.</p>
             </div>

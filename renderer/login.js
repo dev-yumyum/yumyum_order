@@ -76,7 +76,7 @@ function showSuccessAndRedirect() {
     const loginBtn = document.querySelector('.btn-login');
     loginBtn.classList.remove('loading');
     loginBtn.textContent = '로그인 성공!';
-    loginBtn.style.background = 'linear-gradient(135deg, #48bb78 0%, #38a169 100%)';
+    loginBtn.style.background = 'linear-gradient(135deg, #ff6b35 0%, #ff6b35 100%)';
     
     setTimeout(() => {
         window.location.href = 'order-management.html';

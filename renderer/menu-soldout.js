@@ -48,7 +48,7 @@ function renderMainMenus() {
     const grid = document.getElementById('mainMenuGrid');
     
     if (menus.main.length === 0) {
-        grid.innerHTML = '<p style="text-align: center; color: #a0aec0; padding: 40px;">등록된 메뉴가 없습니다</p>';
+        grid.innerHTML = '<p style="text-align: center; color: rgba(34,34,34,0.5); padding: 40px;">등록된 메뉴가 없습니다</p>';
         return;
     }
     
@@ -60,7 +60,7 @@ function renderSideMenus() {
     const grid = document.getElementById('sideMenuGrid');
     
     if (menus.side.length === 0) {
-        grid.innerHTML = '<p style="text-align: center; color: #a0aec0; padding: 40px;">등록된 메뉴가 없습니다</p>';
+        grid.innerHTML = '<p style="text-align: center; color: rgba(34,34,34,0.5); padding: 40px;">등록된 메뉴가 없습니다</p>';
         return;
     }
     

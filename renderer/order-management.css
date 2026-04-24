@@ -9,7 +9,7 @@
 body {
     font-family: 'Noto Sans KR', sans-serif;
     background: #ffffff;
-    color: #333333;
+    color: #222;
     overflow: hidden;
 }
 
@@ -21,12 +21,12 @@ body {
 
 /* 헤더 */
 .app-header {
-    background: #f8f9fa;
+    background: rgba(34,34,34,0.03);
     padding: 8px 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #e9ecef;
+    border-bottom: 1px solid rgba(34,34,34,0.06);
     height: 50px;
 }
 
@@ -39,7 +39,7 @@ body {
 .menu-toggle {
     background: none;
     border: none;
-    color: #495057;
+    color: rgba(34,34,34,0.6);
     font-size: 23px;
     cursor: pointer;
     padding: 4px;
@@ -53,7 +53,7 @@ body {
 }
 
 .status-indicator .online {
-    color: #4CAF50;
+    color: #ff6b35;
     font-size: 10px;
 }
 
@@ -70,11 +70,11 @@ body {
 
 .current-time {
     font-size: 18px;
-    color: #6c757d;
+    color: rgba(34,34,34,0.4);
 }
 
 .test-order-btn {
-    background: #007bff;
+    background: #ff6b35;
     border: none;
     color: white;
     font-size: 18px;
@@ -88,7 +88,7 @@ body {
 }
 
 .test-order-btn:hover {
-    background: #0056b3;
+    background: rgba(255,107,53,0.85);
 }
 
 .test-order-btn i {
@@ -98,7 +98,7 @@ body {
 .settings-btn, .logout-btn, .close-btn {
     background: none;
     border: none;
-    color: #495057;
+    color: rgba(34,34,34,0.6);
     font-size: 21px;
     cursor: pointer;
     padding: 4px;
@@ -106,15 +106,15 @@ body {
 }
 
 .settings-btn:hover, .logout-btn:hover, .close-btn:hover {
-    color: #007bff;
+    color: #ff6b35;
 }
 
 .logout-btn {
-    color: #dc3545;
+    color: #222;
 }
 
 .logout-btn:hover {
-    color: #c82333;
+    color: rgba(34,34,34,0.85);
 }
 
 /* 메인 컨테이너 */
@@ -128,7 +128,7 @@ body {
 .sidebar {
     width: 280px;
     background: #ffffff;
-    border-right: 1px solid #e9ecef;
+    border-right: 1px solid rgba(34,34,34,0.06);
     display: flex;
     flex-direction: column;
     overflow-y: auto;
@@ -136,7 +136,7 @@ body {
 
 .sidebar-section {
     padding: 16px;
-    border-bottom: 1px solid #e9ecef;
+    border-bottom: 1px solid rgba(34,34,34,0.06);
 }
 
 .section-header {
@@ -150,7 +150,7 @@ body {
 
 .section-header i {
     font-size: 18px;
-    color: #4CAF50;
+    color: #ff6b35;
 }
 
 .info-icon {
@@ -158,13 +158,13 @@ body {
 }
 
 .info-icon i {
-    color: #6c757d;
+    color: rgba(34,34,34,0.4);
     font-size: 16px;
 }
 
 .order-status-text {
     font-size: 17px;
-    color: #6c757d;
+    color: rgba(34,34,34,0.4);
     text-align: center;
     padding: 8px 0;
 }
@@ -174,8 +174,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #f8f9fa;
-    border: 1px solid #e9ecef;
+    background: rgba(34,34,34,0.03);
+    border: 1px solid rgba(34,34,34,0.06);
     border-radius: 8px;
     padding: 12px;
     margin-bottom: 12px;
@@ -188,27 +188,27 @@ body {
 }
 
 .order-item.active {
-    border-color: #007bff;
-    background: #e3f2fd;
+    border-color: #ff6b35;
+    background: rgba(255,107,53,0.08);
 }
 
 .order-item.new-order {
-    border-color: #ffc107;
-    background: #fff3cd;
+    border-color: #ff6b35;
+    background: rgba(255,107,53,0.1);
     animation: pulseNewOrder 2s ease-in-out infinite;
 }
 
 .order-item.new-order.active {
-    border-color: #ff9800;
-    background: #ffe082;
+    border-color: #ff6b35;
+    background: rgba(255,107,53,0.1);
 }
 
 @keyframes pulseNewOrder {
     0%, 100% {
-        box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.4);
+        box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.4);
     }
     50% {
-        box-shadow: 0 0 0 8px rgba(255, 193, 7, 0);
+        box-shadow: 0 0 0 8px rgba(255, 107, 53, 0);
     }
 }
 
@@ -220,7 +220,7 @@ body {
     font-weight: 700;
     font-size: 21px;
     margin-bottom: 4px;
-    color: #007bff;
+    color: #ff6b35;
     letter-spacing: -0.3px;
 }
 
@@ -232,11 +232,11 @@ body {
 
 .menu-count, .order-time {
     font-size: 16px;
-    color: #6c757d;
+    color: rgba(34,34,34,0.4);
 }
 
 .order-time {
-    color: #28a745;
+    color: #ff6b35;
 }
 
 .order-timer {
@@ -260,11 +260,11 @@ body {
 }
 
 .timer-circle .timer-background {
-    stroke: #e0e0e0;
+    stroke: rgba(34,34,34,0.12);
 }
 
 .timer-circle .timer-progress {
-    stroke: #ff4444;
+    stroke: #222;
     stroke-linecap: round;
     transition: stroke-dashoffset 1s linear;
 }
@@ -274,13 +274,13 @@ body {
     z-index: 1;
     font-size: 18px;
     font-weight: 600;
-    color: #ff4444;
+    color: #222;
 }
 
 /* 사이드바 하단 네비게이션 */
 .sidebar-bottom {
     margin-top: auto;
-    border-top: 1px solid #e9ecef;
+    border-top: 1px solid rgba(34,34,34,0.06);
 }
 
 .nav-item {
@@ -291,16 +291,16 @@ body {
     font-size: 17px;
     cursor: pointer;
     transition: all 0.2s ease;
-    border-bottom: 1px solid #f8f9fa;
+    border-bottom: 1px solid rgba(34,34,34,0.03);
 }
 
 .nav-item:hover {
-    background: #f8f9fa;
+    background: rgba(34,34,34,0.03);
 }
 
 .nav-item.active {
-    background: #e3f2fd;
-    color: #007bff;
+    background: rgba(255,107,53,0.08);
+    color: #ff6b35;
     font-weight: 500;
 }
 
@@ -319,10 +319,10 @@ body {
 
 /* 주문 접수 확인 영역 */
 .order-accept-section {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #ff6b35;
     padding: 24px;
     margin: 0;
-    border-bottom: 4px solid #5a67d8;
+    border-bottom: 4px solid #ff6b35;
 }
 
 .accept-header {
@@ -339,7 +339,7 @@ body {
     font-size: 26px;
     font-weight: 600;
     margin: 0;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    text-shadow: 0 2px 4px rgba(34, 34, 34, 0.2);
 }
 
 .preparation-time-control {
@@ -395,7 +395,7 @@ body {
     font-weight: 700;
     min-width: 60px;
     text-align: center;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    text-shadow: 0 2px 4px rgba(34, 34, 34, 0.2);
 }
 
 .accept-actions {
@@ -405,7 +405,7 @@ body {
 }
 
 .btn-reject {
-    background: #dc3545;
+    background: #222;
     color: white;
     padding: 14px 40px;
     font-size: 21px;
@@ -417,13 +417,13 @@ body {
     align-items: center;
     gap: 8px;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);
+    box-shadow: 0 4px 15px rgba(34, 34, 34, 0.4);
 }
 
 .btn-reject:hover {
-    background: #c82333;
+    background: rgba(34,34,34,0.85);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(220, 53, 69, 0.5);
+    box-shadow: 0 6px 20px rgba(34, 34, 34, 0.5);
 }
 
 .btn-reject:active {
@@ -431,7 +431,7 @@ body {
 }
 
 .btn-accept {
-    background: #28a745;
+    background: #ff6b35;
     color: white;
     padding: 14px 40px;
     font-size: 21px;
@@ -443,13 +443,13 @@ body {
     align-items: center;
     gap: 8px;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
 }
 
 .btn-accept:hover {
-    background: #218838;
+    background: rgba(255,107,53,0.85);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.5);
+    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.5);
 }
 
 .btn-accept:active {
@@ -461,20 +461,20 @@ body {
     justify-content: space-between;
     align-items: flex-start;
     padding: 20px;
-    border-bottom: 1px solid #e9ecef;
+    border-bottom: 1px solid rgba(34,34,34,0.06);
 }
 
 .order-title h2 {
     font-size: 31px;
     font-weight: 700;
     margin-bottom: 6px;
-    color: #007bff;
+    color: #ff6b35;
     letter-spacing: -0.5px;
 }
 
 .order-subtitle {
     font-size: 18px;
-    color: #6c757d;
+    color: rgba(34,34,34,0.4);
 }
 
 .order-actions {
@@ -493,30 +493,30 @@ body {
 }
 
 .btn-print-receipt {
-    background: #28a745;
+    background: #ff6b35;
     color: white;
 }
 
 .btn-print-receipt:hover {
-    background: #218838;
+    background: rgba(255,107,53,0.85);
 }
 
 .btn-ready {
-    background: #28a745;
+    background: #ff6b35;
     color: white;
 }
 
 .btn-ready:hover {
-    background: #218838;
+    background: rgba(255,107,53,0.85);
 }
 
 .btn-complete {
-    background: #007bff;
+    background: #ff6b35;
     color: white;
 }
 
 .btn-complete:hover {
-    background: #0056b3;
+    background: rgba(255,107,53,0.85);
 }
 
 /* 조건 검증 상태 표시 */
@@ -531,21 +531,21 @@ body {
 }
 
 .order-validation-status.warning {
-    background: #fff3cd;
-    color: #856404;
-    border: 1px solid #ffc107;
+    background: rgba(255,107,53,0.1);
+    color: #ff6b35;
+    border: 1px solid #ff6b35;
 }
 
 .order-validation-status.error {
-    background: #f8d7da;
-    color: #721c24;
-    border: 1px solid #dc3545;
+    background: rgba(34,34,34,0.06);
+    color: #222;
+    border: 1px solid #222;
 }
 
 .order-validation-status.success {
-    background: #d4edda;
-    color: #155724;
-    border: 1px solid #28a745;
+    background: rgba(255,107,53,0.08);
+    color: #ff6b35;
+    border: 1px solid #ff6b35;
 }
 
 .validation-icon {
@@ -554,8 +554,8 @@ body {
 
 /* 조건 검증 결과 표시 */
 .condition-check-list {
-    background: #f8f9fa;
-    border: 1px solid #e9ecef;
+    background: rgba(34,34,34,0.03);
+    border: 1px solid rgba(34,34,34,0.06);
     border-radius: 8px;
     padding: 16px;
 }
@@ -565,7 +565,7 @@ body {
     align-items: center;
     gap: 8px;
     padding: 8px 0;
-    border-bottom: 1px solid #e9ecef;
+    border-bottom: 1px solid rgba(34,34,34,0.06);
     font-size: 18px;
 }
 
@@ -574,15 +574,15 @@ body {
 }
 
 .condition-item.pass {
-    color: #28a745;
+    color: #ff6b35;
 }
 
 .condition-item.fail {
-    color: #dc3545;
+    color: #222;
 }
 
 .condition-item.warning {
-    color: #ffc107;
+    color: #ff6b35;
 }
 
 .condition-icon {
@@ -593,8 +593,8 @@ body {
 
 /* 알림 메시지 */
 .alert-message {
-    background: #fff3cd;
-    border: 1px solid #ffc107;
+    background: rgba(255,107,53,0.1);
+    border: 1px solid #ff6b35;
     border-radius: 8px;
     padding: 12px 16px;
     margin: 20px;
@@ -603,11 +603,11 @@ body {
     gap: 10px;
     font-size: 17px;
     line-height: 1.4;
-    color: #856404;
+    color: #ff6b35;
 }
 
 .alert-message i {
-    color: #ffc107;
+    color: #ff6b35;
     font-size: 21px;
     margin-top: 2px;
 }
@@ -619,12 +619,12 @@ body {
 
 .section-header {
     margin-bottom: 12px;
-    border-bottom: 2px solid #e9ecef;
+    border-bottom: 2px solid rgba(34,34,34,0.06);
     padding-bottom: 8px;
 }
 
 .section-header h3 {
-    color: #333;
+    color: #222;
     font-size: 23px;
     font-weight: 600;
     margin: 0;
@@ -636,7 +636,7 @@ body {
 }
 
 .section-title h4 {
-    color: #495057;
+    color: rgba(34,34,34,0.6);
     font-size: 20px;
     font-weight: 600;
     margin: 0;
@@ -647,7 +647,7 @@ body {
 
 .section-title h4:before {
     content: "•";
-    color: #007bff;
+    color: #ff6b35;
     font-weight: bold;
 }
 
@@ -658,10 +658,10 @@ body {
 
 .info-card {
     background: #ffffff;
-    border: 2px solid #e9ecef;
+    border: 2px solid rgba(34,34,34,0.06);
     border-radius: 8px;
     padding: 16px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 4px rgba(34,34,34,0.05);
 }
 
 /* 메뉴 정보 섹션 */
@@ -674,7 +674,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 12px 0;
-    border-bottom: 1px solid #e9ecef;
+    border-bottom: 1px solid rgba(34,34,34,0.06);
 }
 
 .menu-item-row:last-child {
@@ -684,7 +684,7 @@ body {
 .menu-name {
     font-size: 22px;
     font-weight: 600;
-    color: #212529;
+    color: #222;
 }
 
 .menu-details {
@@ -694,7 +694,7 @@ body {
 }
 
 .menu-details .quantity {
-    background: #007bff;
+    background: #ff6b35;
     color: white;
     padding: 5px 10px;
     border-radius: 5px;
@@ -705,12 +705,12 @@ body {
 .menu-details .price {
     font-size: 22px;
     font-weight: 700;
-    color: #28a745;
+    color: #ff6b35;
 }
 
 .total-section {
-    background: #f8f9fa;
-    border: 2px solid #e9ecef;
+    background: rgba(34,34,34,0.03);
+    border: 2px solid rgba(34,34,34,0.06);
     border-radius: 8px;
     padding: 12px 16px;
     margin-top: 8px;
@@ -725,13 +725,13 @@ body {
 .total-label {
     font-size: 22px;
     font-weight: 700;
-    color: #212529;
+    color: #222;
 }
 
 .total-amount {
     font-size: 26px;
     font-weight: 700;
-    color: #28a745;
+    color: #ff6b35;
 }
 
 /* 요청사항 섹션 */
@@ -741,7 +741,7 @@ body {
 
 .requests-content {
     background: #fff;
-    border: 2px solid #e9ecef;
+    border: 2px solid rgba(34,34,34,0.06);
     border-radius: 8px;
     padding: 14px;
 }
@@ -759,19 +759,19 @@ body {
 }
 
 .request-label {
-    color: #495057;
+    color: rgba(34,34,34,0.6);
     min-width: 60px;
     font-weight: 600;
 }
 
 .request-text {
-    color: #212529;
+    color: #222;
     flex: 1;
     font-weight: 500;
 }
 
 .request-message {
-    color: #212529;
+    color: #222;
     font-size: 20px;
     font-weight: 500;
     line-height: 1.6;
@@ -784,8 +784,8 @@ body {
 }
 
 .status-note {
-    background: #d4edda;
-    border: 1px solid #28a745;
+    background: rgba(255,107,53,0.08);
+    border: 1px solid #ff6b35;
     border-radius: 8px;
     padding: 8px 12px;
     text-align: center;
@@ -794,7 +794,7 @@ body {
 
 .note-text {
     font-size: 17px;
-    color: #155724;
+    color: #ff6b35;
     font-weight: 500;
 }
 
@@ -804,7 +804,7 @@ body {
     gap: 10px;
     margin-top: 20px;
     padding-top: 20px;
-    border-top: 1px solid #e0e0e0;
+    border-top: 1px solid rgba(34,34,34,0.12);
 }
 
 .order-actions-bottom .btn {
@@ -823,28 +823,28 @@ body {
 }
 
 .btn-reorder {
-    background: #2196F3;
+    background: #ff6b35;
     color: white;
 }
 
 .btn-reorder:hover {
-    background: #1976D2;
+    background: rgba(255,107,53,0.85);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
 }
 
 .btn-preview {
     background: #fff;
-    color: #666;
-    border: 1px solid #ddd;
+    color: rgba(34,34,34,0.4);
+    border: 1px solid rgba(34,34,34,0.12);
 }
 
 .btn-preview:hover {
-    background: #f8f9fa;
-    border-color: #2196F3;
-    color: #2196F3;
+    background: rgba(34,34,34,0.03);
+    border-color: #ff6b35;
+    color: #ff6b35;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.2);
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.2);
 }
 
 .btn-reorder i,
@@ -858,8 +858,8 @@ body {
 }
 
 .menu-item-detail {
-    background: #f8f9fa;
-    border: 1px solid #e9ecef;
+    background: rgba(34,34,34,0.03);
+    border: 1px solid rgba(34,34,34,0.06);
     border-radius: 8px;
     padding: 16px;
     margin-bottom: 12px;
@@ -883,7 +883,7 @@ body {
 }
 
 .quantity {
-    background: #007bff;
+    background: #ff6b35;
     color: white;
     padding: 4px 8px;
     border-radius: 4px;
@@ -894,12 +894,12 @@ body {
 .price {
     font-size: 21px;
     font-weight: 600;
-    color: #28a745;
+    color: #ff6b35;
 }
 
 .menu-total {
-    background: #f8f9fa;
-    border: 1px solid #e9ecef;
+    background: rgba(34,34,34,0.03);
+    border: 1px solid rgba(34,34,34,0.06);
     border-radius: 8px;
     padding: 16px;
     margin-bottom: 16px;
@@ -914,7 +914,7 @@ body {
 
 .btn-reorder {
     width: 100%;
-    background: #6c757d;
+    background: rgba(34,34,34,0.4);
     color: white;
     padding: 12px;
     border: none;
@@ -925,13 +925,13 @@ body {
 }
 
 .btn-reorder:hover {
-    background: #5a6268;
+    background: rgba(34,34,34,0.6);
 }
 
 /* 주문 정보 */
 .customer-info {
-    background: #f8f9fa;
-    border: 1px solid #e9ecef;
+    background: rgba(34,34,34,0.03);
+    border: 1px solid rgba(34,34,34,0.06);
     border-radius: 8px;
     padding: 16px;
 }
@@ -941,7 +941,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 10px 0;
-    border-bottom: 1px solid #e9ecef;
+    border-bottom: 1px solid rgba(34,34,34,0.06);
     font-size: 20px;
 }
 
@@ -950,13 +950,13 @@ body {
 }
 
 .info-label {
-    color: #495057;
+    color: rgba(34,34,34,0.6);
     font-weight: 600;
     min-width: 80px;
 }
 
 .info-value {
-    color: #212529;
+    color: #222;
     font-weight: 600;
     font-size: 21px;
 }
@@ -965,17 +965,17 @@ body {
 #orderTypeInfo {
     font-size: 23px;
     font-weight: 700;
-    color: #007bff;
+    color: #ff6b35;
     padding: 4px 12px;
-    background: #e7f3ff;
+    background: rgba(255,107,53,0.08);
     border-radius: 6px;
-    border: 2px solid #007bff;
+    border: 2px solid #ff6b35;
 }
 
 /* 주문 메뉴 통합 스타일 */
 .info-row-divider {
     height: 1px;
-    background: #dee2e6;
+    background: rgba(34,34,34,0.12);
     margin: 8px 0;
 }
 
@@ -998,7 +998,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 8px 0;
-    border-bottom: 1px dashed #e9ecef;
+    border-bottom: 1px dashed rgba(34,34,34,0.06);
 }
 
 .menu-item-inline:last-child {
@@ -1008,7 +1008,7 @@ body {
 .menu-item-inline .menu-name {
     font-size: 20px;
     font-weight: 600;
-    color: #212529;
+    color: #222;
 }
 
 .menu-item-inline .menu-details {
@@ -1018,7 +1018,7 @@ body {
 }
 
 .menu-item-inline .quantity {
-    background: #007bff;
+    background: #ff6b35;
     color: white;
     padding: 4px 8px;
     border-radius: 4px;
@@ -1029,11 +1029,11 @@ body {
 .menu-item-inline .price {
     font-size: 20px;
     font-weight: 700;
-    color: #28a745;
+    color: #ff6b35;
 }
 
 .info-row.total-row-inline {
-    background: #f8f9fa;
+    background: rgba(34,34,34,0.03);
     margin: 8px -16px -6px -16px;
     padding: 12px 16px;
     border-radius: 0 0 6px 6px;
@@ -1043,7 +1043,7 @@ body {
 .total-amount-inline {
     font-size: 23px;
     font-weight: 700;
-    color: #28a745;
+    color: #ff6b35;
 }
 
 /* 모달 스타일 */
@@ -1054,7 +1054,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(34, 34, 34, 0.7);
     z-index: 9999;
     align-items: center;
     justify-content: center;
@@ -1069,7 +1069,7 @@ body {
     border-radius: 12px;
     width: 400px;
     max-width: 90vw;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 10px 40px rgba(34, 34, 34, 0.3);
     animation: modalFadeIn 0.3s ease;
     overflow: hidden;
 }
@@ -1079,20 +1079,20 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 20px 20px 16px 20px;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid rgba(34,34,34,0.12);
 }
 
 .modal-header h3 {
     font-size: 23px;
     font-weight: 600;
-    color: #333333;
+    color: #222;
     margin: 0;
 }
 
 .modal-close {
     background: none;
     border: none;
-    color: #666666;
+    color: rgba(34,34,34,0.4);
     font-size: 23px;
     cursor: pointer;
     padding: 4px;
@@ -1101,7 +1101,7 @@ body {
 }
 
 .modal-close:hover {
-    background: #f0f0f0;
+    background: rgba(34,34,34,0.03);
 }
 
 .modal-body {
@@ -1111,7 +1111,7 @@ body {
 
 .modal-body p {
     font-size: 21px;
-    color: #555555;
+    color: rgba(34,34,34,0.6);
     margin: 0;
     line-height: 1.5;
 }
@@ -1123,7 +1123,7 @@ body {
 }
 
 .btn-confirm {
-    background: #2196F3;
+    background: #ff6b35;
     color: white;
     border: none;
     border-radius: 8px;
@@ -1136,9 +1136,9 @@ body {
 }
 
 .btn-confirm:hover {
-    background: #1976D2;
+    background: rgba(255,107,53,0.85);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
 }
 
 @keyframes modalFadeIn {
@@ -1223,7 +1223,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(34, 34, 34, 0.7);
     z-index: 10000;
     animation: fadeIn 0.3s ease;
 }
@@ -1239,7 +1239,7 @@ body {
     width: 700px;
     height: 100%;
     background: #ffffff;
-    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.5);
+    box-shadow: 4px 0 20px rgba(34, 34, 34, 0.5);
     animation: slideInLeft 0.3s ease;
     display: flex;
     flex-direction: column;
@@ -1257,16 +1257,16 @@ body {
 
 /* 사이드 메뉴 헤더 */
 .side-menu-header {
-    background: #f8f9fa;
+    background: rgba(34,34,34,0.03);
     padding: 20px 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid rgba(34,34,34,0.12);
 }
 
 .side-menu-header h2 {
-    color: #333;
+    color: #222;
     font-size: 23px;
     font-weight: 600;
     margin: 0;
@@ -1275,7 +1275,7 @@ body {
 .side-menu-close {
     background: transparent;
     border: none;
-    color: #666;
+    color: rgba(34,34,34,0.4);
     font-size: 31px;
     cursor: pointer;
     padding: 5px;
@@ -1284,7 +1284,7 @@ body {
 
 .side-menu-close:hover {
     transform: scale(1.1);
-    color: #333;
+    color: #222;
 }
 
 /* 사이드 메뉴 컨텐츠 */
@@ -1301,7 +1301,7 @@ body {
     display: flex;
     flex-direction: column;
     overflow-y: auto;
-    border-right: 1px solid #e0e0e0;
+    border-right: 1px solid rgba(34,34,34,0.12);
 }
 
 .menu-section {
@@ -1309,7 +1309,7 @@ body {
 }
 
 .menu-section-title {
-    color: #333;
+    color: #222;
     font-size: 18px;
     font-weight: 500;
     margin-bottom: 15px;
@@ -1320,7 +1320,7 @@ body {
 
 .menu-section-title i {
     font-size: 16px;
-    color: #999;
+    color: rgba(34,34,34,0.25);
 }
 
 .menu-items {
@@ -1330,8 +1330,8 @@ body {
 }
 
 .menu-item {
-    background: #f8f9fa;
-    border: 1px solid #e0e0e0;
+    background: rgba(34,34,34,0.03);
+    border: 1px solid rgba(34,34,34,0.12);
     border-radius: 8px;
     padding: 15px;
     display: flex;
@@ -1339,25 +1339,25 @@ body {
     gap: 12px;
     cursor: pointer;
     transition: all 0.2s;
-    color: #333;
+    color: #222;
     font-size: 18px;
 }
 
 .menu-item:hover {
-    background: #e9ecef;
-    border-color: #007bff;
+    background: rgba(34,34,34,0.06);
+    border-color: #ff6b35;
 }
 
 .menu-item i {
     font-size: 23px;
-    color: #666;
+    color: rgba(34,34,34,0.4);
 }
 
 /* 설정 메뉴 */
 .menu-settings {
     margin-top: auto;
     padding: 20px;
-    border-top: 1px solid #e0e0e0;
+    border-top: 1px solid rgba(34,34,34,0.12);
 }
 
 .settings-item {
@@ -1370,25 +1370,25 @@ body {
     gap: 12px;
     cursor: pointer;
     transition: background 0.2s;
-    color: #333;
+    color: #222;
     font-size: 18px;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid rgba(34,34,34,0.12);
 }
 
 .settings-item:hover {
-    background: #f8f9fa;
+    background: rgba(34,34,34,0.03);
 }
 
 .settings-item i:first-child {
     font-size: 21px;
-    color: #666;
+    color: rgba(34,34,34,0.4);
     width: 20px;
 }
 
 .settings-item i:last-child {
     margin-left: auto;
     font-size: 16px;
-    color: #999;
+    color: rgba(34,34,34,0.25);
 }
 
 .settings-item-link {
@@ -1398,32 +1398,32 @@ body {
     padding: 15px 10px;
     text-align: center;
     cursor: pointer;
-    color: #007bff;
+    color: #ff6b35;
     font-size: 17px;
     text-decoration: underline;
     transition: color 0.2s;
 }
 
 .settings-item-link:hover {
-    color: #0056b3;
+    color: rgba(255,107,53,0.85);
 }
 
 /* 고객센터 정보 */
 .customer-service {
     padding: 20px;
-    background: #f8f9fa;
-    border-top: 1px solid #e0e0e0;
+    background: rgba(34,34,34,0.03);
+    border-top: 1px solid rgba(34,34,34,0.12);
 }
 
 .service-title {
-    color: #333;
+    color: #222;
     font-size: 17px;
     font-weight: 500;
     margin-bottom: 8px;
 }
 
 .service-info {
-    color: #666;
+    color: rgba(34,34,34,0.4);
     font-size: 16px;
     margin: 4px 0;
 }
@@ -1443,19 +1443,19 @@ body {
 }
 
 .notice-title {
-    color: #333;
+    color: #222;
     font-size: 18px;
     font-weight: 500;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding-bottom: 10px;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid rgba(34,34,34,0.12);
 }
 
 .notice-title i {
     font-size: 16px;
-    color: #999;
+    color: rgba(34,34,34,0.25);
 }
 
 .notice-list {
@@ -1465,8 +1465,8 @@ body {
 }
 
 .notice-item {
-    background: #f8f9fa;
-    border: 1px solid #e0e0e0;
+    background: rgba(34,34,34,0.03);
+    border: 1px solid rgba(34,34,34,0.12);
     border-radius: 8px;
     padding: 15px;
     cursor: pointer;
@@ -1476,8 +1476,8 @@ body {
 }
 
 .notice-item:hover {
-    background: #e9ecef;
-    border-color: #007bff;
+    background: rgba(34,34,34,0.06);
+    border-color: #ff6b35;
 }
 
 .notice-badge {
@@ -1499,7 +1499,7 @@ body {
 }
 
 .notice-content h4 {
-    color: #333;
+    color: #222;
     font-size: 18px;
     font-weight: 500;
     line-height: 1.4;
@@ -1507,7 +1507,7 @@ body {
 }
 
 .notice-date {
-    color: #666;
+    color: rgba(34,34,34,0.4);
     font-size: 16px;
     margin: 0;
 }
@@ -1516,13 +1516,13 @@ body {
 .notice-empty {
     text-align: center;
     padding: 40px 20px;
-    color: #999;
+    color: rgba(34,34,34,0.25);
 }
 
 .notice-empty i {
     font-size: 42px;
     margin-bottom: 15px;
-    color: #ddd;
+    color: rgba(34,34,34,0.12);
     display: block;
 }
 
@@ -1552,18 +1552,18 @@ body {
 
 .side-menu-left::-webkit-scrollbar-track,
 .side-menu-right::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: rgba(34,34,34,0.03);
 }
 
 .side-menu-left::-webkit-scrollbar-thumb,
 .side-menu-right::-webkit-scrollbar-thumb {
-    background: #ccc;
+    background: rgba(34,34,34,0.12);
     border-radius: 3px;
 }
 
 .side-menu-left::-webkit-scrollbar-thumb:hover,
 .side-menu-right::-webkit-scrollbar-thumb:hover {
-    background: #aaa;
+    background: rgba(34,34,34,0.25);
 }
 
 /* ============= 새 주문 알림 팝업 ============= */
@@ -1577,7 +1577,7 @@ body {
     bottom: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(34, 34, 34, 0.7);
     z-index: 99999;
     justify-content: center;
     align-items: center;
@@ -1593,7 +1593,7 @@ body {
     width: 90%;
     max-width: 500px;
     padding: 0;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 10px 40px rgba(34, 34, 34, 0.3);
     animation: slideUp 0.3s ease;
     overflow: hidden;
 }
@@ -1619,7 +1619,7 @@ body {
 }
 
 .order-alert-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #ff6b35;
     color: white;
     padding: 30px;
     text-align: center;
@@ -1659,7 +1659,7 @@ body {
 
 .order-alert-type {
     display: inline-block;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #ff6b35;
     color: white;
     font-size: 26px;
     font-weight: 700;
@@ -1669,7 +1669,7 @@ body {
 }
 
 .order-alert-details {
-    background: #f8f9fa;
+    background: rgba(34,34,34,0.03);
     padding: 20px;
     border-radius: 12px;
 }
@@ -1677,7 +1677,7 @@ body {
 .order-alert-menu {
     font-size: 23px;
     font-weight: 600;
-    color: #333;
+    color: #222;
     margin: 0 0 10px 0;
     line-height: 1.6;
 }
@@ -1685,7 +1685,7 @@ body {
 .order-alert-amount {
     font-size: 31px;
     font-weight: 700;
-    color: #28a745;
+    color: #ff6b35;
     margin: 0;
 }
 
@@ -1712,22 +1712,22 @@ body {
 }
 
 .btn-alert-confirm {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #ff6b35;
     color: white;
 }
 
 .btn-alert-confirm:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
 }
 
 .btn-alert-close {
-    background: #e9ecef;
-    color: #666;
+    background: rgba(34,34,34,0.06);
+    color: rgba(34,34,34,0.4);
 }
 
 .btn-alert-close:hover {
-    background: #dee2e6;
+    background: rgba(34,34,34,0.12);
 }
 
 /* ============= 알림 애니메이션 ============= */
@@ -1756,7 +1756,7 @@ body {
 
 /* 임시운영중단 버튼 */
 .temp-close-btn {
-    background: #ff9800;
+    background: #ff6b35;
     border: none;
     color: white;
     font-size: 18px;
@@ -1770,7 +1770,7 @@ body {
 }
 
 .temp-close-btn:hover {
-    background: #f57c00;
+    background: rgba(255,107,53,0.85);
 }
 
 .temp-close-btn i {
@@ -1779,7 +1779,7 @@ body {
 
 /* 상태 표시 - 운영중단 */
 .status-indicator .offline {
-    color: #f44336;
+    color: #222;
 }
 
 /* 임시운영중단 모달 */
@@ -1790,7 +1790,7 @@ body {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(34, 34, 34, 0.7);
     align-items: center;
     justify-content: center;
     z-index: 10000;
@@ -1807,12 +1807,12 @@ body {
     padding: 0;
     width: 90%;
     max-width: 500px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 20px 60px rgba(34, 34, 34, 0.3);
     animation: slideUp 0.3s ease-out;
 }
 
 .temp-close-header {
-    background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+    background: #ff6b35;
     color: white;
     padding: 24px;
     border-radius: 20px 20px 0 0;
@@ -1862,7 +1862,7 @@ body {
 .temp-close-description {
     text-align: center;
     font-size: 21px;
-    color: #666;
+    color: rgba(34,34,34,0.4);
     margin-bottom: 24px;
 }
 
@@ -1875,7 +1875,7 @@ body {
 
 .temp-close-option {
     background: white;
-    border: 2px solid #e0e0e0;
+    border: 2px solid rgba(34,34,34,0.12);
     border-radius: 12px;
     padding: 24px;
     cursor: pointer;
@@ -1887,26 +1887,26 @@ body {
 }
 
 .temp-close-option:hover {
-    border-color: #ff9800;
-    background: #fff3e0;
+    border-color: #ff6b35;
+    background: rgba(255,107,53,0.1);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(255, 152, 0, 0.2);
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.2);
 }
 
 .temp-close-option i {
     font-size: 42px;
-    color: #ff9800;
+    color: #ff6b35;
 }
 
 .temp-close-option span {
     font-size: 23px;
     font-weight: 600;
-    color: #333;
+    color: #222;
 }
 
 .resume-operation-container {
-    background: #e3f2fd;
-    border: 2px solid #2196f3;
+    background: rgba(255,107,53,0.08);
+    border: 2px solid #ff6b35;
     border-radius: 12px;
     padding: 20px;
     text-align: center;
@@ -1918,7 +1918,7 @@ body {
     justify-content: center;
     gap: 8px;
     margin-bottom: 16px;
-    color: #1976d2;
+    color: #ff6b35;
     font-size: 20px;
     font-weight: 500;
 }
@@ -1928,7 +1928,7 @@ body {
 }
 
 .btn-resume-operation {
-    background: #2196f3;
+    background: #ff6b35;
     color: white;
     border: none;
     padding: 12px 24px;
@@ -1943,9 +1943,9 @@ body {
 }
 
 .btn-resume-operation:hover {
-    background: #1976d2;
+    background: rgba(255,107,53,0.85);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
 }
 
 /* ============= 영수증 미리보기 모달 ============= */
@@ -1957,7 +1957,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(34, 34, 34, 0.7);
     z-index: 10000;
     animation: fadeIn 0.3s;
 }
@@ -1976,7 +1976,7 @@ body {
     max-height: 90vh;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 32px rgba(34, 34, 34, 0.3);
     animation: slideUp 0.3s;
 }
 
@@ -1985,15 +1985,15 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 20px 24px;
-    border-bottom: 2px solid #e0e0e0;
-    background: #f8f9fa;
+    border-bottom: 2px solid rgba(34,34,34,0.12);
+    background: rgba(34,34,34,0.03);
     border-radius: 12px 12px 0 0;
 }
 
 .receipt-preview-header h3 {
     font-size: 26px;
     font-weight: 700;
-    color: #333;
+    color: #222;
     margin: 0;
 }
 
@@ -2004,7 +2004,7 @@ body {
 }
 
 .btn-preview-print {
-    background: #2196F3;
+    background: #ff6b35;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -2019,15 +2019,15 @@ body {
 }
 
 .btn-preview-print:hover {
-    background: #1976D2;
+    background: rgba(255,107,53,0.85);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
 }
 
 .receipt-preview-header .modal-close {
     background: transparent;
     border: none;
-    color: #666;
+    color: rgba(34,34,34,0.4);
     font-size: 31px;
     cursor: pointer;
     padding: 4px;
@@ -2038,7 +2038,7 @@ body {
 }
 
 .receipt-preview-header .modal-close:hover {
-    color: #333;
+    color: #222;
     transform: scale(1.1);
 }
 
@@ -2046,7 +2046,7 @@ body {
     flex: 1;
     overflow-y: auto;
     padding: 24px;
-    background: #f5f5f5;
+    background: rgba(34,34,34,0.03);
 }
 
 /* 영수증 스타일 (미리보기용) */
@@ -2054,7 +2054,7 @@ body {
     background: white;
     padding: 24px;
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(34, 34, 34, 0.1);
     font-family: 'Noto Sans KR', 'Malgun Gothic', sans-serif;
     max-width: 400px;
     margin: 0 auto;
@@ -2063,25 +2063,25 @@ body {
 .receipt-header {
     text-align: center;
     padding-bottom: 16px;
-    border-bottom: 2px solid #333;
+    border-bottom: 2px solid #222;
     margin-bottom: 16px;
 }
 
 .receipt-store-name {
     font-size: 31px;
     font-weight: 700;
-    color: #333;
+    color: #222;
     margin-bottom: 8px;
 }
 
 .receipt-order-number {
     font-size: 26px;
     font-weight: 700;
-    color: #2196F3;
+    color: #ff6b35;
     text-align: center;
     margin: 16px 0 0 0;
     padding: 12px 12px 0 12px;
-    background: #e3f2fd;
+    background: rgba(255,107,53,0.08);
     border-radius: 8px 8px 0 0;
 }
 
@@ -2090,16 +2090,16 @@ body {
     font-weight: 600;
     text-align: center;
     padding: 8px 12px 12px 12px;
-    background: #e3f2fd;
+    background: rgba(255,107,53,0.08);
     border-radius: 0 0 8px 8px;
     margin: 0 0 16px 0;
-    color: #333;
+    color: #222;
 }
 
 .receipt-section {
     margin-bottom: 16px;
     padding-bottom: 16px;
-    border-bottom: 1px dashed #ccc;
+    border-bottom: 1px dashed rgba(34,34,34,0.12);
 }
 
 .receipt-section:last-child {
@@ -2109,7 +2109,7 @@ body {
 .receipt-section-title {
     font-size: 18px;
     font-weight: 700;
-    color: #666;
+    color: rgba(34,34,34,0.4);
     margin-bottom: 12px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -2123,12 +2123,12 @@ body {
 }
 
 .receipt-info-label {
-    color: #666;
+    color: rgba(34,34,34,0.4);
     font-weight: 500;
 }
 
 .receipt-info-value {
-    color: #333;
+    color: #222;
     font-weight: 600;
     text-align: right;
 }
@@ -2142,39 +2142,39 @@ body {
 
 .receipt-item-name {
     flex: 1;
-    color: #333;
+    color: #222;
     font-weight: 500;
 }
 
 .receipt-item-qty {
     width: 60px;
     text-align: center;
-    color: #666;
+    color: rgba(34,34,34,0.4);
 }
 
 .receipt-item-price {
     width: 80px;
     text-align: right;
-    color: #333;
+    color: #222;
     font-weight: 600;
 }
 
 .receipt-requests {
-    background: #fff3cd;
-    border: 1px solid #ffc107;
+    background: rgba(255,107,53,0.1);
+    border: 1px solid #ff6b35;
     border-radius: 6px;
     padding: 12px;
     margin-top: 8px;
     font-size: 17px;
-    color: #856404;
+    color: #ff6b35;
     white-space: pre-wrap;
     word-break: break-word;
     line-height: 1.6;
 }
 
 .receipt-expected-time {
-    background: #e8f5e9;
-    border: 2px solid #4CAF50;
+    background: rgba(255,107,53,0.08);
+    border: 2px solid #ff6b35;
     border-radius: 8px;
     padding: 16px;
     text-align: center;
@@ -2183,20 +2183,20 @@ body {
 
 .receipt-expected-time-label {
     font-size: 17px;
-    color: #2e7d32;
+    color: #ff6b35;
     margin-bottom: 4px;
 }
 
 .receipt-expected-time-value {
     font-size: 26px;
     font-weight: 700;
-    color: #1b5e20;
+    color: #ff6b35;
 }
 
 .receipt-total {
     margin-top: 16px;
     padding-top: 16px;
-    border-top: 2px solid #333;
+    border-top: 2px solid #222;
 }
 
 .receipt-total-row {
@@ -2204,7 +2204,7 @@ body {
     justify-content: space-between;
     font-size: 23px;
     font-weight: 700;
-    color: #333;
+    color: #222;
     margin-top: 8px;
 }
 
@@ -2212,19 +2212,19 @@ body {
     text-align: center;
     margin-top: 20px;
     padding-top: 16px;
-    border-top: 2px solid #333;
+    border-top: 2px solid #222;
 }
 
 .receipt-thank-you {
     font-size: 20px;
     font-weight: 600;
-    color: #333;
+    color: #222;
     line-height: 1.6;
 }
 
 .receipt-divider {
     border: 0;
-    border-top: 1px dashed #ccc;
+    border-top: 1px dashed rgba(34,34,34,0.12);
     margin: 16px 0;
 }
 
@@ -2234,16 +2234,16 @@ body {
 }
 
 .receipt-preview-body::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: rgba(34,34,34,0.03);
 }
 
 .receipt-preview-body::-webkit-scrollbar-thumb {
-    background: #888;
+    background: rgba(34,34,34,0.25);
     border-radius: 4px;
 }
 
 .receipt-preview-body::-webkit-scrollbar-thumb:hover {
-    background: #555;
+    background: rgba(34,34,34,0.6);
 }
 
 /* 애니메이션 */

@@ -46,6 +46,7 @@
     "appId": "com.yumyum.order.management",
     "productName": "YumYum 주문접수",
     "npmRebuild": false,
+    "afterPack": "./scripts/afterPack.js",
     "asar": true,
     "compression": "maximum",
     "electronLanguages": [
@@ -104,10 +105,7 @@
       ],
       "icon": "assets/icon.icns",
       "category": "public.app-category.business",
-      "sign": "./scripts/customSign.js",
-      "hardenedRuntime": true,
-      "entitlements": "assets/entitlements.mac.plist",
-      "entitlementsInherit": "assets/entitlements.mac.plist",
+      "identity": null,
       "artifactName": "${productName}-${version}-${arch}.${ext}"
     },
     "dmg": {
