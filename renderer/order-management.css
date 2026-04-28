@@ -53,7 +53,7 @@ body {
 }
 
 .status-indicator .online {
-    color: #ff6b35;
+    color: #C0562B;
     font-size: 10px;
 }
 
@@ -70,11 +70,11 @@ body {
 
 .current-time {
     font-size: 18px;
-    color: rgba(34,34,34,0.4);
+    color: #8C8C8C;
 }
 
 .test-order-btn {
-    background: #ff6b35;
+    background: #C0562B;
     border: none;
     color: white;
     font-size: 18px;
@@ -88,7 +88,7 @@ body {
 }
 
 .test-order-btn:hover {
-    background: rgba(255,107,53,0.85);
+    background: rgba(192,86,43,0.85);
 }
 
 .test-order-btn i {
@@ -106,7 +106,7 @@ body {
 }
 
 .settings-btn:hover, .logout-btn:hover, .close-btn:hover {
-    color: #ff6b35;
+    color: #C0562B;
 }
 
 .logout-btn {
@@ -150,7 +150,7 @@ body {
 
 .section-header i {
     font-size: 18px;
-    color: #ff6b35;
+    color: #C0562B;
 }
 
 .info-icon {
@@ -164,7 +164,7 @@ body {
 
 .order-status-text {
     font-size: 17px;
-    color: rgba(34,34,34,0.4);
+    color: #8C8C8C;
     text-align: center;
     padding: 8px 0;
 }
@@ -174,8 +174,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: rgba(34,34,34,0.03);
-    border: 1px solid rgba(34,34,34,0.06);
+    background: #F0F0F0;
+    border: 1px solid #E0E0E0;
     border-radius: 8px;
     padding: 12px;
     margin-bottom: 12px;
@@ -188,27 +188,27 @@ body {
 }
 
 .order-item.active {
-    border-color: #ff6b35;
-    background: rgba(255,107,53,0.08);
+    border-color: #C0562B;
+    background: rgba(192,86,43,0.08);
 }
 
 .order-item.new-order {
-    border-color: #ff6b35;
-    background: rgba(255,107,53,0.1);
+    border-color: #C0562B;
+    background: rgba(192,86,43,0.1);
     animation: pulseNewOrder 2s ease-in-out infinite;
 }
 
 .order-item.new-order.active {
-    border-color: #ff6b35;
-    background: rgba(255,107,53,0.1);
+    border-color: #C0562B;
+    background: rgba(192,86,43,0.1);
 }
 
 @keyframes pulseNewOrder {
     0%, 100% {
-        box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.4);
+        box-shadow: 0 0 0 0 rgba(192, 86, 43, 0.4);
     }
     50% {
-        box-shadow: 0 0 0 8px rgba(255, 107, 53, 0);
+        box-shadow: 0 0 0 8px rgba(192, 86, 43, 0);
     }
 }
 
@@ -217,10 +217,10 @@ body {
 }
 
 .order-type {
-    font-weight: 700;
+    font-weight: 400;
     font-size: 21px;
     margin-bottom: 4px;
-    color: #ff6b35;
+    color: #2D2D2D;
     letter-spacing: -0.3px;
 }
 
@@ -232,11 +232,11 @@ body {
 
 .menu-count, .order-time {
     font-size: 16px;
-    color: rgba(34,34,34,0.4);
+    color: #8C8C8C;
 }
 
 .order-time {
-    color: #ff6b35;
+    color: #8C8C8C;
 }
 
 .order-timer {
@@ -273,7 +273,7 @@ body {
     position: relative;
     z-index: 1;
     font-size: 18px;
-    font-weight: 600;
+    font-weight: 400;
     color: #222;
 }
 
@@ -299,9 +299,10 @@ body {
 }
 
 .nav-item.active {
-    background: rgba(255,107,53,0.08);
-    color: #ff6b35;
+    background: #F0F0F0;
+    color: #2D2D2D;
     font-weight: 500;
+    border-left: 3px solid #C0562B;
 }
 
 .nav-item i {
@@ -319,10 +320,10 @@ body {
 
 /* 주문 접수 확인 영역 */
 .order-accept-section {
-    background: #ff6b35;
+    background: #C0562B;
     padding: 24px;
     margin: 0;
-    border-bottom: 4px solid #ff6b35;
+    border-bottom: 4px solid #C0562B;
 }
 
 .accept-header {
@@ -337,7 +338,7 @@ body {
 .accept-header h3 {
     color: white;
     font-size: 26px;
-    font-weight: 600;
+    font-weight: 400;
     margin: 0;
     text-shadow: 0 2px 4px rgba(34, 34, 34, 0.2);
 }
@@ -346,7 +347,7 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255,255,255, 0.15);
     padding: 10px 20px;
     border-radius: 30px;
     backdrop-filter: blur(10px);
@@ -363,7 +364,7 @@ body {
     height: 36px;
     border-radius: 50%;
     border: 2px solid white;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255,255,255, 0.2);
     color: white;
     font-size: 21px;
     cursor: pointer;
@@ -375,7 +376,7 @@ body {
 }
 
 .time-btn:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(255,255,255, 0.3);
     transform: scale(1.1);
 }
 
@@ -386,13 +387,13 @@ body {
 .time-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255,255,255, 0.1);
 }
 
 .preparation-time-display {
     color: white;
     font-size: 26px;
-    font-weight: 700;
+    font-weight: 400;
     min-width: 60px;
     text-align: center;
     text-shadow: 0 2px 4px rgba(34, 34, 34, 0.2);
@@ -409,7 +410,7 @@ body {
     color: white;
     padding: 14px 40px;
     font-size: 21px;
-    font-weight: 600;
+    font-weight: 400;
     border: none;
     border-radius: 10px;
     cursor: pointer;
@@ -431,11 +432,11 @@ body {
 }
 
 .btn-accept {
-    background: #ff6b35;
+    background: #C0562B;
     color: white;
     padding: 14px 40px;
     font-size: 21px;
-    font-weight: 600;
+    font-weight: 400;
     border: none;
     border-radius: 10px;
     cursor: pointer;
@@ -443,13 +444,13 @@ body {
     align-items: center;
     gap: 8px;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+    box-shadow: 0 4px 15px rgba(192, 86, 43, 0.4);
 }
 
 .btn-accept:hover {
-    background: rgba(255,107,53,0.85);
+    background: rgba(192,86,43,0.85);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.5);
+    box-shadow: 0 6px 20px rgba(192, 86, 43, 0.5);
 }
 
 .btn-accept:active {
@@ -466,15 +467,15 @@ body {
 
 .order-title h2 {
     font-size: 31px;
-    font-weight: 700;
+    font-weight: 400;
     margin-bottom: 6px;
-    color: #ff6b35;
+    color: #2D2D2D;
     letter-spacing: -0.5px;
 }
 
 .order-subtitle {
     font-size: 18px;
-    color: rgba(34,34,34,0.4);
+    color: #8C8C8C;
 }
 
 .order-actions {
@@ -493,30 +494,30 @@ body {
 }
 
 .btn-print-receipt {
-    background: #ff6b35;
+    background: #C0562B;
     color: white;
 }
 
 .btn-print-receipt:hover {
-    background: rgba(255,107,53,0.85);
+    background: rgba(192,86,43,0.85);
 }
 
 .btn-ready {
-    background: #ff6b35;
+    background: #C0562B;
     color: white;
 }
 
 .btn-ready:hover {
-    background: rgba(255,107,53,0.85);
+    background: rgba(192,86,43,0.85);
 }
 
 .btn-complete {
-    background: #ff6b35;
+    background: #C0562B;
     color: white;
 }
 
 .btn-complete:hover {
-    background: rgba(255,107,53,0.85);
+    background: rgba(192,86,43,0.85);
 }
 
 /* 조건 검증 상태 표시 */
@@ -531,21 +532,21 @@ body {
 }
 
 .order-validation-status.warning {
-    background: rgba(255,107,53,0.1);
-    color: #ff6b35;
-    border: 1px solid #ff6b35;
+    background: #FFF3ED;
+    color: #C0562B;
+    border: 1px solid #C0562B;
 }
 
 .order-validation-status.error {
-    background: rgba(34,34,34,0.06);
-    color: #222;
-    border: 1px solid #222;
+    background: #F0F0F0;
+    color: #2D2D2D;
+    border: 1px solid #E0E0E0;
 }
 
 .order-validation-status.success {
-    background: rgba(255,107,53,0.08);
-    color: #ff6b35;
-    border: 1px solid #ff6b35;
+    background: #F0F0F0;
+    color: #2D2D2D;
+    border: 1px solid #E0E0E0;
 }
 
 .validation-icon {
@@ -554,8 +555,8 @@ body {
 
 /* 조건 검증 결과 표시 */
 .condition-check-list {
-    background: rgba(34,34,34,0.03);
-    border: 1px solid rgba(34,34,34,0.06);
+    background: #F0F0F0;
+    border: 1px solid #E0E0E0;
     border-radius: 8px;
     padding: 16px;
 }
@@ -574,15 +575,15 @@ body {
 }
 
 .condition-item.pass {
-    color: #ff6b35;
+    color: #2D2D2D;
 }
 
 .condition-item.fail {
-    color: #222;
+    color: #8C8C8C;
 }
 
 .condition-item.warning {
-    color: #ff6b35;
+    color: #C0562B;
 }
 
 .condition-icon {
@@ -593,8 +594,8 @@ body {
 
 /* 알림 메시지 */
 .alert-message {
-    background: rgba(255,107,53,0.1);
-    border: 1px solid #ff6b35;
+    background: #F0F0F0;
+    border: 1px solid #E0E0E0;
     border-radius: 8px;
     padding: 12px 16px;
     margin: 20px;
@@ -603,11 +604,11 @@ body {
     gap: 10px;
     font-size: 17px;
     line-height: 1.4;
-    color: #ff6b35;
+    color: #2D2D2D;
 }
 
 .alert-message i {
-    color: #ff6b35;
+    color: #C0562B;
     font-size: 21px;
     margin-top: 2px;
 }
@@ -626,7 +627,7 @@ body {
 .section-header h3 {
     color: #222;
     font-size: 23px;
-    font-weight: 600;
+    font-weight: 400;
     margin: 0;
 }
 
@@ -636,9 +637,9 @@ body {
 }
 
 .section-title h4 {
-    color: rgba(34,34,34,0.6);
+    color: #8C8C8C;
     font-size: 20px;
-    font-weight: 600;
+    font-weight: 400;
     margin: 0;
     display: flex;
     align-items: center;
@@ -647,8 +648,8 @@ body {
 
 .section-title h4:before {
     content: "•";
-    color: #ff6b35;
-    font-weight: bold;
+    color: #C0562B;
+    font-weight: 400;
 }
 
 /* 기본 주문 정보 */
@@ -657,11 +658,10 @@ body {
 }
 
 .info-card {
-    background: #ffffff;
-    border: 2px solid rgba(34,34,34,0.06);
+    background: #F0F0F0;
+    border: 1px solid #E0E0E0;
     border-radius: 8px;
     padding: 16px;
-    box-shadow: 0 2px 4px rgba(34,34,34,0.05);
 }
 
 /* 메뉴 정보 섹션 */
@@ -683,7 +683,7 @@ body {
 
 .menu-name {
     font-size: 22px;
-    font-weight: 600;
+    font-weight: 400;
     color: #222;
 }
 
@@ -694,23 +694,23 @@ body {
 }
 
 .menu-details .quantity {
-    background: #ff6b35;
-    color: white;
+    background: #E0E0E0;
+    color: #2D2D2D;
     padding: 5px 10px;
     border-radius: 5px;
     font-size: 17px;
-    font-weight: 700;
+    font-weight: 400;
 }
 
 .menu-details .price {
     font-size: 22px;
-    font-weight: 700;
-    color: #ff6b35;
+    font-weight: 400;
+    color: #2D2D2D;
 }
 
 .total-section {
-    background: rgba(34,34,34,0.03);
-    border: 2px solid rgba(34,34,34,0.06);
+    background: #F0F0F0;
+    border: 1px solid #E0E0E0;
     border-radius: 8px;
     padding: 12px 16px;
     margin-top: 8px;
@@ -724,14 +724,14 @@ body {
 
 .total-label {
     font-size: 22px;
-    font-weight: 700;
+    font-weight: 400;
     color: #222;
 }
 
 .total-amount {
     font-size: 26px;
-    font-weight: 700;
-    color: #ff6b35;
+    font-weight: 400;
+    color: #2D2D2D;
 }
 
 /* 요청사항 섹션 */
@@ -740,8 +740,8 @@ body {
 }
 
 .requests-content {
-    background: #fff;
-    border: 2px solid rgba(34,34,34,0.06);
+    background: #F0F0F0;
+    border: 1px solid #E0E0E0;
     border-radius: 8px;
     padding: 14px;
 }
@@ -761,7 +761,7 @@ body {
 .request-label {
     color: rgba(34,34,34,0.6);
     min-width: 60px;
-    font-weight: 600;
+    font-weight: 400;
 }
 
 .request-text {
@@ -784,8 +784,8 @@ body {
 }
 
 .status-note {
-    background: rgba(255,107,53,0.08);
-    border: 1px solid #ff6b35;
+    background: #F0F0F0;
+    border: 1px solid #E0E0E0;
     border-radius: 8px;
     padding: 8px 12px;
     text-align: center;
@@ -794,8 +794,8 @@ body {
 
 .note-text {
     font-size: 17px;
-    color: #ff6b35;
-    font-weight: 500;
+    color: #8C8C8C;
+    font-weight: 400;
 }
 
 /* 하단 액션 버튼 */
@@ -813,7 +813,7 @@ body {
     border: none;
     border-radius: 8px;
     font-size: 18px;
-    font-weight: 600;
+    font-weight: 400;
     cursor: pointer;
     transition: all 0.2s;
     display: flex;
@@ -823,14 +823,14 @@ body {
 }
 
 .btn-reorder {
-    background: #ff6b35;
+    background: #C0562B;
     color: white;
 }
 
 .btn-reorder:hover {
-    background: rgba(255,107,53,0.85);
+    background: rgba(192,86,43,0.85);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+    box-shadow: 0 4px 12px rgba(192, 86, 43, 0.3);
 }
 
 .btn-preview {
@@ -841,10 +841,10 @@ body {
 
 .btn-preview:hover {
     background: rgba(34,34,34,0.03);
-    border-color: #ff6b35;
-    color: #ff6b35;
+    border-color: #C0562B;
+    color: #C0562B;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.2);
+    box-shadow: 0 4px 12px rgba(192, 86, 43, 0.2);
 }
 
 .btn-reorder i,
@@ -858,8 +858,8 @@ body {
 }
 
 .menu-item-detail {
-    background: rgba(34,34,34,0.03);
-    border: 1px solid rgba(34,34,34,0.06);
+    background: #F0F0F0;
+    border: 1px solid #E0E0E0;
     border-radius: 8px;
     padding: 16px;
     margin-bottom: 12px;
@@ -883,23 +883,23 @@ body {
 }
 
 .quantity {
-    background: #ff6b35;
-    color: white;
+    background: #E0E0E0;
+    color: #2D2D2D;
     padding: 4px 8px;
     border-radius: 4px;
     font-size: 18px;
-    font-weight: 600;
+    font-weight: 400;
 }
 
 .price {
     font-size: 21px;
-    font-weight: 600;
-    color: #ff6b35;
+    font-weight: 400;
+    color: #2D2D2D;
 }
 
 .menu-total {
-    background: rgba(34,34,34,0.03);
-    border: 1px solid rgba(34,34,34,0.06);
+    background: #F0F0F0;
+    border: 1px solid #E0E0E0;
     border-radius: 8px;
     padding: 16px;
     margin-bottom: 16px;
@@ -909,7 +909,7 @@ body {
     display: flex;
     justify-content: space-between;
     font-size: 21px;
-    font-weight: 600;
+    font-weight: 400;
 }
 
 .btn-reorder {
@@ -930,8 +930,8 @@ body {
 
 /* 주문 정보 */
 .customer-info {
-    background: rgba(34,34,34,0.03);
-    border: 1px solid rgba(34,34,34,0.06);
+    background: #F0F0F0;
+    border: 1px solid #E0E0E0;
     border-radius: 8px;
     padding: 16px;
 }
@@ -950,26 +950,26 @@ body {
 }
 
 .info-label {
-    color: rgba(34,34,34,0.6);
-    font-weight: 600;
+    color: #8C8C8C;
+    font-weight: 400;
     min-width: 80px;
 }
 
 .info-value {
-    color: #222;
-    font-weight: 600;
+    color: #2D2D2D;
+    font-weight: 400;
     font-size: 21px;
 }
 
 /* 주문유형 강조 스타일 */
 #orderTypeInfo {
     font-size: 23px;
-    font-weight: 700;
-    color: #ff6b35;
+    font-weight: 400;
+    color: #2D2D2D;
     padding: 4px 12px;
-    background: rgba(255,107,53,0.08);
+    background: #F0F0F0;
     border-radius: 6px;
-    border: 2px solid #ff6b35;
+    border: 1px solid #E0E0E0;
 }
 
 /* 주문 메뉴 통합 스타일 */
@@ -1007,7 +1007,7 @@ body {
 
 .menu-item-inline .menu-name {
     font-size: 20px;
-    font-weight: 600;
+    font-weight: 400;
     color: #222;
 }
 
@@ -1018,22 +1018,22 @@ body {
 }
 
 .menu-item-inline .quantity {
-    background: #ff6b35;
-    color: white;
+    background: #E0E0E0;
+    color: #2D2D2D;
     padding: 4px 8px;
     border-radius: 4px;
     font-size: 17px;
-    font-weight: 600;
+    font-weight: 400;
 }
 
 .menu-item-inline .price {
     font-size: 20px;
-    font-weight: 700;
-    color: #ff6b35;
+    font-weight: 400;
+    color: #2D2D2D;
 }
 
 .info-row.total-row-inline {
-    background: rgba(34,34,34,0.03);
+    background: #E8E8E8;
     margin: 8px -16px -6px -16px;
     padding: 12px 16px;
     border-radius: 0 0 6px 6px;
@@ -1042,8 +1042,8 @@ body {
 
 .total-amount-inline {
     font-size: 23px;
-    font-weight: 700;
-    color: #ff6b35;
+    font-weight: 400;
+    color: #2D2D2D;
 }
 
 /* 모달 스타일 */
@@ -1084,7 +1084,7 @@ body {
 
 .modal-header h3 {
     font-size: 23px;
-    font-weight: 600;
+    font-weight: 400;
     color: #222;
     margin: 0;
 }
@@ -1123,7 +1123,7 @@ body {
 }
 
 .btn-confirm {
-    background: #ff6b35;
+    background: #C0562B;
     color: white;
     border: none;
     border-radius: 8px;
@@ -1136,9 +1136,9 @@ body {
 }
 
 .btn-confirm:hover {
-    background: rgba(255,107,53,0.85);
+    background: rgba(192,86,43,0.85);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+    box-shadow: 0 4px 12px rgba(192, 86, 43, 0.3);
 }
 
 @keyframes modalFadeIn {
@@ -1268,7 +1268,7 @@ body {
 .side-menu-header h2 {
     color: #222;
     font-size: 23px;
-    font-weight: 600;
+    font-weight: 400;
     margin: 0;
 }
 
@@ -1345,7 +1345,7 @@ body {
 
 .menu-item:hover {
     background: rgba(34,34,34,0.06);
-    border-color: #ff6b35;
+    border-color: #C0562B;
 }
 
 .menu-item i {
@@ -1398,14 +1398,14 @@ body {
     padding: 15px 10px;
     text-align: center;
     cursor: pointer;
-    color: #ff6b35;
+    color: #C0562B;
     font-size: 17px;
     text-decoration: underline;
     transition: color 0.2s;
 }
 
 .settings-item-link:hover {
-    color: rgba(255,107,53,0.85);
+    color: rgba(192,86,43,0.85);
 }
 
 /* 고객센터 정보 */
@@ -1477,7 +1477,7 @@ body {
 
 .notice-item:hover {
     background: rgba(34,34,34,0.06);
-    border-color: #ff6b35;
+    border-color: #C0562B;
 }
 
 .notice-badge {
@@ -1485,12 +1485,12 @@ body {
 }
 
 .notice-badge.new {
-    background: #ff6b35;
+    background: #C0562B;
     color: white;
     padding: 4px 8px;
     border-radius: 4px;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 400;
     height: fit-content;
 }
 
@@ -1619,7 +1619,7 @@ body {
 }
 
 .order-alert-header {
-    background: #ff6b35;
+    background: #C0562B;
     color: white;
     padding: 30px;
     text-align: center;
@@ -1645,7 +1645,7 @@ body {
 
 .order-alert-header h2 {
     font-size: 31px;
-    font-weight: 700;
+    font-weight: 400;
     margin: 0;
 }
 
@@ -1659,24 +1659,24 @@ body {
 
 .order-alert-type {
     display: inline-block;
-    background: #ff6b35;
+    background: #C0562B;
     color: white;
     font-size: 26px;
-    font-weight: 700;
+    font-weight: 400;
     padding: 12px 30px;
     border-radius: 25px;
     margin-bottom: 20px;
 }
 
 .order-alert-details {
-    background: rgba(34,34,34,0.03);
+    background: #F0F0F0;
     padding: 20px;
     border-radius: 12px;
 }
 
 .order-alert-menu {
     font-size: 23px;
-    font-weight: 600;
+    font-weight: 400;
     color: #222;
     margin: 0 0 10px 0;
     line-height: 1.6;
@@ -1684,8 +1684,8 @@ body {
 
 .order-alert-amount {
     font-size: 31px;
-    font-weight: 700;
-    color: #ff6b35;
+    font-weight: 400;
+    color: #2D2D2D;
     margin: 0;
 }
 
@@ -1702,7 +1702,7 @@ body {
     border: none;
     border-radius: 10px;
     font-size: 21px;
-    font-weight: 600;
+    font-weight: 400;
     cursor: pointer;
     transition: all 0.2s;
     display: flex;
@@ -1712,13 +1712,13 @@ body {
 }
 
 .btn-alert-confirm {
-    background: #ff6b35;
+    background: #C0562B;
     color: white;
 }
 
 .btn-alert-confirm:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
+    box-shadow: 0 5px 15px rgba(192, 86, 43, 0.4);
 }
 
 .btn-alert-close {
@@ -1756,7 +1756,7 @@ body {
 
 /* 임시운영중단 버튼 */
 .temp-close-btn {
-    background: #ff6b35;
+    background: #C0562B;
     border: none;
     color: white;
     font-size: 18px;
@@ -1770,7 +1770,7 @@ body {
 }
 
 .temp-close-btn:hover {
-    background: rgba(255,107,53,0.85);
+    background: rgba(192,86,43,0.85);
 }
 
 .temp-close-btn i {
@@ -1812,7 +1812,7 @@ body {
 }
 
 .temp-close-header {
-    background: #ff6b35;
+    background: #C0562B;
     color: white;
     padding: 24px;
     border-radius: 20px 20px 0 0;
@@ -1828,13 +1828,13 @@ body {
 
 .temp-close-header h2 {
     font-size: 29px;
-    font-weight: 700;
+    font-weight: 400;
     margin: 0;
     flex: 1;
 }
 
 .modal-close-btn {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255,255,255, 0.2);
     border: none;
     color: white;
     width: 36px;
@@ -1848,7 +1848,7 @@ body {
 }
 
 .modal-close-btn:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(255,255,255, 0.3);
 }
 
 .modal-close-btn i {
@@ -1887,26 +1887,26 @@ body {
 }
 
 .temp-close-option:hover {
-    border-color: #ff6b35;
-    background: rgba(255,107,53,0.1);
+    border-color: #C0562B;
+    background: rgba(192,86,43,0.1);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.2);
+    box-shadow: 0 4px 12px rgba(192, 86, 43, 0.2);
 }
 
 .temp-close-option i {
     font-size: 42px;
-    color: #ff6b35;
+    color: #C0562B;
 }
 
 .temp-close-option span {
     font-size: 23px;
-    font-weight: 600;
+    font-weight: 400;
     color: #222;
 }
 
 .resume-operation-container {
-    background: rgba(255,107,53,0.08);
-    border: 2px solid #ff6b35;
+    background: #F0F0F0;
+    border: 1px solid #E0E0E0;
     border-radius: 12px;
     padding: 20px;
     text-align: center;
@@ -1918,9 +1918,9 @@ body {
     justify-content: center;
     gap: 8px;
     margin-bottom: 16px;
-    color: #ff6b35;
+    color: #2D2D2D;
     font-size: 20px;
-    font-weight: 500;
+    font-weight: 400;
 }
 
 .resume-operation-info i {
@@ -1928,13 +1928,13 @@ body {
 }
 
 .btn-resume-operation {
-    background: #ff6b35;
+    background: #C0562B;
     color: white;
     border: none;
     padding: 12px 24px;
     border-radius: 8px;
     font-size: 21px;
-    font-weight: 600;
+    font-weight: 400;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
@@ -1943,9 +1943,9 @@ body {
 }
 
 .btn-resume-operation:hover {
-    background: rgba(255,107,53,0.85);
+    background: rgba(192,86,43,0.85);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+    box-shadow: 0 4px 12px rgba(192, 86, 43, 0.3);
 }
 
 /* ============= 영수증 미리보기 모달 ============= */
@@ -1992,7 +1992,7 @@ body {
 
 .receipt-preview-header h3 {
     font-size: 26px;
-    font-weight: 700;
+    font-weight: 400;
     color: #222;
     margin: 0;
 }
@@ -2004,13 +2004,13 @@ body {
 }
 
 .btn-preview-print {
-    background: #ff6b35;
+    background: #C0562B;
     color: white;
     border: none;
     padding: 10px 20px;
     border-radius: 6px;
     font-size: 18px;
-    font-weight: 600;
+    font-weight: 400;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -2019,9 +2019,9 @@ body {
 }
 
 .btn-preview-print:hover {
-    background: rgba(255,107,53,0.85);
+    background: rgba(192,86,43,0.85);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+    box-shadow: 0 4px 12px rgba(192, 86, 43, 0.3);
 }
 
 .receipt-preview-header .modal-close {
@@ -2069,31 +2069,31 @@ body {
 
 .receipt-store-name {
     font-size: 31px;
-    font-weight: 700;
+    font-weight: 400;
     color: #222;
     margin-bottom: 8px;
 }
 
 .receipt-order-number {
     font-size: 26px;
-    font-weight: 700;
-    color: #ff6b35;
+    font-weight: 400;
+    color: #2D2D2D;
     text-align: center;
     margin: 16px 0 0 0;
     padding: 12px 12px 0 12px;
-    background: rgba(255,107,53,0.08);
+    background: #F0F0F0;
     border-radius: 8px 8px 0 0;
 }
 
 .customer-info-inline {
     font-size: 21px;
-    font-weight: 600;
+    font-weight: 400;
     text-align: center;
     padding: 8px 12px 12px 12px;
-    background: rgba(255,107,53,0.08);
+    background: #F0F0F0;
     border-radius: 0 0 8px 8px;
     margin: 0 0 16px 0;
-    color: #222;
+    color: #2D2D2D;
 }
 
 .receipt-section {
@@ -2108,7 +2108,7 @@ body {
 
 .receipt-section-title {
     font-size: 18px;
-    font-weight: 700;
+    font-weight: 400;
     color: rgba(34,34,34,0.4);
     margin-bottom: 12px;
     text-transform: uppercase;
@@ -2129,7 +2129,7 @@ body {
 
 .receipt-info-value {
     color: #222;
-    font-weight: 600;
+    font-weight: 400;
     text-align: right;
 }
 
@@ -2156,25 +2156,25 @@ body {
     width: 80px;
     text-align: right;
     color: #222;
-    font-weight: 600;
+    font-weight: 400;
 }
 
 .receipt-requests {
-    background: rgba(255,107,53,0.1);
-    border: 1px solid #ff6b35;
+    background: #F0F0F0;
+    border: 1px solid #E0E0E0;
     border-radius: 6px;
     padding: 12px;
     margin-top: 8px;
     font-size: 17px;
-    color: #ff6b35;
+    color: #2D2D2D;
     white-space: pre-wrap;
     word-break: break-word;
     line-height: 1.6;
 }
 
 .receipt-expected-time {
-    background: rgba(255,107,53,0.08);
-    border: 2px solid #ff6b35;
+    background: #F0F0F0;
+    border: 1px solid #E0E0E0;
     border-radius: 8px;
     padding: 16px;
     text-align: center;
@@ -2183,14 +2183,14 @@ body {
 
 .receipt-expected-time-label {
     font-size: 17px;
-    color: #ff6b35;
+    color: #8C8C8C;
     margin-bottom: 4px;
 }
 
 .receipt-expected-time-value {
     font-size: 26px;
-    font-weight: 700;
-    color: #ff6b35;
+    font-weight: 400;
+    color: #2D2D2D;
 }
 
 .receipt-total {
@@ -2203,7 +2203,7 @@ body {
     display: flex;
     justify-content: space-between;
     font-size: 23px;
-    font-weight: 700;
+    font-weight: 400;
     color: #222;
     margin-top: 8px;
 }
@@ -2217,7 +2217,7 @@ body {
 
 .receipt-thank-you {
     font-size: 20px;
-    font-weight: 600;
+    font-weight: 400;
     color: #222;
     line-height: 1.6;
 }

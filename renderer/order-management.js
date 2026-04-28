@@ -1636,30 +1636,6 @@ function openOrderHistory() {
     closeSideMenu();
 }
 
-// 매출 관리
-function openSalesManagement() {
-    window.location.href = 'sales-management.html';
-    closeSideMenu();
-}
-
-// 운영정보 관리
-function openOperationInfo() {
-    window.location.href = 'operation-info.html';
-    closeSideMenu();
-}
-
-// 메뉴 품절 관리
-function openMenuManagement() {
-    window.location.href = 'menu-soldout.html';
-    closeSideMenu();
-}
-
-// 리뷰 관리
-function openReviewManagement() {
-    showNotification('리뷰 관리 기능은 준비 중입니다', 'info');
-    closeSideMenu();
-}
-
 // 주문접수 설정
 function openOrderSettings() {
     showNotification('주문접수 설정 기능은 준비 중입니다', 'info');
